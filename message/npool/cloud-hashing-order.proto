@@ -117,7 +117,7 @@ message CreateGoodPayingResponse {
 }
 
 message GetGoodPayingRequest {
-    GoodPaying Info = 500;
+    string ID = 500;
 }
 
 message GetGoodPayingResponse {

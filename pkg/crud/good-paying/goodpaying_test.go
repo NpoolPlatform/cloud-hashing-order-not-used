@@ -60,4 +60,14 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, resp1.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
 		assertGoodPaying(t, resp1.Info, &goodPaying)
 	}
+
+	resp2, err := Get(context.Background(), &npool.GetGoodPayingRequest{
+		ID: resp1.Info.ID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
+		assert.Equal(t, resp2.Info.ChainTransactionID, goodPaying.ChainTransactionID)
+		assert.Equal(t, resp2.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
+		assertGoodPaying(t, resp2.Info, &goodPaying)
+	}
 }

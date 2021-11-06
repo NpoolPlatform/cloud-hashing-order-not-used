@@ -196,7 +196,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [GoodPaying](#cloud.hashing.order.v1.GoodPaying) |  |  |
+| ID | [string](#string) |  |  |
 
 
 

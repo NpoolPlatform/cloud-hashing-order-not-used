@@ -59,7 +59,30 @@ func Create(ctx context.Context, in *npool.CreateGoodPayingRequest) (*npool.Crea
 }
 
 func Get(ctx context.Context, in *npool.GetGoodPayingRequest) (*npool.GetGoodPayingResponse, error) {
-	return nil, nil
+	id, err := uuid.Parse(in.GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid id: %v", err)
+	}
+
+	infos, err := db.Client().
+		GoodPaying.
+		Query().
+		Where(
+			goodpaying.And(
+				goodpaying.ID(id),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query good paying: %v", err)
+	}
+	if len(infos) == 0 {
+		return nil, xerrors.Errorf("empty good paying")
+	}
+
+	return &npool.GetGoodPayingResponse{
+		Info: dbRowToGoodPaying(infos[0]),
+	}, nil
 }
 
 func Update(ctx context.Context, in *npool.UpdateGoodPayingRequest) (*npool.UpdateGoodPayingResponse, error) {
