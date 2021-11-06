@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/schema"
 	"github.com/google/uuid"
@@ -12,6 +14,46 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	gaspayingFields := schema.GasPaying{}.Fields()
+	_ = gaspayingFields
+	// gaspayingDescCreateAt is the schema descriptor for create_at field.
+	gaspayingDescCreateAt := gaspayingFields[8].Descriptor()
+	// gaspaying.DefaultCreateAt holds the default value on creation for the create_at field.
+	gaspaying.DefaultCreateAt = gaspayingDescCreateAt.Default.(func() uint32)
+	// gaspayingDescUpdateAt is the schema descriptor for update_at field.
+	gaspayingDescUpdateAt := gaspayingFields[9].Descriptor()
+	// gaspaying.DefaultUpdateAt holds the default value on creation for the update_at field.
+	gaspaying.DefaultUpdateAt = gaspayingDescUpdateAt.Default.(func() uint32)
+	// gaspaying.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	gaspaying.UpdateDefaultUpdateAt = gaspayingDescUpdateAt.UpdateDefault.(func() uint32)
+	// gaspayingDescDeleteAt is the schema descriptor for delete_at field.
+	gaspayingDescDeleteAt := gaspayingFields[10].Descriptor()
+	// gaspaying.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	gaspaying.DefaultDeleteAt = gaspayingDescDeleteAt.Default.(func() uint32)
+	// gaspayingDescID is the schema descriptor for id field.
+	gaspayingDescID := gaspayingFields[0].Descriptor()
+	// gaspaying.DefaultID holds the default value on creation for the id field.
+	gaspaying.DefaultID = gaspayingDescID.Default.(func() uuid.UUID)
+	goodpayingFields := schema.GoodPaying{}.Fields()
+	_ = goodpayingFields
+	// goodpayingDescCreateAt is the schema descriptor for create_at field.
+	goodpayingDescCreateAt := goodpayingFields[6].Descriptor()
+	// goodpaying.DefaultCreateAt holds the default value on creation for the create_at field.
+	goodpaying.DefaultCreateAt = goodpayingDescCreateAt.Default.(func() uint32)
+	// goodpayingDescUpdateAt is the schema descriptor for update_at field.
+	goodpayingDescUpdateAt := goodpayingFields[7].Descriptor()
+	// goodpaying.DefaultUpdateAt holds the default value on creation for the update_at field.
+	goodpaying.DefaultUpdateAt = goodpayingDescUpdateAt.Default.(func() uint32)
+	// goodpaying.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	goodpaying.UpdateDefaultUpdateAt = goodpayingDescUpdateAt.UpdateDefault.(func() uint32)
+	// goodpayingDescDeleteAt is the schema descriptor for delete_at field.
+	goodpayingDescDeleteAt := goodpayingFields[8].Descriptor()
+	// goodpaying.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	goodpaying.DefaultDeleteAt = goodpayingDescDeleteAt.Default.(func() uint32)
+	// goodpayingDescID is the schema descriptor for id field.
+	goodpayingDescID := goodpayingFields[0].Descriptor()
+	// goodpaying.DefaultID holds the default value on creation for the id field.
+	goodpaying.DefaultID = goodpayingDescID.Default.(func() uuid.UUID)
 	orderFields := schema.Order{}.Fields()
 	_ = orderFields
 	// orderDescDiscount is the schema descriptor for discount field.

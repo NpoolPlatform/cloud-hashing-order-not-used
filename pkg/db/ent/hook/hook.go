@@ -9,6 +9,32 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 )
 
+// The GasPayingFunc type is an adapter to allow the use of ordinary
+// function as GasPaying mutator.
+type GasPayingFunc func(context.Context, *ent.GasPayingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GasPayingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GasPayingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GasPayingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GoodPayingFunc type is an adapter to allow the use of ordinary
+// function as GoodPaying mutator.
+type GoodPayingFunc func(context.Context, *ent.GoodPayingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GoodPayingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GoodPayingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GoodPayingMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The OrderFunc type is an adapter to allow the use of ordinary
 // function as Order mutator.
 type OrderFunc func(context.Context, *ent.OrderMutation) (ent.Value, error)

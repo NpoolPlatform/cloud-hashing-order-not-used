@@ -8,6 +8,8 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 )
 
@@ -29,7 +31,9 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		order.Table: order.ValidColumn,
+		gaspaying.Table:  gaspaying.ValidColumn,
+		goodpaying.Table: goodpaying.ValidColumn,
+		order.Table:      order.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

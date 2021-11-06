@@ -10,6 +10,8 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/migrate"
 	"github.com/google/uuid"
 
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 
 	"entgo.io/ent/dialect"
@@ -21,6 +23,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// GasPaying is the client for interacting with the GasPaying builders.
+	GasPaying *GasPayingClient
+	// GoodPaying is the client for interacting with the GoodPaying builders.
+	GoodPaying *GoodPayingClient
 	// Order is the client for interacting with the Order builders.
 	Order *OrderClient
 }
@@ -36,6 +42,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.GasPaying = NewGasPayingClient(c.config)
+	c.GoodPaying = NewGoodPayingClient(c.config)
 	c.Order = NewOrderClient(c.config)
 }
 
@@ -68,9 +76,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Order:  NewOrderClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		GasPaying:  NewGasPayingClient(cfg),
+		GoodPaying: NewGoodPayingClient(cfg),
+		Order:      NewOrderClient(cfg),
 	}, nil
 }
 
@@ -88,15 +98,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		config: cfg,
-		Order:  NewOrderClient(cfg),
+		config:     cfg,
+		GasPaying:  NewGasPayingClient(cfg),
+		GoodPaying: NewGoodPayingClient(cfg),
+		Order:      NewOrderClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Order.
+//		GasPaying.
 //		Query().
 //		Count(ctx)
 //
@@ -119,7 +131,189 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.GasPaying.Use(hooks...)
+	c.GoodPaying.Use(hooks...)
 	c.Order.Use(hooks...)
+}
+
+// GasPayingClient is a client for the GasPaying schema.
+type GasPayingClient struct {
+	config
+}
+
+// NewGasPayingClient returns a client for the GasPaying from the given config.
+func NewGasPayingClient(c config) *GasPayingClient {
+	return &GasPayingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `gaspaying.Hooks(f(g(h())))`.
+func (c *GasPayingClient) Use(hooks ...Hook) {
+	c.hooks.GasPaying = append(c.hooks.GasPaying, hooks...)
+}
+
+// Create returns a create builder for GasPaying.
+func (c *GasPayingClient) Create() *GasPayingCreate {
+	mutation := newGasPayingMutation(c.config, OpCreate)
+	return &GasPayingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GasPaying entities.
+func (c *GasPayingClient) CreateBulk(builders ...*GasPayingCreate) *GasPayingCreateBulk {
+	return &GasPayingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GasPaying.
+func (c *GasPayingClient) Update() *GasPayingUpdate {
+	mutation := newGasPayingMutation(c.config, OpUpdate)
+	return &GasPayingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GasPayingClient) UpdateOne(gp *GasPaying) *GasPayingUpdateOne {
+	mutation := newGasPayingMutation(c.config, OpUpdateOne, withGasPaying(gp))
+	return &GasPayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GasPayingClient) UpdateOneID(id uuid.UUID) *GasPayingUpdateOne {
+	mutation := newGasPayingMutation(c.config, OpUpdateOne, withGasPayingID(id))
+	return &GasPayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GasPaying.
+func (c *GasPayingClient) Delete() *GasPayingDelete {
+	mutation := newGasPayingMutation(c.config, OpDelete)
+	return &GasPayingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GasPayingClient) DeleteOne(gp *GasPaying) *GasPayingDeleteOne {
+	return c.DeleteOneID(gp.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GasPayingClient) DeleteOneID(id uuid.UUID) *GasPayingDeleteOne {
+	builder := c.Delete().Where(gaspaying.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GasPayingDeleteOne{builder}
+}
+
+// Query returns a query builder for GasPaying.
+func (c *GasPayingClient) Query() *GasPayingQuery {
+	return &GasPayingQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GasPaying entity by its id.
+func (c *GasPayingClient) Get(ctx context.Context, id uuid.UUID) (*GasPaying, error) {
+	return c.Query().Where(gaspaying.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GasPayingClient) GetX(ctx context.Context, id uuid.UUID) *GasPaying {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GasPayingClient) Hooks() []Hook {
+	return c.hooks.GasPaying
+}
+
+// GoodPayingClient is a client for the GoodPaying schema.
+type GoodPayingClient struct {
+	config
+}
+
+// NewGoodPayingClient returns a client for the GoodPaying from the given config.
+func NewGoodPayingClient(c config) *GoodPayingClient {
+	return &GoodPayingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `goodpaying.Hooks(f(g(h())))`.
+func (c *GoodPayingClient) Use(hooks ...Hook) {
+	c.hooks.GoodPaying = append(c.hooks.GoodPaying, hooks...)
+}
+
+// Create returns a create builder for GoodPaying.
+func (c *GoodPayingClient) Create() *GoodPayingCreate {
+	mutation := newGoodPayingMutation(c.config, OpCreate)
+	return &GoodPayingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GoodPaying entities.
+func (c *GoodPayingClient) CreateBulk(builders ...*GoodPayingCreate) *GoodPayingCreateBulk {
+	return &GoodPayingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GoodPaying.
+func (c *GoodPayingClient) Update() *GoodPayingUpdate {
+	mutation := newGoodPayingMutation(c.config, OpUpdate)
+	return &GoodPayingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GoodPayingClient) UpdateOne(gp *GoodPaying) *GoodPayingUpdateOne {
+	mutation := newGoodPayingMutation(c.config, OpUpdateOne, withGoodPaying(gp))
+	return &GoodPayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GoodPayingClient) UpdateOneID(id uuid.UUID) *GoodPayingUpdateOne {
+	mutation := newGoodPayingMutation(c.config, OpUpdateOne, withGoodPayingID(id))
+	return &GoodPayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GoodPaying.
+func (c *GoodPayingClient) Delete() *GoodPayingDelete {
+	mutation := newGoodPayingMutation(c.config, OpDelete)
+	return &GoodPayingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GoodPayingClient) DeleteOne(gp *GoodPaying) *GoodPayingDeleteOne {
+	return c.DeleteOneID(gp.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GoodPayingClient) DeleteOneID(id uuid.UUID) *GoodPayingDeleteOne {
+	builder := c.Delete().Where(goodpaying.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GoodPayingDeleteOne{builder}
+}
+
+// Query returns a query builder for GoodPaying.
+func (c *GoodPayingClient) Query() *GoodPayingQuery {
+	return &GoodPayingQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GoodPaying entity by its id.
+func (c *GoodPayingClient) Get(ctx context.Context, id uuid.UUID) (*GoodPaying, error) {
+	return c.Query().Where(goodpaying.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GoodPayingClient) GetX(ctx context.Context, id uuid.UUID) *GoodPaying {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GoodPayingClient) Hooks() []Hook {
+	return c.hooks.GoodPaying
 }
 
 // OrderClient is a client for the Order schema.

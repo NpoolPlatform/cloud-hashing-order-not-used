@@ -8,6 +8,44 @@ import (
 )
 
 var (
+	// GasPayingsColumns holds the columns for the "gas_payings" table.
+	GasPayingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "account_id", Type: field.TypeUUID},
+		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
+		{Name: "chain_transaction_id", Type: field.TypeString},
+		{Name: "platform_transaction_id", Type: field.TypeUUID},
+		{Name: "duration_minutes", Type: field.TypeUint32},
+		{Name: "used", Type: field.TypeBool},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// GasPayingsTable holds the schema information for the "gas_payings" table.
+	GasPayingsTable = &schema.Table{
+		Name:       "gas_payings",
+		Columns:    GasPayingsColumns,
+		PrimaryKey: []*schema.Column{GasPayingsColumns[0]},
+	}
+	// GoodPayingsColumns holds the columns for the "good_payings" table.
+	GoodPayingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "account_id", Type: field.TypeUUID},
+		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
+		{Name: "chain_transaction_id", Type: field.TypeString},
+		{Name: "platform_transaction_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// GoodPayingsTable holds the schema information for the "good_payings" table.
+	GoodPayingsTable = &schema.Table{
+		Name:       "good_payings",
+		Columns:    GoodPayingsColumns,
+		PrimaryKey: []*schema.Column{GoodPayingsColumns[0]},
+	}
 	// OrdersColumns holds the columns for the "orders" table.
 	OrdersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
@@ -38,6 +76,8 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		GasPayingsTable,
+		GoodPayingsTable,
 		OrdersTable,
 	}
 )
