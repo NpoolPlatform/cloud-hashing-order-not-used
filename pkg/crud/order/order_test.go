@@ -97,4 +97,26 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
 		assertOrder(t, resp2.Info, &order)
 	}
+
+	resp3, err := GetByAppUser(context.Background(), &npool.GetOrdersByAppUserRequest{
+		AppID:  resp.Info.AppID,
+		UserID: resp.Info.UserID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, len(resp3.Infos), 1)
+	}
+
+	resp4, err := GetByApp(context.Background(), &npool.GetOrdersByAppRequest{
+		AppID: resp.Info.AppID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, len(resp4.Infos), 1)
+	}
+
+	resp5, err := GetByGood(context.Background(), &npool.GetOrdersByGoodRequest{
+		GoodID: resp.Info.GoodID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, len(resp5.Infos), 1)
+	}
 }

@@ -197,13 +197,103 @@ func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrd
 }
 
 func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*npool.GetOrdersByAppUserResponse, error) {
-	return nil, nil
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	infos, err := db.Client().
+		Order.
+		Query().
+		Where(
+			order.And(
+				order.AppID(appID),
+				order.UserID(userID),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+	if len(infos) == 0 {
+		return nil, xerrors.Errorf("empty order")
+	}
+
+	orders := []*npool.Order{}
+	for _, info := range infos {
+		orders = append(orders, dbRowToOrder(info))
+	}
+
+	return &npool.GetOrdersByAppUserResponse{
+		Infos: orders,
+	}, nil
 }
 
 func GetByApp(ctx context.Context, in *npool.GetOrdersByAppRequest) (*npool.GetOrdersByAppResponse, error) {
-	return nil, nil
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	infos, err := db.Client().
+		Order.
+		Query().
+		Where(
+			order.And(
+				order.AppID(appID),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+	if len(infos) == 0 {
+		return nil, xerrors.Errorf("empty order")
+	}
+
+	orders := []*npool.Order{}
+	for _, info := range infos {
+		orders = append(orders, dbRowToOrder(info))
+	}
+
+	return &npool.GetOrdersByAppResponse{
+		Infos: orders,
+	}, nil
 }
 
 func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.GetOrdersByGoodResponse, error) {
-	return nil, nil
+	goodID, err := uuid.Parse(in.GetGoodID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid good id: %v", err)
+	}
+
+	infos, err := db.Client().
+		Order.
+		Query().
+		Where(
+			order.And(
+				order.GoodID(goodID),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+	if len(infos) == 0 {
+		return nil, xerrors.Errorf("empty order")
+	}
+
+	orders := []*npool.Order{}
+	for _, info := range infos {
+		orders = append(orders, dbRowToOrder(info))
+	}
+
+	return &npool.GetOrdersByGoodResponse{
+		Infos: orders,
+	}, nil
 }

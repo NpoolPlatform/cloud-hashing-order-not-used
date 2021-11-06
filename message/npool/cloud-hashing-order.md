@@ -271,7 +271,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [Order](#cloud.hashing.order.v1.Order) |  |  |
+| Infos | [Order](#cloud.hashing.order.v1.Order) | repeated |  |
 
 
 
@@ -302,7 +302,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [Order](#cloud.hashing.order.v1.Order) |  |  |
+| Infos | [Order](#cloud.hashing.order.v1.Order) | repeated |  |
 
 
 
@@ -332,7 +332,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [Order](#cloud.hashing.order.v1.Order) |  |  |
+| Infos | [Order](#cloud.hashing.order.v1.Order) | repeated |  |
 
 
 

@@ -217,7 +217,7 @@ message GetOrdersByAppUserRequest {
 }
 
 message GetOrdersByAppUserResponse {
-    Order Info = 2200;
+    repeated Order Infos = 2200;
 }
 
 message GetOrdersByAppRequest {
@@ -225,7 +225,7 @@ message GetOrdersByAppRequest {
 }
 
 message GetOrdersByAppResponse {
-    Order Info = 2400;
+    repeated Order Infos = 2400;
 }
 
 message GetOrdersByGoodRequest {
@@ -233,5 +233,5 @@ message GetOrdersByGoodRequest {
 }
 
 message GetOrdersByGoodResponse {
-    Order Info = 2600;
+    repeated Order Infos = 2600;
 }
