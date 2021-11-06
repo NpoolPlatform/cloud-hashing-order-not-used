@@ -1736,12 +1736,12 @@ type OrderMutation struct {
 	good_id                       *uuid.UUID
 	app_id                        *uuid.UUID
 	user_id                       *uuid.UUID
-	uints                         *uint32
-	adduints                      *uint32
+	units                         *uint32
+	addunits                      *uint32
 	discount                      *uint32
 	adddiscount                   *uint32
-	special_reduction_amount      *uint32
-	addspecial_reduction_amount   *uint32
+	special_reduction_amount      *uint64
+	addspecial_reduction_amount   *uint64
 	state                         *order.State
 	good_pay_id                   *uuid.UUID
 	start                         *uint32
@@ -1756,6 +1756,7 @@ type OrderMutation struct {
 	addgas_start                  *uint32
 	gas_end                       *uint32
 	addgas_end                    *uint32
+	gas_pay_ids                   *[]uuid.UUID
 	coupon_id                     *uuid.UUID
 	create_at                     *uint32
 	addcreate_at                  *uint32
@@ -1962,60 +1963,60 @@ func (m *OrderMutation) ResetUserID() {
 	m.user_id = nil
 }
 
-// SetUints sets the "uints" field.
-func (m *OrderMutation) SetUints(u uint32) {
-	m.uints = &u
-	m.adduints = nil
+// SetUnits sets the "units" field.
+func (m *OrderMutation) SetUnits(u uint32) {
+	m.units = &u
+	m.addunits = nil
 }
 
-// Uints returns the value of the "uints" field in the mutation.
-func (m *OrderMutation) Uints() (r uint32, exists bool) {
-	v := m.uints
+// Units returns the value of the "units" field in the mutation.
+func (m *OrderMutation) Units() (r uint32, exists bool) {
+	v := m.units
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUints returns the old "uints" field's value of the Order entity.
+// OldUnits returns the old "units" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldUints(ctx context.Context) (v uint32, err error) {
+func (m *OrderMutation) OldUnits(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldUints is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldUnits is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldUints requires an ID field in the mutation")
+		return v, fmt.Errorf("OldUnits requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUints: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnits: %w", err)
 	}
-	return oldValue.Uints, nil
+	return oldValue.Units, nil
 }
 
-// AddUints adds u to the "uints" field.
-func (m *OrderMutation) AddUints(u uint32) {
-	if m.adduints != nil {
-		*m.adduints += u
+// AddUnits adds u to the "units" field.
+func (m *OrderMutation) AddUnits(u uint32) {
+	if m.addunits != nil {
+		*m.addunits += u
 	} else {
-		m.adduints = &u
+		m.addunits = &u
 	}
 }
 
-// AddedUints returns the value that was added to the "uints" field in this mutation.
-func (m *OrderMutation) AddedUints() (r uint32, exists bool) {
-	v := m.adduints
+// AddedUnits returns the value that was added to the "units" field in this mutation.
+func (m *OrderMutation) AddedUnits() (r uint32, exists bool) {
+	v := m.addunits
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetUints resets all changes to the "uints" field.
-func (m *OrderMutation) ResetUints() {
-	m.uints = nil
-	m.adduints = nil
+// ResetUnits resets all changes to the "units" field.
+func (m *OrderMutation) ResetUnits() {
+	m.units = nil
+	m.addunits = nil
 }
 
 // SetDiscount sets the "discount" field.
@@ -2075,13 +2076,13 @@ func (m *OrderMutation) ResetDiscount() {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (m *OrderMutation) SetSpecialReductionAmount(u uint32) {
+func (m *OrderMutation) SetSpecialReductionAmount(u uint64) {
 	m.special_reduction_amount = &u
 	m.addspecial_reduction_amount = nil
 }
 
 // SpecialReductionAmount returns the value of the "special_reduction_amount" field in the mutation.
-func (m *OrderMutation) SpecialReductionAmount() (r uint32, exists bool) {
+func (m *OrderMutation) SpecialReductionAmount() (r uint64, exists bool) {
 	v := m.special_reduction_amount
 	if v == nil {
 		return
@@ -2092,7 +2093,7 @@ func (m *OrderMutation) SpecialReductionAmount() (r uint32, exists bool) {
 // OldSpecialReductionAmount returns the old "special_reduction_amount" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldSpecialReductionAmount(ctx context.Context) (v uint32, err error) {
+func (m *OrderMutation) OldSpecialReductionAmount(ctx context.Context) (v uint64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldSpecialReductionAmount is only allowed on UpdateOne operations")
 	}
@@ -2107,7 +2108,7 @@ func (m *OrderMutation) OldSpecialReductionAmount(ctx context.Context) (v uint32
 }
 
 // AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (m *OrderMutation) AddSpecialReductionAmount(u uint32) {
+func (m *OrderMutation) AddSpecialReductionAmount(u uint64) {
 	if m.addspecial_reduction_amount != nil {
 		*m.addspecial_reduction_amount += u
 	} else {
@@ -2116,7 +2117,7 @@ func (m *OrderMutation) AddSpecialReductionAmount(u uint32) {
 }
 
 // AddedSpecialReductionAmount returns the value that was added to the "special_reduction_amount" field in this mutation.
-func (m *OrderMutation) AddedSpecialReductionAmount() (r uint32, exists bool) {
+func (m *OrderMutation) AddedSpecialReductionAmount() (r uint64, exists bool) {
 	v := m.addspecial_reduction_amount
 	if v == nil {
 		return
@@ -2538,6 +2539,42 @@ func (m *OrderMutation) ResetGasEnd() {
 	m.addgas_end = nil
 }
 
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (m *OrderMutation) SetGasPayIds(u []uuid.UUID) {
+	m.gas_pay_ids = &u
+}
+
+// GasPayIds returns the value of the "gas_pay_ids" field in the mutation.
+func (m *OrderMutation) GasPayIds() (r []uuid.UUID, exists bool) {
+	v := m.gas_pay_ids
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGasPayIds returns the old "gas_pay_ids" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldGasPayIds(ctx context.Context) (v []uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGasPayIds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGasPayIds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGasPayIds: %w", err)
+	}
+	return oldValue.GasPayIds, nil
+}
+
+// ResetGasPayIds resets all changes to the "gas_pay_ids" field.
+func (m *OrderMutation) ResetGasPayIds() {
+	m.gas_pay_ids = nil
+}
+
 // SetCouponID sets the "coupon_id" field.
 func (m *OrderMutation) SetCouponID(u uuid.UUID) {
 	m.coupon_id = &u
@@ -2761,7 +2798,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 18)
+	fields := make([]string, 0, 19)
 	if m.good_id != nil {
 		fields = append(fields, order.FieldGoodID)
 	}
@@ -2771,8 +2808,8 @@ func (m *OrderMutation) Fields() []string {
 	if m.user_id != nil {
 		fields = append(fields, order.FieldUserID)
 	}
-	if m.uints != nil {
-		fields = append(fields, order.FieldUints)
+	if m.units != nil {
+		fields = append(fields, order.FieldUnits)
 	}
 	if m.discount != nil {
 		fields = append(fields, order.FieldDiscount)
@@ -2804,6 +2841,9 @@ func (m *OrderMutation) Fields() []string {
 	if m.gas_end != nil {
 		fields = append(fields, order.FieldGasEnd)
 	}
+	if m.gas_pay_ids != nil {
+		fields = append(fields, order.FieldGasPayIds)
+	}
 	if m.coupon_id != nil {
 		fields = append(fields, order.FieldCouponID)
 	}
@@ -2830,8 +2870,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case order.FieldUserID:
 		return m.UserID()
-	case order.FieldUints:
-		return m.Uints()
+	case order.FieldUnits:
+		return m.Units()
 	case order.FieldDiscount:
 		return m.Discount()
 	case order.FieldSpecialReductionAmount:
@@ -2852,6 +2892,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.GasStart()
 	case order.FieldGasEnd:
 		return m.GasEnd()
+	case order.FieldGasPayIds:
+		return m.GasPayIds()
 	case order.FieldCouponID:
 		return m.CouponID()
 	case order.FieldCreateAt:
@@ -2875,8 +2917,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldAppID(ctx)
 	case order.FieldUserID:
 		return m.OldUserID(ctx)
-	case order.FieldUints:
-		return m.OldUints(ctx)
+	case order.FieldUnits:
+		return m.OldUnits(ctx)
 	case order.FieldDiscount:
 		return m.OldDiscount(ctx)
 	case order.FieldSpecialReductionAmount:
@@ -2897,6 +2939,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldGasStart(ctx)
 	case order.FieldGasEnd:
 		return m.OldGasEnd(ctx)
+	case order.FieldGasPayIds:
+		return m.OldGasPayIds(ctx)
 	case order.FieldCouponID:
 		return m.OldCouponID(ctx)
 	case order.FieldCreateAt:
@@ -2935,12 +2979,12 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
-	case order.FieldUints:
+	case order.FieldUnits:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUints(v)
+		m.SetUnits(v)
 		return nil
 	case order.FieldDiscount:
 		v, ok := value.(uint32)
@@ -2950,7 +2994,7 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		m.SetDiscount(v)
 		return nil
 	case order.FieldSpecialReductionAmount:
-		v, ok := value.(uint32)
+		v, ok := value.(uint64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3012,6 +3056,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetGasEnd(v)
 		return nil
+	case order.FieldGasPayIds:
+		v, ok := value.([]uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGasPayIds(v)
+		return nil
 	case order.FieldCouponID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
@@ -3048,8 +3099,8 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *OrderMutation) AddedFields() []string {
 	var fields []string
-	if m.adduints != nil {
-		fields = append(fields, order.FieldUints)
+	if m.addunits != nil {
+		fields = append(fields, order.FieldUnits)
 	}
 	if m.adddiscount != nil {
 		fields = append(fields, order.FieldDiscount)
@@ -3092,8 +3143,8 @@ func (m *OrderMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case order.FieldUints:
-		return m.AddedUints()
+	case order.FieldUnits:
+		return m.AddedUnits()
 	case order.FieldDiscount:
 		return m.AddedDiscount()
 	case order.FieldSpecialReductionAmount:
@@ -3125,12 +3176,12 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *OrderMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case order.FieldUints:
+	case order.FieldUnits:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddUints(v)
+		m.AddUnits(v)
 		return nil
 	case order.FieldDiscount:
 		v, ok := value.(uint32)
@@ -3140,7 +3191,7 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 		m.AddDiscount(v)
 		return nil
 	case order.FieldSpecialReductionAmount:
-		v, ok := value.(uint32)
+		v, ok := value.(uint64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3245,8 +3296,8 @@ func (m *OrderMutation) ResetField(name string) error {
 	case order.FieldUserID:
 		m.ResetUserID()
 		return nil
-	case order.FieldUints:
-		m.ResetUints()
+	case order.FieldUnits:
+		m.ResetUnits()
 		return nil
 	case order.FieldDiscount:
 		m.ResetDiscount()
@@ -3277,6 +3328,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldGasEnd:
 		m.ResetGasEnd()
+		return nil
+	case order.FieldGasPayIds:
+		m.ResetGasPayIds()
 		return nil
 	case order.FieldCouponID:
 		m.ResetCouponID()

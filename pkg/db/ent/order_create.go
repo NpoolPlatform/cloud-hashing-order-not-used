@@ -41,9 +41,9 @@ func (oc *OrderCreate) SetUserID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
-// SetUints sets the "uints" field.
-func (oc *OrderCreate) SetUints(u uint32) *OrderCreate {
-	oc.mutation.SetUints(u)
+// SetUnits sets the "units" field.
+func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
+	oc.mutation.SetUnits(u)
 	return oc
 }
 
@@ -62,13 +62,13 @@ func (oc *OrderCreate) SetNillableDiscount(u *uint32) *OrderCreate {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (oc *OrderCreate) SetSpecialReductionAmount(u uint32) *OrderCreate {
+func (oc *OrderCreate) SetSpecialReductionAmount(u uint64) *OrderCreate {
 	oc.mutation.SetSpecialReductionAmount(u)
 	return oc
 }
 
 // SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableSpecialReductionAmount(u *uint32) *OrderCreate {
+func (oc *OrderCreate) SetNillableSpecialReductionAmount(u *uint64) *OrderCreate {
 	if u != nil {
 		oc.SetSpecialReductionAmount(*u)
 	}
@@ -136,6 +136,12 @@ func (oc *OrderCreate) SetGasStart(u uint32) *OrderCreate {
 // SetGasEnd sets the "gas_end" field.
 func (oc *OrderCreate) SetGasEnd(u uint32) *OrderCreate {
 	oc.mutation.SetGasEnd(u)
+	return oc
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (oc *OrderCreate) SetGasPayIds(u []uuid.UUID) *OrderCreate {
+	oc.mutation.SetGasPayIds(u)
 	return oc
 }
 
@@ -309,8 +315,8 @@ func (oc *OrderCreate) check() error {
 	if _, ok := oc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "user_id"`)}
 	}
-	if _, ok := oc.mutation.Uints(); !ok {
-		return &ValidationError{Name: "uints", err: errors.New(`ent: missing required field "uints"`)}
+	if _, ok := oc.mutation.Units(); !ok {
+		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "units"`)}
 	}
 	if _, ok := oc.mutation.Discount(); !ok {
 		return &ValidationError{Name: "discount", err: errors.New(`ent: missing required field "discount"`)}
@@ -346,6 +352,9 @@ func (oc *OrderCreate) check() error {
 	}
 	if _, ok := oc.mutation.GasEnd(); !ok {
 		return &ValidationError{Name: "gas_end", err: errors.New(`ent: missing required field "gas_end"`)}
+	}
+	if _, ok := oc.mutation.GasPayIds(); !ok {
+		return &ValidationError{Name: "gas_pay_ids", err: errors.New(`ent: missing required field "gas_pay_ids"`)}
 	}
 	if _, ok := oc.mutation.CouponID(); !ok {
 		return &ValidationError{Name: "coupon_id", err: errors.New(`ent: missing required field "coupon_id"`)}
@@ -416,13 +425,13 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 		})
 		_node.UserID = value
 	}
-	if value, ok := oc.mutation.Uints(); ok {
+	if value, ok := oc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: order.FieldUints,
+			Column: order.FieldUnits,
 		})
-		_node.Uints = value
+		_node.Units = value
 	}
 	if value, ok := oc.mutation.Discount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -434,7 +443,7 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := oc.mutation.SpecialReductionAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUint64,
 			Value:  value,
 			Column: order.FieldSpecialReductionAmount,
 		})
@@ -503,6 +512,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldGasEnd,
 		})
 		_node.GasEnd = value
+	}
+	if value, ok := oc.mutation.GasPayIds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldGasPayIds,
+		})
+		_node.GasPayIds = value
 	}
 	if value, ok := oc.mutation.CouponID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -626,15 +643,15 @@ func (u *OrderUpsert) UpdateUserID() *OrderUpsert {
 	return u
 }
 
-// SetUints sets the "uints" field.
-func (u *OrderUpsert) SetUints(v uint32) *OrderUpsert {
-	u.Set(order.FieldUints, v)
+// SetUnits sets the "units" field.
+func (u *OrderUpsert) SetUnits(v uint32) *OrderUpsert {
+	u.Set(order.FieldUnits, v)
 	return u
 }
 
-// UpdateUints sets the "uints" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateUints() *OrderUpsert {
-	u.SetExcluded(order.FieldUints)
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUnits() *OrderUpsert {
+	u.SetExcluded(order.FieldUnits)
 	return u
 }
 
@@ -651,7 +668,7 @@ func (u *OrderUpsert) UpdateDiscount() *OrderUpsert {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsert) SetSpecialReductionAmount(v uint32) *OrderUpsert {
+func (u *OrderUpsert) SetSpecialReductionAmount(v uint64) *OrderUpsert {
 	u.Set(order.FieldSpecialReductionAmount, v)
 	return u
 }
@@ -755,6 +772,18 @@ func (u *OrderUpsert) SetGasEnd(v uint32) *OrderUpsert {
 // UpdateGasEnd sets the "gas_end" field to the value that was provided on create.
 func (u *OrderUpsert) UpdateGasEnd() *OrderUpsert {
 	u.SetExcluded(order.FieldGasEnd)
+	return u
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (u *OrderUpsert) SetGasPayIds(v []uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldGasPayIds, v)
+	return u
+}
+
+// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateGasPayIds() *OrderUpsert {
+	u.SetExcluded(order.FieldGasPayIds)
 	return u
 }
 
@@ -898,17 +927,17 @@ func (u *OrderUpsertOne) UpdateUserID() *OrderUpsertOne {
 	})
 }
 
-// SetUints sets the "uints" field.
-func (u *OrderUpsertOne) SetUints(v uint32) *OrderUpsertOne {
+// SetUnits sets the "units" field.
+func (u *OrderUpsertOne) SetUnits(v uint32) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetUints(v)
+		s.SetUnits(v)
 	})
 }
 
-// UpdateUints sets the "uints" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateUints() *OrderUpsertOne {
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUnits() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateUints()
+		s.UpdateUnits()
 	})
 }
 
@@ -927,7 +956,7 @@ func (u *OrderUpsertOne) UpdateDiscount() *OrderUpsertOne {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsertOne) SetSpecialReductionAmount(v uint32) *OrderUpsertOne {
+func (u *OrderUpsertOne) SetSpecialReductionAmount(v uint64) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.SetSpecialReductionAmount(v)
 	})
@@ -1049,6 +1078,20 @@ func (u *OrderUpsertOne) SetGasEnd(v uint32) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateGasEnd() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateGasEnd()
+	})
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (u *OrderUpsertOne) SetGasPayIds(v []uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetGasPayIds(v)
+	})
+}
+
+// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateGasPayIds() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateGasPayIds()
 	})
 }
 
@@ -1366,17 +1409,17 @@ func (u *OrderUpsertBulk) UpdateUserID() *OrderUpsertBulk {
 	})
 }
 
-// SetUints sets the "uints" field.
-func (u *OrderUpsertBulk) SetUints(v uint32) *OrderUpsertBulk {
+// SetUnits sets the "units" field.
+func (u *OrderUpsertBulk) SetUnits(v uint32) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetUints(v)
+		s.SetUnits(v)
 	})
 }
 
-// UpdateUints sets the "uints" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateUints() *OrderUpsertBulk {
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUnits() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateUints()
+		s.UpdateUnits()
 	})
 }
 
@@ -1395,7 +1438,7 @@ func (u *OrderUpsertBulk) UpdateDiscount() *OrderUpsertBulk {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsertBulk) SetSpecialReductionAmount(v uint32) *OrderUpsertBulk {
+func (u *OrderUpsertBulk) SetSpecialReductionAmount(v uint64) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.SetSpecialReductionAmount(v)
 	})
@@ -1517,6 +1560,20 @@ func (u *OrderUpsertBulk) SetGasEnd(v uint32) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateGasEnd() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateGasEnd()
+	})
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (u *OrderUpsertBulk) SetGasPayIds(v []uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetGasPayIds(v)
+	})
+}
+
+// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateGasPayIds() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateGasPayIds()
 	})
 }
 

@@ -112,10 +112,10 @@ func UserID(v uuid.UUID) predicate.Order {
 	})
 }
 
-// Uints applies equality check predicate on the "uints" field. It's identical to UintsEQ.
-func Uints(v uint32) predicate.Order {
+// Units applies equality check predicate on the "units" field. It's identical to UnitsEQ.
+func Units(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUints), v))
+		s.Where(sql.EQ(s.C(FieldUnits), v))
 	})
 }
 
@@ -127,7 +127,7 @@ func Discount(v uint32) predicate.Order {
 }
 
 // SpecialReductionAmount applies equality check predicate on the "special_reduction_amount" field. It's identical to SpecialReductionAmountEQ.
-func SpecialReductionAmount(v uint32) predicate.Order {
+func SpecialReductionAmount(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSpecialReductionAmount), v))
 	})
@@ -438,22 +438,22 @@ func UserIDLTE(v uuid.UUID) predicate.Order {
 	})
 }
 
-// UintsEQ applies the EQ predicate on the "uints" field.
-func UintsEQ(v uint32) predicate.Order {
+// UnitsEQ applies the EQ predicate on the "units" field.
+func UnitsEQ(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUints), v))
+		s.Where(sql.EQ(s.C(FieldUnits), v))
 	})
 }
 
-// UintsNEQ applies the NEQ predicate on the "uints" field.
-func UintsNEQ(v uint32) predicate.Order {
+// UnitsNEQ applies the NEQ predicate on the "units" field.
+func UnitsNEQ(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUints), v))
+		s.Where(sql.NEQ(s.C(FieldUnits), v))
 	})
 }
 
-// UintsIn applies the In predicate on the "uints" field.
-func UintsIn(vs ...uint32) predicate.Order {
+// UnitsIn applies the In predicate on the "units" field.
+func UnitsIn(vs ...uint32) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -465,12 +465,12 @@ func UintsIn(vs ...uint32) predicate.Order {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldUints), v...))
+		s.Where(sql.In(s.C(FieldUnits), v...))
 	})
 }
 
-// UintsNotIn applies the NotIn predicate on the "uints" field.
-func UintsNotIn(vs ...uint32) predicate.Order {
+// UnitsNotIn applies the NotIn predicate on the "units" field.
+func UnitsNotIn(vs ...uint32) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -482,35 +482,35 @@ func UintsNotIn(vs ...uint32) predicate.Order {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldUints), v...))
+		s.Where(sql.NotIn(s.C(FieldUnits), v...))
 	})
 }
 
-// UintsGT applies the GT predicate on the "uints" field.
-func UintsGT(v uint32) predicate.Order {
+// UnitsGT applies the GT predicate on the "units" field.
+func UnitsGT(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldUints), v))
+		s.Where(sql.GT(s.C(FieldUnits), v))
 	})
 }
 
-// UintsGTE applies the GTE predicate on the "uints" field.
-func UintsGTE(v uint32) predicate.Order {
+// UnitsGTE applies the GTE predicate on the "units" field.
+func UnitsGTE(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldUints), v))
+		s.Where(sql.GTE(s.C(FieldUnits), v))
 	})
 }
 
-// UintsLT applies the LT predicate on the "uints" field.
-func UintsLT(v uint32) predicate.Order {
+// UnitsLT applies the LT predicate on the "units" field.
+func UnitsLT(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldUints), v))
+		s.Where(sql.LT(s.C(FieldUnits), v))
 	})
 }
 
-// UintsLTE applies the LTE predicate on the "uints" field.
-func UintsLTE(v uint32) predicate.Order {
+// UnitsLTE applies the LTE predicate on the "units" field.
+func UnitsLTE(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldUints), v))
+		s.Where(sql.LTE(s.C(FieldUnits), v))
 	})
 }
 
@@ -591,21 +591,21 @@ func DiscountLTE(v uint32) predicate.Order {
 }
 
 // SpecialReductionAmountEQ applies the EQ predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountEQ(v uint32) predicate.Order {
+func SpecialReductionAmountEQ(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSpecialReductionAmount), v))
 	})
 }
 
 // SpecialReductionAmountNEQ applies the NEQ predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountNEQ(v uint32) predicate.Order {
+func SpecialReductionAmountNEQ(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldSpecialReductionAmount), v))
 	})
 }
 
 // SpecialReductionAmountIn applies the In predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountIn(vs ...uint32) predicate.Order {
+func SpecialReductionAmountIn(vs ...uint64) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -622,7 +622,7 @@ func SpecialReductionAmountIn(vs ...uint32) predicate.Order {
 }
 
 // SpecialReductionAmountNotIn applies the NotIn predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountNotIn(vs ...uint32) predicate.Order {
+func SpecialReductionAmountNotIn(vs ...uint64) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -639,28 +639,28 @@ func SpecialReductionAmountNotIn(vs ...uint32) predicate.Order {
 }
 
 // SpecialReductionAmountGT applies the GT predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountGT(v uint32) predicate.Order {
+func SpecialReductionAmountGT(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldSpecialReductionAmount), v))
 	})
 }
 
 // SpecialReductionAmountGTE applies the GTE predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountGTE(v uint32) predicate.Order {
+func SpecialReductionAmountGTE(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldSpecialReductionAmount), v))
 	})
 }
 
 // SpecialReductionAmountLT applies the LT predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountLT(v uint32) predicate.Order {
+func SpecialReductionAmountLT(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldSpecialReductionAmount), v))
 	})
 }
 
 // SpecialReductionAmountLTE applies the LTE predicate on the "special_reduction_amount" field.
-func SpecialReductionAmountLTE(v uint32) predicate.Order {
+func SpecialReductionAmountLTE(v uint64) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldSpecialReductionAmount), v))
 	})

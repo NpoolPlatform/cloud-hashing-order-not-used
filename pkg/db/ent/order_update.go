@@ -45,16 +45,16 @@ func (ou *OrderUpdate) SetUserID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
-// SetUints sets the "uints" field.
-func (ou *OrderUpdate) SetUints(u uint32) *OrderUpdate {
-	ou.mutation.ResetUints()
-	ou.mutation.SetUints(u)
+// SetUnits sets the "units" field.
+func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
+	ou.mutation.ResetUnits()
+	ou.mutation.SetUnits(u)
 	return ou
 }
 
-// AddUints adds u to the "uints" field.
-func (ou *OrderUpdate) AddUints(u uint32) *OrderUpdate {
-	ou.mutation.AddUints(u)
+// AddUnits adds u to the "units" field.
+func (ou *OrderUpdate) AddUnits(u uint32) *OrderUpdate {
+	ou.mutation.AddUnits(u)
 	return ou
 }
 
@@ -80,14 +80,14 @@ func (ou *OrderUpdate) AddDiscount(u uint32) *OrderUpdate {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (ou *OrderUpdate) SetSpecialReductionAmount(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) SetSpecialReductionAmount(u uint64) *OrderUpdate {
 	ou.mutation.ResetSpecialReductionAmount()
 	ou.mutation.SetSpecialReductionAmount(u)
 	return ou
 }
 
 // SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableSpecialReductionAmount(u *uint32) *OrderUpdate {
+func (ou *OrderUpdate) SetNillableSpecialReductionAmount(u *uint64) *OrderUpdate {
 	if u != nil {
 		ou.SetSpecialReductionAmount(*u)
 	}
@@ -95,7 +95,7 @@ func (ou *OrderUpdate) SetNillableSpecialReductionAmount(u *uint32) *OrderUpdate
 }
 
 // AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (ou *OrderUpdate) AddSpecialReductionAmount(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddSpecialReductionAmount(u uint64) *OrderUpdate {
 	ou.mutation.AddSpecialReductionAmount(u)
 	return ou
 }
@@ -203,6 +203,12 @@ func (ou *OrderUpdate) SetGasEnd(u uint32) *OrderUpdate {
 // AddGasEnd adds u to the "gas_end" field.
 func (ou *OrderUpdate) AddGasEnd(u uint32) *OrderUpdate {
 	ou.mutation.AddGasEnd(u)
+	return ou
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (ou *OrderUpdate) SetGasPayIds(u []uuid.UUID) *OrderUpdate {
+	ou.mutation.SetGasPayIds(u)
 	return ou
 }
 
@@ -390,18 +396,18 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUserID,
 		})
 	}
-	if value, ok := ou.mutation.Uints(); ok {
+	if value, ok := ou.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: order.FieldUints,
+			Column: order.FieldUnits,
 		})
 	}
-	if value, ok := ou.mutation.AddedUints(); ok {
+	if value, ok := ou.mutation.AddedUnits(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: order.FieldUints,
+			Column: order.FieldUnits,
 		})
 	}
 	if value, ok := ou.mutation.Discount(); ok {
@@ -420,14 +426,14 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ou.mutation.SpecialReductionAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUint64,
 			Value:  value,
 			Column: order.FieldSpecialReductionAmount,
 		})
 	}
 	if value, ok := ou.mutation.AddedSpecialReductionAmount(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUint64,
 			Value:  value,
 			Column: order.FieldSpecialReductionAmount,
 		})
@@ -530,6 +536,13 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldGasEnd,
 		})
 	}
+	if value, ok := ou.mutation.GasPayIds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldGasPayIds,
+		})
+	}
 	if value, ok := ou.mutation.CouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -616,16 +629,16 @@ func (ouo *OrderUpdateOne) SetUserID(u uuid.UUID) *OrderUpdateOne {
 	return ouo
 }
 
-// SetUints sets the "uints" field.
-func (ouo *OrderUpdateOne) SetUints(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetUints()
-	ouo.mutation.SetUints(u)
+// SetUnits sets the "units" field.
+func (ouo *OrderUpdateOne) SetUnits(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetUnits()
+	ouo.mutation.SetUnits(u)
 	return ouo
 }
 
-// AddUints adds u to the "uints" field.
-func (ouo *OrderUpdateOne) AddUints(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddUints(u)
+// AddUnits adds u to the "units" field.
+func (ouo *OrderUpdateOne) AddUnits(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddUnits(u)
 	return ouo
 }
 
@@ -651,14 +664,14 @@ func (ouo *OrderUpdateOne) AddDiscount(u uint32) *OrderUpdateOne {
 }
 
 // SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (ouo *OrderUpdateOne) SetSpecialReductionAmount(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) SetSpecialReductionAmount(u uint64) *OrderUpdateOne {
 	ouo.mutation.ResetSpecialReductionAmount()
 	ouo.mutation.SetSpecialReductionAmount(u)
 	return ouo
 }
 
 // SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableSpecialReductionAmount(u *uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) SetNillableSpecialReductionAmount(u *uint64) *OrderUpdateOne {
 	if u != nil {
 		ouo.SetSpecialReductionAmount(*u)
 	}
@@ -666,7 +679,7 @@ func (ouo *OrderUpdateOne) SetNillableSpecialReductionAmount(u *uint32) *OrderUp
 }
 
 // AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (ouo *OrderUpdateOne) AddSpecialReductionAmount(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddSpecialReductionAmount(u uint64) *OrderUpdateOne {
 	ouo.mutation.AddSpecialReductionAmount(u)
 	return ouo
 }
@@ -774,6 +787,12 @@ func (ouo *OrderUpdateOne) SetGasEnd(u uint32) *OrderUpdateOne {
 // AddGasEnd adds u to the "gas_end" field.
 func (ouo *OrderUpdateOne) AddGasEnd(u uint32) *OrderUpdateOne {
 	ouo.mutation.AddGasEnd(u)
+	return ouo
+}
+
+// SetGasPayIds sets the "gas_pay_ids" field.
+func (ouo *OrderUpdateOne) SetGasPayIds(u []uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetGasPayIds(u)
 	return ouo
 }
 
@@ -985,18 +1004,18 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Column: order.FieldUserID,
 		})
 	}
-	if value, ok := ouo.mutation.Uints(); ok {
+	if value, ok := ouo.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: order.FieldUints,
+			Column: order.FieldUnits,
 		})
 	}
-	if value, ok := ouo.mutation.AddedUints(); ok {
+	if value, ok := ouo.mutation.AddedUnits(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: order.FieldUints,
+			Column: order.FieldUnits,
 		})
 	}
 	if value, ok := ouo.mutation.Discount(); ok {
@@ -1015,14 +1034,14 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 	}
 	if value, ok := ouo.mutation.SpecialReductionAmount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUint64,
 			Value:  value,
 			Column: order.FieldSpecialReductionAmount,
 		})
 	}
 	if value, ok := ouo.mutation.AddedSpecialReductionAmount(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUint64,
 			Value:  value,
 			Column: order.FieldSpecialReductionAmount,
 		})
@@ -1123,6 +1142,13 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: order.FieldGasEnd,
+		})
+	}
+	if value, ok := ouo.mutation.GasPayIds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldGasPayIds,
 		})
 	}
 	if value, ok := ouo.mutation.CouponID(); ok {

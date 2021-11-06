@@ -63,7 +63,7 @@ func init() {
 	// orderDescSpecialReductionAmount is the schema descriptor for special_reduction_amount field.
 	orderDescSpecialReductionAmount := orderFields[6].Descriptor()
 	// order.DefaultSpecialReductionAmount holds the default value on creation for the special_reduction_amount field.
-	order.DefaultSpecialReductionAmount = orderDescSpecialReductionAmount.Default.(uint32)
+	order.DefaultSpecialReductionAmount = orderDescSpecialReductionAmount.Default.(uint64)
 	// orderDescCompensateMinutes is the schema descriptor for compensate_minutes field.
 	orderDescCompensateMinutes := orderFields[11].Descriptor()
 	// order.DefaultCompensateMinutes holds the default value on creation for the compensate_minutes field.
@@ -73,17 +73,17 @@ func init() {
 	// order.DefaultCompensateElapsedMinutes holds the default value on creation for the compensate_elapsed_minutes field.
 	order.DefaultCompensateElapsedMinutes = orderDescCompensateElapsedMinutes.Default.(uint32)
 	// orderDescCreateAt is the schema descriptor for create_at field.
-	orderDescCreateAt := orderFields[16].Descriptor()
+	orderDescCreateAt := orderFields[17].Descriptor()
 	// order.DefaultCreateAt holds the default value on creation for the create_at field.
 	order.DefaultCreateAt = orderDescCreateAt.Default.(func() uint32)
 	// orderDescUpdateAt is the schema descriptor for update_at field.
-	orderDescUpdateAt := orderFields[17].Descriptor()
+	orderDescUpdateAt := orderFields[18].Descriptor()
 	// order.DefaultUpdateAt holds the default value on creation for the update_at field.
 	order.DefaultUpdateAt = orderDescUpdateAt.Default.(func() uint32)
 	// order.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	order.UpdateDefaultUpdateAt = orderDescUpdateAt.UpdateDefault.(func() uint32)
 	// orderDescDeleteAt is the schema descriptor for delete_at field.
-	orderDescDeleteAt := orderFields[18].Descriptor()
+	orderDescDeleteAt := orderFields[19].Descriptor()
 	// order.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	order.DefaultDeleteAt = orderDescDeleteAt.Default.(func() uint32)
 	// orderDescID is the schema descriptor for id field.

@@ -19,8 +19,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldUints holds the string denoting the uints field in the database.
-	FieldUints = "uints"
+	// FieldUnits holds the string denoting the units field in the database.
+	FieldUnits = "units"
 	// FieldDiscount holds the string denoting the discount field in the database.
 	FieldDiscount = "discount"
 	// FieldSpecialReductionAmount holds the string denoting the special_reduction_amount field in the database.
@@ -41,6 +41,8 @@ const (
 	FieldGasStart = "gas_start"
 	// FieldGasEnd holds the string denoting the gas_end field in the database.
 	FieldGasEnd = "gas_end"
+	// FieldGasPayIds holds the string denoting the gas_pay_ids field in the database.
+	FieldGasPayIds = "gas_pay_ids"
 	// FieldCouponID holds the string denoting the coupon_id field in the database.
 	FieldCouponID = "coupon_id"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
@@ -59,7 +61,7 @@ var Columns = []string{
 	FieldGoodID,
 	FieldAppID,
 	FieldUserID,
-	FieldUints,
+	FieldUnits,
 	FieldDiscount,
 	FieldSpecialReductionAmount,
 	FieldState,
@@ -70,6 +72,7 @@ var Columns = []string{
 	FieldCompensateElapsedMinutes,
 	FieldGasStart,
 	FieldGasEnd,
+	FieldGasPayIds,
 	FieldCouponID,
 	FieldCreateAt,
 	FieldUpdateAt,
@@ -90,7 +93,7 @@ var (
 	// DefaultDiscount holds the default value on creation for the "discount" field.
 	DefaultDiscount uint32
 	// DefaultSpecialReductionAmount holds the default value on creation for the "special_reduction_amount" field.
-	DefaultSpecialReductionAmount uint32
+	DefaultSpecialReductionAmount uint64
 	// DefaultCompensateMinutes holds the default value on creation for the "compensate_minutes" field.
 	DefaultCompensateMinutes uint32
 	// DefaultCompensateElapsedMinutes holds the default value on creation for the "compensate_elapsed_minutes" field.
