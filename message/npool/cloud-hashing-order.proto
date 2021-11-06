@@ -68,6 +68,12 @@ service CloudHashingOrder {
             body: "*"
         };
     }
+    rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/order/detail"
+            body: "*"
+        };
+    }
     rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse) {
         option (google.api.http) = {
             post: "/v1/update/order"
@@ -89,6 +95,25 @@ service CloudHashingOrder {
     rpc GetOrdersByGood(GetOrdersByGoodRequest) returns (GetOrdersByGoodResponse) {
         option (google.api.http) = {
             post: "/v1/get/orders/by/good"
+            body: "*"
+        };
+    }
+
+    rpc GetOrdersDetailByAppUser(GetOrdersDetailByAppUserRequest) returns (GetOrdersDetailByAppUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/detail/by/app/user"
+            body: "*"
+        };
+    }
+    rpc GetOrdersDetailByApp(GetOrdersDetailByAppRequest) returns (GetOrdersDetailByAppResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/detail/by/app"
+            body: "*"
+        };
+    }
+    rpc GetOrdersDetailByGood(GetOrdersDetailByGoodRequest) returns (GetOrdersDetailByGoodResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/detail/by/good"
             body: "*"
         };
     }
@@ -234,4 +259,57 @@ message GetOrdersByGoodRequest {
 
 message GetOrdersByGoodResponse {
     repeated Order Infos = 2600;
+}
+
+message OrderDetail {
+    string ID = 2700;
+    string GoodID = 2701;
+    uint32 Units = 2702;
+    uint32 Discount = 2703;
+    double SpecialReductionAmount = 2704;
+    string UserID = 2705;
+    string AppID = 2706;
+    string State = 2707;
+    GoodPaying GoodPaying = 2708;
+    uint32 Start = 2709;
+    uint32 End = 2710;
+    uint32 CompensateMinutes = 2711;
+    uint32 CompensateElapsedMinutes = 2712;
+    uint32 GasStart = 2713;
+    uint32 GasEnd = 2714;
+    repeated GasPaying GasPayings = 2715;
+    string CouponID = 2716;
+}
+
+message GetOrderDetailRequest {
+    string ID = 2800;
+}
+
+message GetOrderDetailResponse {
+    OrderDetail Info = 2900;
+}
+
+message GetOrdersDetailByAppUserRequest {
+    string AppID = 3000;
+    string UserID = 3001;
+}
+
+message GetOrdersDetailByAppUserResponse {
+    repeated OrderDetail Infos = 3100;
+}
+
+message GetOrdersDetailByAppRequest {
+    string AppID = 3200;
+}
+
+message GetOrdersDetailByAppResponse {
+    repeated OrderDetail Infos = 3300;
+}
+
+message GetOrdersDetailByGoodRequest {
+    string GoodID = 3400;
+}
+
+message GetOrdersDetailByGoodResponse {
+    repeated OrderDetail Infos = 3500;
 }
