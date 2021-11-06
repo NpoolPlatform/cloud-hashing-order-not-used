@@ -86,7 +86,7 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetSpecialReductionAmount(price.VisualPriceToDBPrice(in.GetInfo().GetSpecialReductionAmount())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
-		SetState(order.State(in.GetInfo().GetState())).
+		SetState("created").
 		SetGoodPayID(uuid.MustParse(in.GetInfo().GetGoodPayID())).
 		SetStart(in.GetInfo().GetStart()).
 		SetEnd(in.GetInfo().GetEnd()).

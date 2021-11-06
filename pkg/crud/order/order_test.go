@@ -69,11 +69,11 @@ func TestCRUD(t *testing.T) {
 		CouponID:                 uuid.New().String(),
 	}
 
-	order.State = "created"
-
 	resp, err := Create(context.Background(), &npool.CreateOrderRequest{
 		Info: &order,
 	})
+
+	order.State = "created"
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{})
 		assertOrder(t, resp.Info, &order)
