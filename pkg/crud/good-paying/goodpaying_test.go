@@ -31,6 +31,10 @@ func assertGoodPaying(t *testing.T, actual, expected *npool.GoodPaying) {
 }
 
 func TestCRUD(t *testing.T) {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+		return
+	}
+
 	goodPaying := npool.GoodPaying{
 		OrderID:   uuid.New().String(),
 		AccountID: uuid.New().String(),
