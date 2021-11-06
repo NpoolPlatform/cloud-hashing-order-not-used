@@ -125,6 +125,36 @@ func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrd
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
 
+	oldGasPayIDs, err := db.Client().
+		Order.
+		Query().
+		Where(
+			order.And(
+				order.ID(id),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query old gas pay id: %v", err)
+	}
+	if len(oldGasPayIDs) == 0 {
+		return nil, xerrors.Errorf("empty gas pay ids")
+	}
+
+	for _, oldGasPayID := range oldGasPayIDs[0].GasPayIds {
+		found := false
+		for _, gasPayID := range gasPayIDs {
+			if gasPayID == oldGasPayID {
+				found = true
+				break
+			}
+		}
+		if found {
+			continue
+		}
+		gasPayIDs = append(gasPayIDs, oldGasPayID)
+	}
+
 	info, err := db.Client().
 		Order.
 		UpdateOneID(id).
