@@ -7,8 +7,11 @@ import (
 	"fmt"
 	"sync"
 
-	"entgo.io/ent"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/predicate"
+	"github.com/google/uuid"
+
+	"entgo.io/ent"
 )
 
 const (
@@ -26,13 +29,43 @@ const (
 // OrderMutation represents an operation that mutates the Order nodes in the graph.
 type OrderMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Order, error)
-	predicates    []predicate.Order
+	op                            Op
+	typ                           string
+	id                            *uuid.UUID
+	good_id                       *uuid.UUID
+	app_id                        *uuid.UUID
+	user_id                       *uuid.UUID
+	uints                         *uint32
+	adduints                      *uint32
+	discount                      *uint32
+	adddiscount                   *uint32
+	special_reduction_amount      *uint32
+	addspecial_reduction_amount   *uint32
+	state                         *order.State
+	good_pay_id                   *uuid.UUID
+	start                         *uint32
+	addstart                      *uint32
+	end                           *uint32
+	addend                        *uint32
+	compensate_minutes            *uint32
+	addcompensate_minutes         *uint32
+	compensate_elapsed_minutes    *uint32
+	addcompensate_elapsed_minutes *uint32
+	gas_start                     *uint32
+	addgas_start                  *uint32
+	gas_end                       *uint32
+	addgas_end                    *uint32
+	coupon_id                     *uuid.UUID
+	create_at                     *uint32
+	addcreate_at                  *uint32
+	update_at                     *uint32
+	addupdate_at                  *uint32
+	delete_at                     *uint32
+	adddelete_at                  *uint32
+	clearedFields                 map[string]struct{}
+	done                          bool
+	oldValue                      func(context.Context) (*Order, error)
+	predicates                    []predicate.Order
 }
 
 var _ ent.Mutation = (*OrderMutation)(nil)
@@ -55,7 +88,7 @@ func newOrderMutation(c config, op Op, opts ...orderOption) *OrderMutation {
 }
 
 // withOrderID sets the ID field of the mutation.
-func withOrderID(id int) orderOption {
+func withOrderID(id uuid.UUID) orderOption {
 	return func(m *OrderMutation) {
 		var (
 			err   error
@@ -105,13 +138,907 @@ func (m OrderMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Order entities.
+func (m *OrderMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *OrderMutation) ID() (id int, exists bool) {
+func (m *OrderMutation) ID() (id uuid.UUID, exists bool) {
 	if m.id == nil {
 		return
 	}
 	return *m.id, true
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *OrderMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *OrderMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *OrderMutation) ResetGoodID() {
+	m.good_id = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *OrderMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *OrderMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *OrderMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *OrderMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *OrderMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *OrderMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetUints sets the "uints" field.
+func (m *OrderMutation) SetUints(u uint32) {
+	m.uints = &u
+	m.adduints = nil
+}
+
+// Uints returns the value of the "uints" field in the mutation.
+func (m *OrderMutation) Uints() (r uint32, exists bool) {
+	v := m.uints
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUints returns the old "uints" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldUints(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldUints is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldUints requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUints: %w", err)
+	}
+	return oldValue.Uints, nil
+}
+
+// AddUints adds u to the "uints" field.
+func (m *OrderMutation) AddUints(u uint32) {
+	if m.adduints != nil {
+		*m.adduints += u
+	} else {
+		m.adduints = &u
+	}
+}
+
+// AddedUints returns the value that was added to the "uints" field in this mutation.
+func (m *OrderMutation) AddedUints() (r uint32, exists bool) {
+	v := m.adduints
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUints resets all changes to the "uints" field.
+func (m *OrderMutation) ResetUints() {
+	m.uints = nil
+	m.adduints = nil
+}
+
+// SetDiscount sets the "discount" field.
+func (m *OrderMutation) SetDiscount(u uint32) {
+	m.discount = &u
+	m.adddiscount = nil
+}
+
+// Discount returns the value of the "discount" field in the mutation.
+func (m *OrderMutation) Discount() (r uint32, exists bool) {
+	v := m.discount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDiscount returns the old "discount" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldDiscount(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDiscount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDiscount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDiscount: %w", err)
+	}
+	return oldValue.Discount, nil
+}
+
+// AddDiscount adds u to the "discount" field.
+func (m *OrderMutation) AddDiscount(u uint32) {
+	if m.adddiscount != nil {
+		*m.adddiscount += u
+	} else {
+		m.adddiscount = &u
+	}
+}
+
+// AddedDiscount returns the value that was added to the "discount" field in this mutation.
+func (m *OrderMutation) AddedDiscount() (r uint32, exists bool) {
+	v := m.adddiscount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDiscount resets all changes to the "discount" field.
+func (m *OrderMutation) ResetDiscount() {
+	m.discount = nil
+	m.adddiscount = nil
+}
+
+// SetSpecialReductionAmount sets the "special_reduction_amount" field.
+func (m *OrderMutation) SetSpecialReductionAmount(u uint32) {
+	m.special_reduction_amount = &u
+	m.addspecial_reduction_amount = nil
+}
+
+// SpecialReductionAmount returns the value of the "special_reduction_amount" field in the mutation.
+func (m *OrderMutation) SpecialReductionAmount() (r uint32, exists bool) {
+	v := m.special_reduction_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSpecialReductionAmount returns the old "special_reduction_amount" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldSpecialReductionAmount(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldSpecialReductionAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldSpecialReductionAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSpecialReductionAmount: %w", err)
+	}
+	return oldValue.SpecialReductionAmount, nil
+}
+
+// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
+func (m *OrderMutation) AddSpecialReductionAmount(u uint32) {
+	if m.addspecial_reduction_amount != nil {
+		*m.addspecial_reduction_amount += u
+	} else {
+		m.addspecial_reduction_amount = &u
+	}
+}
+
+// AddedSpecialReductionAmount returns the value that was added to the "special_reduction_amount" field in this mutation.
+func (m *OrderMutation) AddedSpecialReductionAmount() (r uint32, exists bool) {
+	v := m.addspecial_reduction_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSpecialReductionAmount resets all changes to the "special_reduction_amount" field.
+func (m *OrderMutation) ResetSpecialReductionAmount() {
+	m.special_reduction_amount = nil
+	m.addspecial_reduction_amount = nil
+}
+
+// SetState sets the "state" field.
+func (m *OrderMutation) SetState(o order.State) {
+	m.state = &o
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *OrderMutation) State() (r order.State, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldState(ctx context.Context) (v order.State, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *OrderMutation) ResetState() {
+	m.state = nil
+}
+
+// SetGoodPayID sets the "good_pay_id" field.
+func (m *OrderMutation) SetGoodPayID(u uuid.UUID) {
+	m.good_pay_id = &u
+}
+
+// GoodPayID returns the value of the "good_pay_id" field in the mutation.
+func (m *OrderMutation) GoodPayID() (r uuid.UUID, exists bool) {
+	v := m.good_pay_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodPayID returns the old "good_pay_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldGoodPayID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGoodPayID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGoodPayID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodPayID: %w", err)
+	}
+	return oldValue.GoodPayID, nil
+}
+
+// ResetGoodPayID resets all changes to the "good_pay_id" field.
+func (m *OrderMutation) ResetGoodPayID() {
+	m.good_pay_id = nil
+}
+
+// SetStart sets the "start" field.
+func (m *OrderMutation) SetStart(u uint32) {
+	m.start = &u
+	m.addstart = nil
+}
+
+// Start returns the value of the "start" field in the mutation.
+func (m *OrderMutation) Start() (r uint32, exists bool) {
+	v := m.start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStart returns the old "start" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldStart(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStart: %w", err)
+	}
+	return oldValue.Start, nil
+}
+
+// AddStart adds u to the "start" field.
+func (m *OrderMutation) AddStart(u uint32) {
+	if m.addstart != nil {
+		*m.addstart += u
+	} else {
+		m.addstart = &u
+	}
+}
+
+// AddedStart returns the value that was added to the "start" field in this mutation.
+func (m *OrderMutation) AddedStart() (r uint32, exists bool) {
+	v := m.addstart
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStart resets all changes to the "start" field.
+func (m *OrderMutation) ResetStart() {
+	m.start = nil
+	m.addstart = nil
+}
+
+// SetEnd sets the "end" field.
+func (m *OrderMutation) SetEnd(u uint32) {
+	m.end = &u
+	m.addend = nil
+}
+
+// End returns the value of the "end" field in the mutation.
+func (m *OrderMutation) End() (r uint32, exists bool) {
+	v := m.end
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnd returns the old "end" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldEnd(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEnd is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEnd requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnd: %w", err)
+	}
+	return oldValue.End, nil
+}
+
+// AddEnd adds u to the "end" field.
+func (m *OrderMutation) AddEnd(u uint32) {
+	if m.addend != nil {
+		*m.addend += u
+	} else {
+		m.addend = &u
+	}
+}
+
+// AddedEnd returns the value that was added to the "end" field in this mutation.
+func (m *OrderMutation) AddedEnd() (r uint32, exists bool) {
+	v := m.addend
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEnd resets all changes to the "end" field.
+func (m *OrderMutation) ResetEnd() {
+	m.end = nil
+	m.addend = nil
+}
+
+// SetCompensateMinutes sets the "compensate_minutes" field.
+func (m *OrderMutation) SetCompensateMinutes(u uint32) {
+	m.compensate_minutes = &u
+	m.addcompensate_minutes = nil
+}
+
+// CompensateMinutes returns the value of the "compensate_minutes" field in the mutation.
+func (m *OrderMutation) CompensateMinutes() (r uint32, exists bool) {
+	v := m.compensate_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCompensateMinutes returns the old "compensate_minutes" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldCompensateMinutes(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCompensateMinutes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCompensateMinutes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCompensateMinutes: %w", err)
+	}
+	return oldValue.CompensateMinutes, nil
+}
+
+// AddCompensateMinutes adds u to the "compensate_minutes" field.
+func (m *OrderMutation) AddCompensateMinutes(u uint32) {
+	if m.addcompensate_minutes != nil {
+		*m.addcompensate_minutes += u
+	} else {
+		m.addcompensate_minutes = &u
+	}
+}
+
+// AddedCompensateMinutes returns the value that was added to the "compensate_minutes" field in this mutation.
+func (m *OrderMutation) AddedCompensateMinutes() (r uint32, exists bool) {
+	v := m.addcompensate_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCompensateMinutes resets all changes to the "compensate_minutes" field.
+func (m *OrderMutation) ResetCompensateMinutes() {
+	m.compensate_minutes = nil
+	m.addcompensate_minutes = nil
+}
+
+// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
+func (m *OrderMutation) SetCompensateElapsedMinutes(u uint32) {
+	m.compensate_elapsed_minutes = &u
+	m.addcompensate_elapsed_minutes = nil
+}
+
+// CompensateElapsedMinutes returns the value of the "compensate_elapsed_minutes" field in the mutation.
+func (m *OrderMutation) CompensateElapsedMinutes() (r uint32, exists bool) {
+	v := m.compensate_elapsed_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCompensateElapsedMinutes returns the old "compensate_elapsed_minutes" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldCompensateElapsedMinutes(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCompensateElapsedMinutes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCompensateElapsedMinutes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCompensateElapsedMinutes: %w", err)
+	}
+	return oldValue.CompensateElapsedMinutes, nil
+}
+
+// AddCompensateElapsedMinutes adds u to the "compensate_elapsed_minutes" field.
+func (m *OrderMutation) AddCompensateElapsedMinutes(u uint32) {
+	if m.addcompensate_elapsed_minutes != nil {
+		*m.addcompensate_elapsed_minutes += u
+	} else {
+		m.addcompensate_elapsed_minutes = &u
+	}
+}
+
+// AddedCompensateElapsedMinutes returns the value that was added to the "compensate_elapsed_minutes" field in this mutation.
+func (m *OrderMutation) AddedCompensateElapsedMinutes() (r uint32, exists bool) {
+	v := m.addcompensate_elapsed_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCompensateElapsedMinutes resets all changes to the "compensate_elapsed_minutes" field.
+func (m *OrderMutation) ResetCompensateElapsedMinutes() {
+	m.compensate_elapsed_minutes = nil
+	m.addcompensate_elapsed_minutes = nil
+}
+
+// SetGasStart sets the "gas_start" field.
+func (m *OrderMutation) SetGasStart(u uint32) {
+	m.gas_start = &u
+	m.addgas_start = nil
+}
+
+// GasStart returns the value of the "gas_start" field in the mutation.
+func (m *OrderMutation) GasStart() (r uint32, exists bool) {
+	v := m.gas_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGasStart returns the old "gas_start" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldGasStart(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGasStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGasStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGasStart: %w", err)
+	}
+	return oldValue.GasStart, nil
+}
+
+// AddGasStart adds u to the "gas_start" field.
+func (m *OrderMutation) AddGasStart(u uint32) {
+	if m.addgas_start != nil {
+		*m.addgas_start += u
+	} else {
+		m.addgas_start = &u
+	}
+}
+
+// AddedGasStart returns the value that was added to the "gas_start" field in this mutation.
+func (m *OrderMutation) AddedGasStart() (r uint32, exists bool) {
+	v := m.addgas_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetGasStart resets all changes to the "gas_start" field.
+func (m *OrderMutation) ResetGasStart() {
+	m.gas_start = nil
+	m.addgas_start = nil
+}
+
+// SetGasEnd sets the "gas_end" field.
+func (m *OrderMutation) SetGasEnd(u uint32) {
+	m.gas_end = &u
+	m.addgas_end = nil
+}
+
+// GasEnd returns the value of the "gas_end" field in the mutation.
+func (m *OrderMutation) GasEnd() (r uint32, exists bool) {
+	v := m.gas_end
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGasEnd returns the old "gas_end" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldGasEnd(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGasEnd is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGasEnd requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGasEnd: %w", err)
+	}
+	return oldValue.GasEnd, nil
+}
+
+// AddGasEnd adds u to the "gas_end" field.
+func (m *OrderMutation) AddGasEnd(u uint32) {
+	if m.addgas_end != nil {
+		*m.addgas_end += u
+	} else {
+		m.addgas_end = &u
+	}
+}
+
+// AddedGasEnd returns the value that was added to the "gas_end" field in this mutation.
+func (m *OrderMutation) AddedGasEnd() (r uint32, exists bool) {
+	v := m.addgas_end
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetGasEnd resets all changes to the "gas_end" field.
+func (m *OrderMutation) ResetGasEnd() {
+	m.gas_end = nil
+	m.addgas_end = nil
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (m *OrderMutation) SetCouponID(u uuid.UUID) {
+	m.coupon_id = &u
+}
+
+// CouponID returns the value of the "coupon_id" field in the mutation.
+func (m *OrderMutation) CouponID() (r uuid.UUID, exists bool) {
+	v := m.coupon_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCouponID returns the old "coupon_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldCouponID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCouponID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCouponID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCouponID: %w", err)
+	}
+	return oldValue.CouponID, nil
+}
+
+// ResetCouponID resets all changes to the "coupon_id" field.
+func (m *OrderMutation) ResetCouponID() {
+	m.coupon_id = nil
+}
+
+// SetCreateAt sets the "create_at" field.
+func (m *OrderMutation) SetCreateAt(u uint32) {
+	m.create_at = &u
+	m.addcreate_at = nil
+}
+
+// CreateAt returns the value of the "create_at" field in the mutation.
+func (m *OrderMutation) CreateAt() (r uint32, exists bool) {
+	v := m.create_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateAt returns the old "create_at" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCreateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCreateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
+	}
+	return oldValue.CreateAt, nil
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (m *OrderMutation) AddCreateAt(u uint32) {
+	if m.addcreate_at != nil {
+		*m.addcreate_at += u
+	} else {
+		m.addcreate_at = &u
+	}
+}
+
+// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
+func (m *OrderMutation) AddedCreateAt() (r uint32, exists bool) {
+	v := m.addcreate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreateAt resets all changes to the "create_at" field.
+func (m *OrderMutation) ResetCreateAt() {
+	m.create_at = nil
+	m.addcreate_at = nil
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (m *OrderMutation) SetUpdateAt(u uint32) {
+	m.update_at = &u
+	m.addupdate_at = nil
+}
+
+// UpdateAt returns the value of the "update_at" field in the mutation.
+func (m *OrderMutation) UpdateAt() (r uint32, exists bool) {
+	v := m.update_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateAt returns the old "update_at" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldUpdateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldUpdateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
+	}
+	return oldValue.UpdateAt, nil
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (m *OrderMutation) AddUpdateAt(u uint32) {
+	if m.addupdate_at != nil {
+		*m.addupdate_at += u
+	} else {
+		m.addupdate_at = &u
+	}
+}
+
+// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
+func (m *OrderMutation) AddedUpdateAt() (r uint32, exists bool) {
+	v := m.addupdate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdateAt resets all changes to the "update_at" field.
+func (m *OrderMutation) ResetUpdateAt() {
+	m.update_at = nil
+	m.addupdate_at = nil
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (m *OrderMutation) SetDeleteAt(u uint32) {
+	m.delete_at = &u
+	m.adddelete_at = nil
+}
+
+// DeleteAt returns the value of the "delete_at" field in the mutation.
+func (m *OrderMutation) DeleteAt() (r uint32, exists bool) {
+	v := m.delete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeleteAt returns the old "delete_at" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDeleteAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDeleteAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeleteAt: %w", err)
+	}
+	return oldValue.DeleteAt, nil
+}
+
+// AddDeleteAt adds u to the "delete_at" field.
+func (m *OrderMutation) AddDeleteAt(u uint32) {
+	if m.adddelete_at != nil {
+		*m.adddelete_at += u
+	} else {
+		m.adddelete_at = &u
+	}
+}
+
+// AddedDeleteAt returns the value that was added to the "delete_at" field in this mutation.
+func (m *OrderMutation) AddedDeleteAt() (r uint32, exists bool) {
+	v := m.adddelete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeleteAt resets all changes to the "delete_at" field.
+func (m *OrderMutation) ResetDeleteAt() {
+	m.delete_at = nil
+	m.adddelete_at = nil
 }
 
 // Where appends a list predicates to the OrderMutation builder.
@@ -133,7 +1060,61 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 18)
+	if m.good_id != nil {
+		fields = append(fields, order.FieldGoodID)
+	}
+	if m.app_id != nil {
+		fields = append(fields, order.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, order.FieldUserID)
+	}
+	if m.uints != nil {
+		fields = append(fields, order.FieldUints)
+	}
+	if m.discount != nil {
+		fields = append(fields, order.FieldDiscount)
+	}
+	if m.special_reduction_amount != nil {
+		fields = append(fields, order.FieldSpecialReductionAmount)
+	}
+	if m.state != nil {
+		fields = append(fields, order.FieldState)
+	}
+	if m.good_pay_id != nil {
+		fields = append(fields, order.FieldGoodPayID)
+	}
+	if m.start != nil {
+		fields = append(fields, order.FieldStart)
+	}
+	if m.end != nil {
+		fields = append(fields, order.FieldEnd)
+	}
+	if m.compensate_minutes != nil {
+		fields = append(fields, order.FieldCompensateMinutes)
+	}
+	if m.compensate_elapsed_minutes != nil {
+		fields = append(fields, order.FieldCompensateElapsedMinutes)
+	}
+	if m.gas_start != nil {
+		fields = append(fields, order.FieldGasStart)
+	}
+	if m.gas_end != nil {
+		fields = append(fields, order.FieldGasEnd)
+	}
+	if m.coupon_id != nil {
+		fields = append(fields, order.FieldCouponID)
+	}
+	if m.create_at != nil {
+		fields = append(fields, order.FieldCreateAt)
+	}
+	if m.update_at != nil {
+		fields = append(fields, order.FieldUpdateAt)
+	}
+	if m.delete_at != nil {
+		fields = append(fields, order.FieldDeleteAt)
+	}
 	return fields
 }
 
@@ -141,6 +1122,44 @@ func (m *OrderMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *OrderMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case order.FieldGoodID:
+		return m.GoodID()
+	case order.FieldAppID:
+		return m.AppID()
+	case order.FieldUserID:
+		return m.UserID()
+	case order.FieldUints:
+		return m.Uints()
+	case order.FieldDiscount:
+		return m.Discount()
+	case order.FieldSpecialReductionAmount:
+		return m.SpecialReductionAmount()
+	case order.FieldState:
+		return m.State()
+	case order.FieldGoodPayID:
+		return m.GoodPayID()
+	case order.FieldStart:
+		return m.Start()
+	case order.FieldEnd:
+		return m.End()
+	case order.FieldCompensateMinutes:
+		return m.CompensateMinutes()
+	case order.FieldCompensateElapsedMinutes:
+		return m.CompensateElapsedMinutes()
+	case order.FieldGasStart:
+		return m.GasStart()
+	case order.FieldGasEnd:
+		return m.GasEnd()
+	case order.FieldCouponID:
+		return m.CouponID()
+	case order.FieldCreateAt:
+		return m.CreateAt()
+	case order.FieldUpdateAt:
+		return m.UpdateAt()
+	case order.FieldDeleteAt:
+		return m.DeleteAt()
+	}
 	return nil, false
 }
 
@@ -148,6 +1167,44 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case order.FieldGoodID:
+		return m.OldGoodID(ctx)
+	case order.FieldAppID:
+		return m.OldAppID(ctx)
+	case order.FieldUserID:
+		return m.OldUserID(ctx)
+	case order.FieldUints:
+		return m.OldUints(ctx)
+	case order.FieldDiscount:
+		return m.OldDiscount(ctx)
+	case order.FieldSpecialReductionAmount:
+		return m.OldSpecialReductionAmount(ctx)
+	case order.FieldState:
+		return m.OldState(ctx)
+	case order.FieldGoodPayID:
+		return m.OldGoodPayID(ctx)
+	case order.FieldStart:
+		return m.OldStart(ctx)
+	case order.FieldEnd:
+		return m.OldEnd(ctx)
+	case order.FieldCompensateMinutes:
+		return m.OldCompensateMinutes(ctx)
+	case order.FieldCompensateElapsedMinutes:
+		return m.OldCompensateElapsedMinutes(ctx)
+	case order.FieldGasStart:
+		return m.OldGasStart(ctx)
+	case order.FieldGasEnd:
+		return m.OldGasEnd(ctx)
+	case order.FieldCouponID:
+		return m.OldCouponID(ctx)
+	case order.FieldCreateAt:
+		return m.OldCreateAt(ctx)
+	case order.FieldUpdateAt:
+		return m.OldUpdateAt(ctx)
+	case order.FieldDeleteAt:
+		return m.OldDeleteAt(ctx)
+	}
 	return nil, fmt.Errorf("unknown Order field %s", name)
 }
 
@@ -156,6 +1213,132 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 // type.
 func (m *OrderMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case order.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
+		return nil
+	case order.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case order.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case order.FieldUints:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUints(v)
+		return nil
+	case order.FieldDiscount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDiscount(v)
+		return nil
+	case order.FieldSpecialReductionAmount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSpecialReductionAmount(v)
+		return nil
+	case order.FieldState:
+		v, ok := value.(order.State)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case order.FieldGoodPayID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodPayID(v)
+		return nil
+	case order.FieldStart:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStart(v)
+		return nil
+	case order.FieldEnd:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnd(v)
+		return nil
+	case order.FieldCompensateMinutes:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCompensateMinutes(v)
+		return nil
+	case order.FieldCompensateElapsedMinutes:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCompensateElapsedMinutes(v)
+		return nil
+	case order.FieldGasStart:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGasStart(v)
+		return nil
+	case order.FieldGasEnd:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGasEnd(v)
+		return nil
+	case order.FieldCouponID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCouponID(v)
+		return nil
+	case order.FieldCreateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateAt(v)
+		return nil
+	case order.FieldUpdateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateAt(v)
+		return nil
+	case order.FieldDeleteAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeleteAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
 }
@@ -163,13 +1346,76 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *OrderMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.adduints != nil {
+		fields = append(fields, order.FieldUints)
+	}
+	if m.adddiscount != nil {
+		fields = append(fields, order.FieldDiscount)
+	}
+	if m.addspecial_reduction_amount != nil {
+		fields = append(fields, order.FieldSpecialReductionAmount)
+	}
+	if m.addstart != nil {
+		fields = append(fields, order.FieldStart)
+	}
+	if m.addend != nil {
+		fields = append(fields, order.FieldEnd)
+	}
+	if m.addcompensate_minutes != nil {
+		fields = append(fields, order.FieldCompensateMinutes)
+	}
+	if m.addcompensate_elapsed_minutes != nil {
+		fields = append(fields, order.FieldCompensateElapsedMinutes)
+	}
+	if m.addgas_start != nil {
+		fields = append(fields, order.FieldGasStart)
+	}
+	if m.addgas_end != nil {
+		fields = append(fields, order.FieldGasEnd)
+	}
+	if m.addcreate_at != nil {
+		fields = append(fields, order.FieldCreateAt)
+	}
+	if m.addupdate_at != nil {
+		fields = append(fields, order.FieldUpdateAt)
+	}
+	if m.adddelete_at != nil {
+		fields = append(fields, order.FieldDeleteAt)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case order.FieldUints:
+		return m.AddedUints()
+	case order.FieldDiscount:
+		return m.AddedDiscount()
+	case order.FieldSpecialReductionAmount:
+		return m.AddedSpecialReductionAmount()
+	case order.FieldStart:
+		return m.AddedStart()
+	case order.FieldEnd:
+		return m.AddedEnd()
+	case order.FieldCompensateMinutes:
+		return m.AddedCompensateMinutes()
+	case order.FieldCompensateElapsedMinutes:
+		return m.AddedCompensateElapsedMinutes()
+	case order.FieldGasStart:
+		return m.AddedGasStart()
+	case order.FieldGasEnd:
+		return m.AddedGasEnd()
+	case order.FieldCreateAt:
+		return m.AddedCreateAt()
+	case order.FieldUpdateAt:
+		return m.AddedUpdateAt()
+	case order.FieldDeleteAt:
+		return m.AddedDeleteAt()
+	}
 	return nil, false
 }
 
@@ -177,6 +1423,92 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *OrderMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case order.FieldUints:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUints(v)
+		return nil
+	case order.FieldDiscount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDiscount(v)
+		return nil
+	case order.FieldSpecialReductionAmount:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSpecialReductionAmount(v)
+		return nil
+	case order.FieldStart:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStart(v)
+		return nil
+	case order.FieldEnd:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEnd(v)
+		return nil
+	case order.FieldCompensateMinutes:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCompensateMinutes(v)
+		return nil
+	case order.FieldCompensateElapsedMinutes:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCompensateElapsedMinutes(v)
+		return nil
+	case order.FieldGasStart:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddGasStart(v)
+		return nil
+	case order.FieldGasEnd:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddGasEnd(v)
+		return nil
+	case order.FieldCreateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreateAt(v)
+		return nil
+	case order.FieldUpdateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdateAt(v)
+		return nil
+	case order.FieldDeleteAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeleteAt(v)
+		return nil
+	}
 	return fmt.Errorf("unknown Order numeric field %s", name)
 }
 
@@ -202,6 +1534,62 @@ func (m *OrderMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *OrderMutation) ResetField(name string) error {
+	switch name {
+	case order.FieldGoodID:
+		m.ResetGoodID()
+		return nil
+	case order.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case order.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case order.FieldUints:
+		m.ResetUints()
+		return nil
+	case order.FieldDiscount:
+		m.ResetDiscount()
+		return nil
+	case order.FieldSpecialReductionAmount:
+		m.ResetSpecialReductionAmount()
+		return nil
+	case order.FieldState:
+		m.ResetState()
+		return nil
+	case order.FieldGoodPayID:
+		m.ResetGoodPayID()
+		return nil
+	case order.FieldStart:
+		m.ResetStart()
+		return nil
+	case order.FieldEnd:
+		m.ResetEnd()
+		return nil
+	case order.FieldCompensateMinutes:
+		m.ResetCompensateMinutes()
+		return nil
+	case order.FieldCompensateElapsedMinutes:
+		m.ResetCompensateElapsedMinutes()
+		return nil
+	case order.FieldGasStart:
+		m.ResetGasStart()
+		return nil
+	case order.FieldGasEnd:
+		m.ResetGasEnd()
+		return nil
+	case order.FieldCouponID:
+		m.ResetCouponID()
+		return nil
+	case order.FieldCreateAt:
+		m.ResetCreateAt()
+		return nil
+	case order.FieldUpdateAt:
+		m.ResetUpdateAt()
+		return nil
+	case order.FieldDeleteAt:
+		m.ResetDeleteAt()
+		return nil
+	}
 	return fmt.Errorf("unknown Order field %s", name)
 }
 

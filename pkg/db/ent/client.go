@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/migrate"
+	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 
@@ -161,7 +162,7 @@ func (c *OrderClient) UpdateOne(o *Order) *OrderUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *OrderClient) UpdateOneID(id int) *OrderUpdateOne {
+func (c *OrderClient) UpdateOneID(id uuid.UUID) *OrderUpdateOne {
 	mutation := newOrderMutation(c.config, OpUpdateOne, withOrderID(id))
 	return &OrderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -178,7 +179,7 @@ func (c *OrderClient) DeleteOne(o *Order) *OrderDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *OrderClient) DeleteOneID(id int) *OrderDeleteOne {
+func (c *OrderClient) DeleteOneID(id uuid.UUID) *OrderDeleteOne {
 	builder := c.Delete().Where(order.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -193,12 +194,12 @@ func (c *OrderClient) Query() *OrderQuery {
 }
 
 // Get returns a Order entity by its id.
-func (c *OrderClient) Get(ctx context.Context, id int) (*Order, error) {
+func (c *OrderClient) Get(ctx context.Context, id uuid.UUID) (*Order, error) {
 	return c.Query().Where(order.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *OrderClient) GetX(ctx context.Context, id int) *Order {
+func (c *OrderClient) GetX(ctx context.Context, id uuid.UUID) *Order {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

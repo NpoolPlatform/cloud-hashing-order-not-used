@@ -5,31 +5,32 @@ package order
 import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Order {
+func ID(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Order {
+func IDEQ(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Order {
+func IDNEQ(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Order {
+func IDIn(ids ...uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -46,7 +47,7 @@ func IDIn(ids ...int) predicate.Order {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Order {
+func IDNotIn(ids ...uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -63,30 +64,1489 @@ func IDNotIn(ids ...int) predicate.Order {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Order {
+func IDGT(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Order {
+func IDGTE(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Order {
+func IDLT(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Order {
+func IDLTE(id uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// GoodID applies equality check predicate on the "good_id" field. It's identical to GoodIDEQ.
+func GoodID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodID), v))
+	})
+}
+
+// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
+func AppID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppID), v))
+	})
+}
+
+// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
+func UserID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserID), v))
+	})
+}
+
+// Uints applies equality check predicate on the "uints" field. It's identical to UintsEQ.
+func Uints(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUints), v))
+	})
+}
+
+// Discount applies equality check predicate on the "discount" field. It's identical to DiscountEQ.
+func Discount(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDiscount), v))
+	})
+}
+
+// SpecialReductionAmount applies equality check predicate on the "special_reduction_amount" field. It's identical to SpecialReductionAmountEQ.
+func SpecialReductionAmount(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// GoodPayID applies equality check predicate on the "good_pay_id" field. It's identical to GoodPayIDEQ.
+func GoodPayID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodPayID), v))
+	})
+}
+
+// Start applies equality check predicate on the "start" field. It's identical to StartEQ.
+func Start(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStart), v))
+	})
+}
+
+// End applies equality check predicate on the "end" field. It's identical to EndEQ.
+func End(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnd), v))
+	})
+}
+
+// CompensateMinutes applies equality check predicate on the "compensate_minutes" field. It's identical to CompensateMinutesEQ.
+func CompensateMinutes(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutes applies equality check predicate on the "compensate_elapsed_minutes" field. It's identical to CompensateElapsedMinutesEQ.
+func CompensateElapsedMinutes(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// GasStart applies equality check predicate on the "gas_start" field. It's identical to GasStartEQ.
+func GasStart(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGasStart), v))
+	})
+}
+
+// GasEnd applies equality check predicate on the "gas_end" field. It's identical to GasEndEQ.
+func GasEnd(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGasEnd), v))
+	})
+}
+
+// CouponID applies equality check predicate on the "coupon_id" field. It's identical to CouponIDEQ.
+func CouponID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCouponID), v))
+	})
+}
+
+// CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
+func CreateAt(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// UpdateAt applies equality check predicate on the "update_at" field. It's identical to UpdateAtEQ.
+func UpdateAt(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// DeleteAt applies equality check predicate on the "delete_at" field. It's identical to DeleteAtEQ.
+func DeleteAt(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDeleteAt), v))
+	})
+}
+
+// GoodIDEQ applies the EQ predicate on the "good_id" field.
+func GoodIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDNEQ applies the NEQ predicate on the "good_id" field.
+func GoodIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDIn applies the In predicate on the "good_id" field.
+func GoodIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGoodID), v...))
+	})
+}
+
+// GoodIDNotIn applies the NotIn predicate on the "good_id" field.
+func GoodIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGoodID), v...))
+	})
+}
+
+// GoodIDGT applies the GT predicate on the "good_id" field.
+func GoodIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDGTE applies the GTE predicate on the "good_id" field.
+func GoodIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDLT applies the LT predicate on the "good_id" field.
+func GoodIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGoodID), v))
+	})
+}
+
+// GoodIDLTE applies the LTE predicate on the "good_id" field.
+func GoodIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGoodID), v))
+	})
+}
+
+// AppIDEQ applies the EQ predicate on the "app_id" field.
+func AppIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDNEQ applies the NEQ predicate on the "app_id" field.
+func AppIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDIn applies the In predicate on the "app_id" field.
+func AppIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDNotIn applies the NotIn predicate on the "app_id" field.
+func AppIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDGT applies the GT predicate on the "app_id" field.
+func AppIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDGTE applies the GTE predicate on the "app_id" field.
+func AppIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLT applies the LT predicate on the "app_id" field.
+func AppIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLTE applies the LTE predicate on the "app_id" field.
+func AppIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppID), v))
+	})
+}
+
+// UserIDEQ applies the EQ predicate on the "user_id" field.
+func UserIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDNEQ applies the NEQ predicate on the "user_id" field.
+func UserIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDIn applies the In predicate on the "user_id" field.
+func UserIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUserID), v...))
+	})
+}
+
+// UserIDNotIn applies the NotIn predicate on the "user_id" field.
+func UserIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUserID), v...))
+	})
+}
+
+// UserIDGT applies the GT predicate on the "user_id" field.
+func UserIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDGTE applies the GTE predicate on the "user_id" field.
+func UserIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDLT applies the LT predicate on the "user_id" field.
+func UserIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDLTE applies the LTE predicate on the "user_id" field.
+func UserIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUserID), v))
+	})
+}
+
+// UintsEQ applies the EQ predicate on the "uints" field.
+func UintsEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUints), v))
+	})
+}
+
+// UintsNEQ applies the NEQ predicate on the "uints" field.
+func UintsNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUints), v))
+	})
+}
+
+// UintsIn applies the In predicate on the "uints" field.
+func UintsIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUints), v...))
+	})
+}
+
+// UintsNotIn applies the NotIn predicate on the "uints" field.
+func UintsNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUints), v...))
+	})
+}
+
+// UintsGT applies the GT predicate on the "uints" field.
+func UintsGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUints), v))
+	})
+}
+
+// UintsGTE applies the GTE predicate on the "uints" field.
+func UintsGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUints), v))
+	})
+}
+
+// UintsLT applies the LT predicate on the "uints" field.
+func UintsLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUints), v))
+	})
+}
+
+// UintsLTE applies the LTE predicate on the "uints" field.
+func UintsLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUints), v))
+	})
+}
+
+// DiscountEQ applies the EQ predicate on the "discount" field.
+func DiscountEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDiscount), v))
+	})
+}
+
+// DiscountNEQ applies the NEQ predicate on the "discount" field.
+func DiscountNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDiscount), v))
+	})
+}
+
+// DiscountIn applies the In predicate on the "discount" field.
+func DiscountIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDiscount), v...))
+	})
+}
+
+// DiscountNotIn applies the NotIn predicate on the "discount" field.
+func DiscountNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDiscount), v...))
+	})
+}
+
+// DiscountGT applies the GT predicate on the "discount" field.
+func DiscountGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDiscount), v))
+	})
+}
+
+// DiscountGTE applies the GTE predicate on the "discount" field.
+func DiscountGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDiscount), v))
+	})
+}
+
+// DiscountLT applies the LT predicate on the "discount" field.
+func DiscountLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDiscount), v))
+	})
+}
+
+// DiscountLTE applies the LTE predicate on the "discount" field.
+func DiscountLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDiscount), v))
+	})
+}
+
+// SpecialReductionAmountEQ applies the EQ predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// SpecialReductionAmountNEQ applies the NEQ predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// SpecialReductionAmountIn applies the In predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSpecialReductionAmount), v...))
+	})
+}
+
+// SpecialReductionAmountNotIn applies the NotIn predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSpecialReductionAmount), v...))
+	})
+}
+
+// SpecialReductionAmountGT applies the GT predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// SpecialReductionAmountGTE applies the GTE predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// SpecialReductionAmountLT applies the LT predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// SpecialReductionAmountLTE applies the LTE predicate on the "special_reduction_amount" field.
+func SpecialReductionAmountLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSpecialReductionAmount), v))
+	})
+}
+
+// StateEQ applies the EQ predicate on the "state" field.
+func StateEQ(v State) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldState), v))
+	})
+}
+
+// StateNEQ applies the NEQ predicate on the "state" field.
+func StateNEQ(v State) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldState), v))
+	})
+}
+
+// StateIn applies the In predicate on the "state" field.
+func StateIn(vs ...State) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldState), v...))
+	})
+}
+
+// StateNotIn applies the NotIn predicate on the "state" field.
+func StateNotIn(vs ...State) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldState), v...))
+	})
+}
+
+// GoodPayIDEQ applies the EQ predicate on the "good_pay_id" field.
+func GoodPayIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoodPayID), v))
+	})
+}
+
+// GoodPayIDNEQ applies the NEQ predicate on the "good_pay_id" field.
+func GoodPayIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGoodPayID), v))
+	})
+}
+
+// GoodPayIDIn applies the In predicate on the "good_pay_id" field.
+func GoodPayIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGoodPayID), v...))
+	})
+}
+
+// GoodPayIDNotIn applies the NotIn predicate on the "good_pay_id" field.
+func GoodPayIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGoodPayID), v...))
+	})
+}
+
+// GoodPayIDGT applies the GT predicate on the "good_pay_id" field.
+func GoodPayIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGoodPayID), v))
+	})
+}
+
+// GoodPayIDGTE applies the GTE predicate on the "good_pay_id" field.
+func GoodPayIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGoodPayID), v))
+	})
+}
+
+// GoodPayIDLT applies the LT predicate on the "good_pay_id" field.
+func GoodPayIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGoodPayID), v))
+	})
+}
+
+// GoodPayIDLTE applies the LTE predicate on the "good_pay_id" field.
+func GoodPayIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGoodPayID), v))
+	})
+}
+
+// StartEQ applies the EQ predicate on the "start" field.
+func StartEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldStart), v))
+	})
+}
+
+// StartNEQ applies the NEQ predicate on the "start" field.
+func StartNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldStart), v))
+	})
+}
+
+// StartIn applies the In predicate on the "start" field.
+func StartIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldStart), v...))
+	})
+}
+
+// StartNotIn applies the NotIn predicate on the "start" field.
+func StartNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldStart), v...))
+	})
+}
+
+// StartGT applies the GT predicate on the "start" field.
+func StartGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldStart), v))
+	})
+}
+
+// StartGTE applies the GTE predicate on the "start" field.
+func StartGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldStart), v))
+	})
+}
+
+// StartLT applies the LT predicate on the "start" field.
+func StartLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldStart), v))
+	})
+}
+
+// StartLTE applies the LTE predicate on the "start" field.
+func StartLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldStart), v))
+	})
+}
+
+// EndEQ applies the EQ predicate on the "end" field.
+func EndEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEnd), v))
+	})
+}
+
+// EndNEQ applies the NEQ predicate on the "end" field.
+func EndNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEnd), v))
+	})
+}
+
+// EndIn applies the In predicate on the "end" field.
+func EndIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEnd), v...))
+	})
+}
+
+// EndNotIn applies the NotIn predicate on the "end" field.
+func EndNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEnd), v...))
+	})
+}
+
+// EndGT applies the GT predicate on the "end" field.
+func EndGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEnd), v))
+	})
+}
+
+// EndGTE applies the GTE predicate on the "end" field.
+func EndGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEnd), v))
+	})
+}
+
+// EndLT applies the LT predicate on the "end" field.
+func EndLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEnd), v))
+	})
+}
+
+// EndLTE applies the LTE predicate on the "end" field.
+func EndLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEnd), v))
+	})
+}
+
+// CompensateMinutesEQ applies the EQ predicate on the "compensate_minutes" field.
+func CompensateMinutesEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateMinutesNEQ applies the NEQ predicate on the "compensate_minutes" field.
+func CompensateMinutesNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateMinutesIn applies the In predicate on the "compensate_minutes" field.
+func CompensateMinutesIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCompensateMinutes), v...))
+	})
+}
+
+// CompensateMinutesNotIn applies the NotIn predicate on the "compensate_minutes" field.
+func CompensateMinutesNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCompensateMinutes), v...))
+	})
+}
+
+// CompensateMinutesGT applies the GT predicate on the "compensate_minutes" field.
+func CompensateMinutesGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateMinutesGTE applies the GTE predicate on the "compensate_minutes" field.
+func CompensateMinutesGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateMinutesLT applies the LT predicate on the "compensate_minutes" field.
+func CompensateMinutesLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateMinutesLTE applies the LTE predicate on the "compensate_minutes" field.
+func CompensateMinutesLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCompensateMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesEQ applies the EQ predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesNEQ applies the NEQ predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesIn applies the In predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCompensateElapsedMinutes), v...))
+	})
+}
+
+// CompensateElapsedMinutesNotIn applies the NotIn predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCompensateElapsedMinutes), v...))
+	})
+}
+
+// CompensateElapsedMinutesGT applies the GT predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesGTE applies the GTE predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesLT applies the LT predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// CompensateElapsedMinutesLTE applies the LTE predicate on the "compensate_elapsed_minutes" field.
+func CompensateElapsedMinutesLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCompensateElapsedMinutes), v))
+	})
+}
+
+// GasStartEQ applies the EQ predicate on the "gas_start" field.
+func GasStartEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGasStart), v))
+	})
+}
+
+// GasStartNEQ applies the NEQ predicate on the "gas_start" field.
+func GasStartNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGasStart), v))
+	})
+}
+
+// GasStartIn applies the In predicate on the "gas_start" field.
+func GasStartIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGasStart), v...))
+	})
+}
+
+// GasStartNotIn applies the NotIn predicate on the "gas_start" field.
+func GasStartNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGasStart), v...))
+	})
+}
+
+// GasStartGT applies the GT predicate on the "gas_start" field.
+func GasStartGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGasStart), v))
+	})
+}
+
+// GasStartGTE applies the GTE predicate on the "gas_start" field.
+func GasStartGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGasStart), v))
+	})
+}
+
+// GasStartLT applies the LT predicate on the "gas_start" field.
+func GasStartLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGasStart), v))
+	})
+}
+
+// GasStartLTE applies the LTE predicate on the "gas_start" field.
+func GasStartLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGasStart), v))
+	})
+}
+
+// GasEndEQ applies the EQ predicate on the "gas_end" field.
+func GasEndEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGasEnd), v))
+	})
+}
+
+// GasEndNEQ applies the NEQ predicate on the "gas_end" field.
+func GasEndNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGasEnd), v))
+	})
+}
+
+// GasEndIn applies the In predicate on the "gas_end" field.
+func GasEndIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGasEnd), v...))
+	})
+}
+
+// GasEndNotIn applies the NotIn predicate on the "gas_end" field.
+func GasEndNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGasEnd), v...))
+	})
+}
+
+// GasEndGT applies the GT predicate on the "gas_end" field.
+func GasEndGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGasEnd), v))
+	})
+}
+
+// GasEndGTE applies the GTE predicate on the "gas_end" field.
+func GasEndGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGasEnd), v))
+	})
+}
+
+// GasEndLT applies the LT predicate on the "gas_end" field.
+func GasEndLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGasEnd), v))
+	})
+}
+
+// GasEndLTE applies the LTE predicate on the "gas_end" field.
+func GasEndLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGasEnd), v))
+	})
+}
+
+// CouponIDEQ applies the EQ predicate on the "coupon_id" field.
+func CouponIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCouponID), v))
+	})
+}
+
+// CouponIDNEQ applies the NEQ predicate on the "coupon_id" field.
+func CouponIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCouponID), v))
+	})
+}
+
+// CouponIDIn applies the In predicate on the "coupon_id" field.
+func CouponIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCouponID), v...))
+	})
+}
+
+// CouponIDNotIn applies the NotIn predicate on the "coupon_id" field.
+func CouponIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCouponID), v...))
+	})
+}
+
+// CouponIDGT applies the GT predicate on the "coupon_id" field.
+func CouponIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCouponID), v))
+	})
+}
+
+// CouponIDGTE applies the GTE predicate on the "coupon_id" field.
+func CouponIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCouponID), v))
+	})
+}
+
+// CouponIDLT applies the LT predicate on the "coupon_id" field.
+func CouponIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCouponID), v))
+	})
+}
+
+// CouponIDLTE applies the LTE predicate on the "coupon_id" field.
+func CouponIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCouponID), v))
+	})
+}
+
+// CreateAtEQ applies the EQ predicate on the "create_at" field.
+func CreateAtEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtNEQ applies the NEQ predicate on the "create_at" field.
+func CreateAtNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtIn applies the In predicate on the "create_at" field.
+func CreateAtIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCreateAt), v...))
+	})
+}
+
+// CreateAtNotIn applies the NotIn predicate on the "create_at" field.
+func CreateAtNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCreateAt), v...))
+	})
+}
+
+// CreateAtGT applies the GT predicate on the "create_at" field.
+func CreateAtGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtGTE applies the GTE predicate on the "create_at" field.
+func CreateAtGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtLT applies the LT predicate on the "create_at" field.
+func CreateAtLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtLTE applies the LTE predicate on the "create_at" field.
+func CreateAtLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreateAt), v))
+	})
+}
+
+// UpdateAtEQ applies the EQ predicate on the "update_at" field.
+func UpdateAtEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtNEQ applies the NEQ predicate on the "update_at" field.
+func UpdateAtNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtIn applies the In predicate on the "update_at" field.
+func UpdateAtIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUpdateAt), v...))
+	})
+}
+
+// UpdateAtNotIn applies the NotIn predicate on the "update_at" field.
+func UpdateAtNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUpdateAt), v...))
+	})
+}
+
+// UpdateAtGT applies the GT predicate on the "update_at" field.
+func UpdateAtGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtGTE applies the GTE predicate on the "update_at" field.
+func UpdateAtGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtLT applies the LT predicate on the "update_at" field.
+func UpdateAtLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtLTE applies the LTE predicate on the "update_at" field.
+func UpdateAtLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUpdateAt), v))
+	})
+}
+
+// DeleteAtEQ applies the EQ predicate on the "delete_at" field.
+func DeleteAtEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDeleteAt), v))
+	})
+}
+
+// DeleteAtNEQ applies the NEQ predicate on the "delete_at" field.
+func DeleteAtNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDeleteAt), v))
+	})
+}
+
+// DeleteAtIn applies the In predicate on the "delete_at" field.
+func DeleteAtIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDeleteAt), v...))
+	})
+}
+
+// DeleteAtNotIn applies the NotIn predicate on the "delete_at" field.
+func DeleteAtNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDeleteAt), v...))
+	})
+}
+
+// DeleteAtGT applies the GT predicate on the "delete_at" field.
+func DeleteAtGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDeleteAt), v))
+	})
+}
+
+// DeleteAtGTE applies the GTE predicate on the "delete_at" field.
+func DeleteAtGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDeleteAt), v))
+	})
+}
+
+// DeleteAtLT applies the LT predicate on the "delete_at" field.
+func DeleteAtLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDeleteAt), v))
+	})
+}
+
+// DeleteAtLTE applies the LTE predicate on the "delete_at" field.
+func DeleteAtLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDeleteAt), v))
 	})
 }
 

@@ -8,13 +8,50 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
+	"github.com/google/uuid"
 )
 
 // Order is the model entity for the Order schema.
 type Order struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
+	// GoodID holds the value of the "good_id" field.
+	GoodID uuid.UUID `json:"good_id,omitempty"`
+	// AppID holds the value of the "app_id" field.
+	AppID uuid.UUID `json:"app_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID uuid.UUID `json:"user_id,omitempty"`
+	// Uints holds the value of the "uints" field.
+	Uints uint32 `json:"uints,omitempty"`
+	// Discount holds the value of the "discount" field.
+	Discount uint32 `json:"discount,omitempty"`
+	// SpecialReductionAmount holds the value of the "special_reduction_amount" field.
+	SpecialReductionAmount uint32 `json:"special_reduction_amount,omitempty"`
+	// State holds the value of the "state" field.
+	State order.State `json:"state,omitempty"`
+	// GoodPayID holds the value of the "good_pay_id" field.
+	GoodPayID uuid.UUID `json:"good_pay_id,omitempty"`
+	// Start holds the value of the "start" field.
+	Start uint32 `json:"start,omitempty"`
+	// End holds the value of the "end" field.
+	End uint32 `json:"end,omitempty"`
+	// CompensateMinutes holds the value of the "compensate_minutes" field.
+	CompensateMinutes uint32 `json:"compensate_minutes,omitempty"`
+	// CompensateElapsedMinutes holds the value of the "compensate_elapsed_minutes" field.
+	CompensateElapsedMinutes uint32 `json:"compensate_elapsed_minutes,omitempty"`
+	// GasStart holds the value of the "gas_start" field.
+	GasStart uint32 `json:"gas_start,omitempty"`
+	// GasEnd holds the value of the "gas_end" field.
+	GasEnd uint32 `json:"gas_end,omitempty"`
+	// CouponID holds the value of the "coupon_id" field.
+	CouponID uuid.UUID `json:"coupon_id,omitempty"`
+	// CreateAt holds the value of the "create_at" field.
+	CreateAt uint32 `json:"create_at,omitempty"`
+	// UpdateAt holds the value of the "update_at" field.
+	UpdateAt uint32 `json:"update_at,omitempty"`
+	// DeleteAt holds the value of the "delete_at" field.
+	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -22,8 +59,12 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldID:
+		case order.FieldUints, order.FieldDiscount, order.FieldSpecialReductionAmount, order.FieldStart, order.FieldEnd, order.FieldCompensateMinutes, order.FieldCompensateElapsedMinutes, order.FieldGasStart, order.FieldGasEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
+		case order.FieldState:
+			values[i] = new(sql.NullString)
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldGoodPayID, order.FieldCouponID:
+			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
 		}
@@ -40,11 +81,119 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case order.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				o.ID = *value
 			}
-			o.ID = int(value.Int64)
+		case order.FieldGoodID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field good_id", values[i])
+			} else if value != nil {
+				o.GoodID = *value
+			}
+		case order.FieldAppID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+			} else if value != nil {
+				o.AppID = *value
+			}
+		case order.FieldUserID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value != nil {
+				o.UserID = *value
+			}
+		case order.FieldUints:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field uints", values[i])
+			} else if value.Valid {
+				o.Uints = uint32(value.Int64)
+			}
+		case order.FieldDiscount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field discount", values[i])
+			} else if value.Valid {
+				o.Discount = uint32(value.Int64)
+			}
+		case order.FieldSpecialReductionAmount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field special_reduction_amount", values[i])
+			} else if value.Valid {
+				o.SpecialReductionAmount = uint32(value.Int64)
+			}
+		case order.FieldState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				o.State = order.State(value.String)
+			}
+		case order.FieldGoodPayID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field good_pay_id", values[i])
+			} else if value != nil {
+				o.GoodPayID = *value
+			}
+		case order.FieldStart:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field start", values[i])
+			} else if value.Valid {
+				o.Start = uint32(value.Int64)
+			}
+		case order.FieldEnd:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field end", values[i])
+			} else if value.Valid {
+				o.End = uint32(value.Int64)
+			}
+		case order.FieldCompensateMinutes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field compensate_minutes", values[i])
+			} else if value.Valid {
+				o.CompensateMinutes = uint32(value.Int64)
+			}
+		case order.FieldCompensateElapsedMinutes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field compensate_elapsed_minutes", values[i])
+			} else if value.Valid {
+				o.CompensateElapsedMinutes = uint32(value.Int64)
+			}
+		case order.FieldGasStart:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field gas_start", values[i])
+			} else if value.Valid {
+				o.GasStart = uint32(value.Int64)
+			}
+		case order.FieldGasEnd:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field gas_end", values[i])
+			} else if value.Valid {
+				o.GasEnd = uint32(value.Int64)
+			}
+		case order.FieldCouponID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field coupon_id", values[i])
+			} else if value != nil {
+				o.CouponID = *value
+			}
+		case order.FieldCreateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field create_at", values[i])
+			} else if value.Valid {
+				o.CreateAt = uint32(value.Int64)
+			}
+		case order.FieldUpdateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field update_at", values[i])
+			} else if value.Valid {
+				o.UpdateAt = uint32(value.Int64)
+			}
+		case order.FieldDeleteAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
+			} else if value.Valid {
+				o.DeleteAt = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -73,6 +222,42 @@ func (o *Order) String() string {
 	var builder strings.Builder
 	builder.WriteString("Order(")
 	builder.WriteString(fmt.Sprintf("id=%v", o.ID))
+	builder.WriteString(", good_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.GoodID))
+	builder.WriteString(", app_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.AppID))
+	builder.WriteString(", user_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.UserID))
+	builder.WriteString(", uints=")
+	builder.WriteString(fmt.Sprintf("%v", o.Uints))
+	builder.WriteString(", discount=")
+	builder.WriteString(fmt.Sprintf("%v", o.Discount))
+	builder.WriteString(", special_reduction_amount=")
+	builder.WriteString(fmt.Sprintf("%v", o.SpecialReductionAmount))
+	builder.WriteString(", state=")
+	builder.WriteString(fmt.Sprintf("%v", o.State))
+	builder.WriteString(", good_pay_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.GoodPayID))
+	builder.WriteString(", start=")
+	builder.WriteString(fmt.Sprintf("%v", o.Start))
+	builder.WriteString(", end=")
+	builder.WriteString(fmt.Sprintf("%v", o.End))
+	builder.WriteString(", compensate_minutes=")
+	builder.WriteString(fmt.Sprintf("%v", o.CompensateMinutes))
+	builder.WriteString(", compensate_elapsed_minutes=")
+	builder.WriteString(fmt.Sprintf("%v", o.CompensateElapsedMinutes))
+	builder.WriteString(", gas_start=")
+	builder.WriteString(fmt.Sprintf("%v", o.GasStart))
+	builder.WriteString(", gas_end=")
+	builder.WriteString(fmt.Sprintf("%v", o.GasEnd))
+	builder.WriteString(", coupon_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.CouponID))
+	builder.WriteString(", create_at=")
+	builder.WriteString(fmt.Sprintf("%v", o.CreateAt))
+	builder.WriteString(", update_at=")
+	builder.WriteString(fmt.Sprintf("%v", o.UpdateAt))
+	builder.WriteString(", delete_at=")
+	builder.WriteString(fmt.Sprintf("%v", o.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // OrderUpdate is the builder for updating Order entities.
@@ -26,6 +27,246 @@ func (ou *OrderUpdate) Where(ps ...predicate.Order) *OrderUpdate {
 	return ou
 }
 
+// SetGoodID sets the "good_id" field.
+func (ou *OrderUpdate) SetGoodID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetGoodID(u)
+	return ou
+}
+
+// SetAppID sets the "app_id" field.
+func (ou *OrderUpdate) SetAppID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetAppID(u)
+	return ou
+}
+
+// SetUserID sets the "user_id" field.
+func (ou *OrderUpdate) SetUserID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetUserID(u)
+	return ou
+}
+
+// SetUints sets the "uints" field.
+func (ou *OrderUpdate) SetUints(u uint32) *OrderUpdate {
+	ou.mutation.ResetUints()
+	ou.mutation.SetUints(u)
+	return ou
+}
+
+// AddUints adds u to the "uints" field.
+func (ou *OrderUpdate) AddUints(u uint32) *OrderUpdate {
+	ou.mutation.AddUints(u)
+	return ou
+}
+
+// SetDiscount sets the "discount" field.
+func (ou *OrderUpdate) SetDiscount(u uint32) *OrderUpdate {
+	ou.mutation.ResetDiscount()
+	ou.mutation.SetDiscount(u)
+	return ou
+}
+
+// SetNillableDiscount sets the "discount" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableDiscount(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetDiscount(*u)
+	}
+	return ou
+}
+
+// AddDiscount adds u to the "discount" field.
+func (ou *OrderUpdate) AddDiscount(u uint32) *OrderUpdate {
+	ou.mutation.AddDiscount(u)
+	return ou
+}
+
+// SetSpecialReductionAmount sets the "special_reduction_amount" field.
+func (ou *OrderUpdate) SetSpecialReductionAmount(u uint32) *OrderUpdate {
+	ou.mutation.ResetSpecialReductionAmount()
+	ou.mutation.SetSpecialReductionAmount(u)
+	return ou
+}
+
+// SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableSpecialReductionAmount(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetSpecialReductionAmount(*u)
+	}
+	return ou
+}
+
+// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
+func (ou *OrderUpdate) AddSpecialReductionAmount(u uint32) *OrderUpdate {
+	ou.mutation.AddSpecialReductionAmount(u)
+	return ou
+}
+
+// SetState sets the "state" field.
+func (ou *OrderUpdate) SetState(o order.State) *OrderUpdate {
+	ou.mutation.SetState(o)
+	return ou
+}
+
+// SetGoodPayID sets the "good_pay_id" field.
+func (ou *OrderUpdate) SetGoodPayID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetGoodPayID(u)
+	return ou
+}
+
+// SetStart sets the "start" field.
+func (ou *OrderUpdate) SetStart(u uint32) *OrderUpdate {
+	ou.mutation.ResetStart()
+	ou.mutation.SetStart(u)
+	return ou
+}
+
+// AddStart adds u to the "start" field.
+func (ou *OrderUpdate) AddStart(u uint32) *OrderUpdate {
+	ou.mutation.AddStart(u)
+	return ou
+}
+
+// SetEnd sets the "end" field.
+func (ou *OrderUpdate) SetEnd(u uint32) *OrderUpdate {
+	ou.mutation.ResetEnd()
+	ou.mutation.SetEnd(u)
+	return ou
+}
+
+// AddEnd adds u to the "end" field.
+func (ou *OrderUpdate) AddEnd(u uint32) *OrderUpdate {
+	ou.mutation.AddEnd(u)
+	return ou
+}
+
+// SetCompensateMinutes sets the "compensate_minutes" field.
+func (ou *OrderUpdate) SetCompensateMinutes(u uint32) *OrderUpdate {
+	ou.mutation.ResetCompensateMinutes()
+	ou.mutation.SetCompensateMinutes(u)
+	return ou
+}
+
+// SetNillableCompensateMinutes sets the "compensate_minutes" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableCompensateMinutes(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetCompensateMinutes(*u)
+	}
+	return ou
+}
+
+// AddCompensateMinutes adds u to the "compensate_minutes" field.
+func (ou *OrderUpdate) AddCompensateMinutes(u uint32) *OrderUpdate {
+	ou.mutation.AddCompensateMinutes(u)
+	return ou
+}
+
+// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
+func (ou *OrderUpdate) SetCompensateElapsedMinutes(u uint32) *OrderUpdate {
+	ou.mutation.ResetCompensateElapsedMinutes()
+	ou.mutation.SetCompensateElapsedMinutes(u)
+	return ou
+}
+
+// SetNillableCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableCompensateElapsedMinutes(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetCompensateElapsedMinutes(*u)
+	}
+	return ou
+}
+
+// AddCompensateElapsedMinutes adds u to the "compensate_elapsed_minutes" field.
+func (ou *OrderUpdate) AddCompensateElapsedMinutes(u uint32) *OrderUpdate {
+	ou.mutation.AddCompensateElapsedMinutes(u)
+	return ou
+}
+
+// SetGasStart sets the "gas_start" field.
+func (ou *OrderUpdate) SetGasStart(u uint32) *OrderUpdate {
+	ou.mutation.ResetGasStart()
+	ou.mutation.SetGasStart(u)
+	return ou
+}
+
+// AddGasStart adds u to the "gas_start" field.
+func (ou *OrderUpdate) AddGasStart(u uint32) *OrderUpdate {
+	ou.mutation.AddGasStart(u)
+	return ou
+}
+
+// SetGasEnd sets the "gas_end" field.
+func (ou *OrderUpdate) SetGasEnd(u uint32) *OrderUpdate {
+	ou.mutation.ResetGasEnd()
+	ou.mutation.SetGasEnd(u)
+	return ou
+}
+
+// AddGasEnd adds u to the "gas_end" field.
+func (ou *OrderUpdate) AddGasEnd(u uint32) *OrderUpdate {
+	ou.mutation.AddGasEnd(u)
+	return ou
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (ou *OrderUpdate) SetCouponID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetCouponID(u)
+	return ou
+}
+
+// SetCreateAt sets the "create_at" field.
+func (ou *OrderUpdate) SetCreateAt(u uint32) *OrderUpdate {
+	ou.mutation.ResetCreateAt()
+	ou.mutation.SetCreateAt(u)
+	return ou
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableCreateAt(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetCreateAt(*u)
+	}
+	return ou
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (ou *OrderUpdate) AddCreateAt(u uint32) *OrderUpdate {
+	ou.mutation.AddCreateAt(u)
+	return ou
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (ou *OrderUpdate) SetUpdateAt(u uint32) *OrderUpdate {
+	ou.mutation.ResetUpdateAt()
+	ou.mutation.SetUpdateAt(u)
+	return ou
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (ou *OrderUpdate) AddUpdateAt(u uint32) *OrderUpdate {
+	ou.mutation.AddUpdateAt(u)
+	return ou
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (ou *OrderUpdate) SetDeleteAt(u uint32) *OrderUpdate {
+	ou.mutation.ResetDeleteAt()
+	ou.mutation.SetDeleteAt(u)
+	return ou
+}
+
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableDeleteAt(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetDeleteAt(*u)
+	}
+	return ou
+}
+
+// AddDeleteAt adds u to the "delete_at" field.
+func (ou *OrderUpdate) AddDeleteAt(u uint32) *OrderUpdate {
+	ou.mutation.AddDeleteAt(u)
+	return ou
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (ou *OrderUpdate) Mutation() *OrderMutation {
 	return ou.mutation
@@ -37,13 +278,20 @@ func (ou *OrderUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	ou.defaults()
 	if len(ou.hooks) == 0 {
+		if err = ou.check(); err != nil {
+			return 0, err
+		}
 		affected, err = ou.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*OrderMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ou.check(); err != nil {
+				return 0, err
 			}
 			ou.mutation = mutation
 			affected, err = ou.sqlSave(ctx)
@@ -85,13 +333,31 @@ func (ou *OrderUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (ou *OrderUpdate) defaults() {
+	if _, ok := ou.mutation.UpdateAt(); !ok {
+		v := order.UpdateDefaultUpdateAt()
+		ou.mutation.SetUpdateAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ou *OrderUpdate) check() error {
+	if v, ok := ou.mutation.State(); ok {
+		if err := order.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
+		}
+	}
+	return nil
+}
+
 func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   order.Table,
 			Columns: order.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: order.FieldID,
 			},
 		},
@@ -102,6 +368,216 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ou.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldGoodID,
+		})
+	}
+	if value, ok := ou.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldAppID,
+		})
+	}
+	if value, ok := ou.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldUserID,
+		})
+	}
+	if value, ok := ou.mutation.Uints(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUints,
+		})
+	}
+	if value, ok := ou.mutation.AddedUints(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUints,
+		})
+	}
+	if value, ok := ou.mutation.Discount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDiscount,
+		})
+	}
+	if value, ok := ou.mutation.AddedDiscount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDiscount,
+		})
+	}
+	if value, ok := ou.mutation.SpecialReductionAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldSpecialReductionAmount,
+		})
+	}
+	if value, ok := ou.mutation.AddedSpecialReductionAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldSpecialReductionAmount,
+		})
+	}
+	if value, ok := ou.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: order.FieldState,
+		})
+	}
+	if value, ok := ou.mutation.GoodPayID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldGoodPayID,
+		})
+	}
+	if value, ok := ou.mutation.Start(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldStart,
+		})
+	}
+	if value, ok := ou.mutation.AddedStart(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldStart,
+		})
+	}
+	if value, ok := ou.mutation.End(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldEnd,
+		})
+	}
+	if value, ok := ou.mutation.AddedEnd(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldEnd,
+		})
+	}
+	if value, ok := ou.mutation.CompensateMinutes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateMinutes,
+		})
+	}
+	if value, ok := ou.mutation.AddedCompensateMinutes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateMinutes,
+		})
+	}
+	if value, ok := ou.mutation.CompensateElapsedMinutes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateElapsedMinutes,
+		})
+	}
+	if value, ok := ou.mutation.AddedCompensateElapsedMinutes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateElapsedMinutes,
+		})
+	}
+	if value, ok := ou.mutation.GasStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasStart,
+		})
+	}
+	if value, ok := ou.mutation.AddedGasStart(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasStart,
+		})
+	}
+	if value, ok := ou.mutation.GasEnd(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasEnd,
+		})
+	}
+	if value, ok := ou.mutation.AddedGasEnd(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasEnd,
+		})
+	}
+	if value, ok := ou.mutation.CouponID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldCouponID,
+		})
+	}
+	if value, ok := ou.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCreateAt,
+		})
+	}
+	if value, ok := ou.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCreateAt,
+		})
+	}
+	if value, ok := ou.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUpdateAt,
+		})
+	}
+	if value, ok := ou.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUpdateAt,
+		})
+	}
+	if value, ok := ou.mutation.DeleteAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDeleteAt,
+		})
+	}
+	if value, ok := ou.mutation.AddedDeleteAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDeleteAt,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ou.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -122,6 +598,246 @@ type OrderUpdateOne struct {
 	mutation *OrderMutation
 }
 
+// SetGoodID sets the "good_id" field.
+func (ouo *OrderUpdateOne) SetGoodID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetGoodID(u)
+	return ouo
+}
+
+// SetAppID sets the "app_id" field.
+func (ouo *OrderUpdateOne) SetAppID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetAppID(u)
+	return ouo
+}
+
+// SetUserID sets the "user_id" field.
+func (ouo *OrderUpdateOne) SetUserID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetUserID(u)
+	return ouo
+}
+
+// SetUints sets the "uints" field.
+func (ouo *OrderUpdateOne) SetUints(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetUints()
+	ouo.mutation.SetUints(u)
+	return ouo
+}
+
+// AddUints adds u to the "uints" field.
+func (ouo *OrderUpdateOne) AddUints(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddUints(u)
+	return ouo
+}
+
+// SetDiscount sets the "discount" field.
+func (ouo *OrderUpdateOne) SetDiscount(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetDiscount()
+	ouo.mutation.SetDiscount(u)
+	return ouo
+}
+
+// SetNillableDiscount sets the "discount" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableDiscount(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetDiscount(*u)
+	}
+	return ouo
+}
+
+// AddDiscount adds u to the "discount" field.
+func (ouo *OrderUpdateOne) AddDiscount(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddDiscount(u)
+	return ouo
+}
+
+// SetSpecialReductionAmount sets the "special_reduction_amount" field.
+func (ouo *OrderUpdateOne) SetSpecialReductionAmount(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetSpecialReductionAmount()
+	ouo.mutation.SetSpecialReductionAmount(u)
+	return ouo
+}
+
+// SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableSpecialReductionAmount(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetSpecialReductionAmount(*u)
+	}
+	return ouo
+}
+
+// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
+func (ouo *OrderUpdateOne) AddSpecialReductionAmount(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddSpecialReductionAmount(u)
+	return ouo
+}
+
+// SetState sets the "state" field.
+func (ouo *OrderUpdateOne) SetState(o order.State) *OrderUpdateOne {
+	ouo.mutation.SetState(o)
+	return ouo
+}
+
+// SetGoodPayID sets the "good_pay_id" field.
+func (ouo *OrderUpdateOne) SetGoodPayID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetGoodPayID(u)
+	return ouo
+}
+
+// SetStart sets the "start" field.
+func (ouo *OrderUpdateOne) SetStart(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetStart()
+	ouo.mutation.SetStart(u)
+	return ouo
+}
+
+// AddStart adds u to the "start" field.
+func (ouo *OrderUpdateOne) AddStart(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddStart(u)
+	return ouo
+}
+
+// SetEnd sets the "end" field.
+func (ouo *OrderUpdateOne) SetEnd(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetEnd()
+	ouo.mutation.SetEnd(u)
+	return ouo
+}
+
+// AddEnd adds u to the "end" field.
+func (ouo *OrderUpdateOne) AddEnd(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddEnd(u)
+	return ouo
+}
+
+// SetCompensateMinutes sets the "compensate_minutes" field.
+func (ouo *OrderUpdateOne) SetCompensateMinutes(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetCompensateMinutes()
+	ouo.mutation.SetCompensateMinutes(u)
+	return ouo
+}
+
+// SetNillableCompensateMinutes sets the "compensate_minutes" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableCompensateMinutes(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetCompensateMinutes(*u)
+	}
+	return ouo
+}
+
+// AddCompensateMinutes adds u to the "compensate_minutes" field.
+func (ouo *OrderUpdateOne) AddCompensateMinutes(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddCompensateMinutes(u)
+	return ouo
+}
+
+// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
+func (ouo *OrderUpdateOne) SetCompensateElapsedMinutes(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetCompensateElapsedMinutes()
+	ouo.mutation.SetCompensateElapsedMinutes(u)
+	return ouo
+}
+
+// SetNillableCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableCompensateElapsedMinutes(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetCompensateElapsedMinutes(*u)
+	}
+	return ouo
+}
+
+// AddCompensateElapsedMinutes adds u to the "compensate_elapsed_minutes" field.
+func (ouo *OrderUpdateOne) AddCompensateElapsedMinutes(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddCompensateElapsedMinutes(u)
+	return ouo
+}
+
+// SetGasStart sets the "gas_start" field.
+func (ouo *OrderUpdateOne) SetGasStart(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetGasStart()
+	ouo.mutation.SetGasStart(u)
+	return ouo
+}
+
+// AddGasStart adds u to the "gas_start" field.
+func (ouo *OrderUpdateOne) AddGasStart(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddGasStart(u)
+	return ouo
+}
+
+// SetGasEnd sets the "gas_end" field.
+func (ouo *OrderUpdateOne) SetGasEnd(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetGasEnd()
+	ouo.mutation.SetGasEnd(u)
+	return ouo
+}
+
+// AddGasEnd adds u to the "gas_end" field.
+func (ouo *OrderUpdateOne) AddGasEnd(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddGasEnd(u)
+	return ouo
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (ouo *OrderUpdateOne) SetCouponID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetCouponID(u)
+	return ouo
+}
+
+// SetCreateAt sets the "create_at" field.
+func (ouo *OrderUpdateOne) SetCreateAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetCreateAt()
+	ouo.mutation.SetCreateAt(u)
+	return ouo
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableCreateAt(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetCreateAt(*u)
+	}
+	return ouo
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (ouo *OrderUpdateOne) AddCreateAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddCreateAt(u)
+	return ouo
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (ouo *OrderUpdateOne) SetUpdateAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetUpdateAt()
+	ouo.mutation.SetUpdateAt(u)
+	return ouo
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (ouo *OrderUpdateOne) AddUpdateAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddUpdateAt(u)
+	return ouo
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (ouo *OrderUpdateOne) SetDeleteAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.ResetDeleteAt()
+	ouo.mutation.SetDeleteAt(u)
+	return ouo
+}
+
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableDeleteAt(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetDeleteAt(*u)
+	}
+	return ouo
+}
+
+// AddDeleteAt adds u to the "delete_at" field.
+func (ouo *OrderUpdateOne) AddDeleteAt(u uint32) *OrderUpdateOne {
+	ouo.mutation.AddDeleteAt(u)
+	return ouo
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (ouo *OrderUpdateOne) Mutation() *OrderMutation {
 	return ouo.mutation
@@ -140,13 +856,20 @@ func (ouo *OrderUpdateOne) Save(ctx context.Context) (*Order, error) {
 		err  error
 		node *Order
 	)
+	ouo.defaults()
 	if len(ouo.hooks) == 0 {
+		if err = ouo.check(); err != nil {
+			return nil, err
+		}
 		node, err = ouo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*OrderMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ouo.check(); err != nil {
+				return nil, err
 			}
 			ouo.mutation = mutation
 			node, err = ouo.sqlSave(ctx)
@@ -188,13 +911,31 @@ func (ouo *OrderUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (ouo *OrderUpdateOne) defaults() {
+	if _, ok := ouo.mutation.UpdateAt(); !ok {
+		v := order.UpdateDefaultUpdateAt()
+		ouo.mutation.SetUpdateAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ouo *OrderUpdateOne) check() error {
+	if v, ok := ouo.mutation.State(); ok {
+		if err := order.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
+		}
+	}
+	return nil
+}
+
 func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   order.Table,
 			Columns: order.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: order.FieldID,
 			},
 		},
@@ -222,6 +963,216 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ouo.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldGoodID,
+		})
+	}
+	if value, ok := ouo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldAppID,
+		})
+	}
+	if value, ok := ouo.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldUserID,
+		})
+	}
+	if value, ok := ouo.mutation.Uints(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUints,
+		})
+	}
+	if value, ok := ouo.mutation.AddedUints(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUints,
+		})
+	}
+	if value, ok := ouo.mutation.Discount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDiscount,
+		})
+	}
+	if value, ok := ouo.mutation.AddedDiscount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDiscount,
+		})
+	}
+	if value, ok := ouo.mutation.SpecialReductionAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldSpecialReductionAmount,
+		})
+	}
+	if value, ok := ouo.mutation.AddedSpecialReductionAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldSpecialReductionAmount,
+		})
+	}
+	if value, ok := ouo.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: order.FieldState,
+		})
+	}
+	if value, ok := ouo.mutation.GoodPayID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldGoodPayID,
+		})
+	}
+	if value, ok := ouo.mutation.Start(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldStart,
+		})
+	}
+	if value, ok := ouo.mutation.AddedStart(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldStart,
+		})
+	}
+	if value, ok := ouo.mutation.End(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldEnd,
+		})
+	}
+	if value, ok := ouo.mutation.AddedEnd(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldEnd,
+		})
+	}
+	if value, ok := ouo.mutation.CompensateMinutes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateMinutes,
+		})
+	}
+	if value, ok := ouo.mutation.AddedCompensateMinutes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateMinutes,
+		})
+	}
+	if value, ok := ouo.mutation.CompensateElapsedMinutes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateElapsedMinutes,
+		})
+	}
+	if value, ok := ouo.mutation.AddedCompensateElapsedMinutes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCompensateElapsedMinutes,
+		})
+	}
+	if value, ok := ouo.mutation.GasStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasStart,
+		})
+	}
+	if value, ok := ouo.mutation.AddedGasStart(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasStart,
+		})
+	}
+	if value, ok := ouo.mutation.GasEnd(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasEnd,
+		})
+	}
+	if value, ok := ouo.mutation.AddedGasEnd(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldGasEnd,
+		})
+	}
+	if value, ok := ouo.mutation.CouponID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldCouponID,
+		})
+	}
+	if value, ok := ouo.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCreateAt,
+		})
+	}
+	if value, ok := ouo.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldCreateAt,
+		})
+	}
+	if value, ok := ouo.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUpdateAt,
+		})
+	}
+	if value, ok := ouo.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldUpdateAt,
+		})
+	}
+	if value, ok := ouo.mutation.DeleteAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDeleteAt,
+		})
+	}
+	if value, ok := ouo.mutation.AddedDeleteAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldDeleteAt,
+		})
 	}
 	_node = &Order{config: ouo.config}
 	_spec.Assign = _node.assignValues

@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // OrderQuery is the builder for querying Order entities.
@@ -84,8 +85,8 @@ func (oq *OrderQuery) FirstX(ctx context.Context) *Order {
 
 // FirstID returns the first Order ID from the query.
 // Returns a *NotFoundError when no Order ID was found.
-func (oq *OrderQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (oq *OrderQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = oq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -97,7 +98,7 @@ func (oq *OrderQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (oq *OrderQuery) FirstIDX(ctx context.Context) int {
+func (oq *OrderQuery) FirstIDX(ctx context.Context) uuid.UUID {
 	id, err := oq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -135,8 +136,8 @@ func (oq *OrderQuery) OnlyX(ctx context.Context) *Order {
 // OnlyID is like Only, but returns the only Order ID in the query.
 // Returns a *NotSingularError when exactly one Order ID is not found.
 // Returns a *NotFoundError when no entities are found.
-func (oq *OrderQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (oq *OrderQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = oq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -152,7 +153,7 @@ func (oq *OrderQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (oq *OrderQuery) OnlyIDX(ctx context.Context) int {
+func (oq *OrderQuery) OnlyIDX(ctx context.Context) uuid.UUID {
 	id, err := oq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,8 +179,8 @@ func (oq *OrderQuery) AllX(ctx context.Context) []*Order {
 }
 
 // IDs executes the query and returns a list of Order IDs.
-func (oq *OrderQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
+func (oq *OrderQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	var ids []uuid.UUID
 	if err := oq.Select(order.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -187,7 +188,7 @@ func (oq *OrderQuery) IDs(ctx context.Context) ([]int, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (oq *OrderQuery) IDsX(ctx context.Context) []int {
+func (oq *OrderQuery) IDsX(ctx context.Context) []uuid.UUID {
 	ids, err := oq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -249,6 +250,19 @@ func (oq *OrderQuery) Clone() *OrderQuery {
 
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		GoodID uuid.UUID `json:"good_id,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Order.Query().
+//		GroupBy(order.FieldGoodID).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (oq *OrderQuery) GroupBy(field string, fields ...string) *OrderGroupBy {
 	group := &OrderGroupBy{config: oq.config}
 	group.fields = append([]string{field}, fields...)
@@ -263,6 +277,17 @@ func (oq *OrderQuery) GroupBy(field string, fields ...string) *OrderGroupBy {
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		GoodID uuid.UUID `json:"good_id,omitempty"`
+//	}
+//
+//	client.Order.Query().
+//		Select(order.FieldGoodID).
+//		Scan(ctx, &v)
+//
 func (oq *OrderQuery) Select(fields ...string) *OrderSelect {
 	oq.fields = append(oq.fields, fields...)
 	return &OrderSelect{OrderQuery: oq}
@@ -329,7 +354,7 @@ func (oq *OrderQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   order.Table,
 			Columns: order.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: order.FieldID,
 			},
 		},

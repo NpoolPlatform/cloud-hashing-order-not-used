@@ -10,7 +10,25 @@ import (
 var (
 	// OrdersColumns holds the columns for the "orders" table.
 	OrdersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "good_id", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "uints", Type: field.TypeUint32},
+		{Name: "discount", Type: field.TypeUint32, Default: 0},
+		{Name: "special_reduction_amount", Type: field.TypeUint32, Default: 0},
+		{Name: "state", Type: field.TypeEnum, Enums: []string{"created", "paying", "paid", "timeout", "canceled"}},
+		{Name: "good_pay_id", Type: field.TypeUUID},
+		{Name: "start", Type: field.TypeUint32},
+		{Name: "end", Type: field.TypeUint32},
+		{Name: "compensate_minutes", Type: field.TypeUint32, Default: 0},
+		{Name: "compensate_elapsed_minutes", Type: field.TypeUint32, Default: 0},
+		{Name: "gas_start", Type: field.TypeUint32},
+		{Name: "gas_end", Type: field.TypeUint32},
+		{Name: "coupon_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// OrdersTable holds the schema information for the "orders" table.
 	OrdersTable = &schema.Table{

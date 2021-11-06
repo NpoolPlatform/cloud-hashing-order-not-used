@@ -2,8 +2,50 @@
 
 package ent
 
+import (
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/schema"
+	"github.com/google/uuid"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	orderFields := schema.Order{}.Fields()
+	_ = orderFields
+	// orderDescDiscount is the schema descriptor for discount field.
+	orderDescDiscount := orderFields[5].Descriptor()
+	// order.DefaultDiscount holds the default value on creation for the discount field.
+	order.DefaultDiscount = orderDescDiscount.Default.(uint32)
+	// orderDescSpecialReductionAmount is the schema descriptor for special_reduction_amount field.
+	orderDescSpecialReductionAmount := orderFields[6].Descriptor()
+	// order.DefaultSpecialReductionAmount holds the default value on creation for the special_reduction_amount field.
+	order.DefaultSpecialReductionAmount = orderDescSpecialReductionAmount.Default.(uint32)
+	// orderDescCompensateMinutes is the schema descriptor for compensate_minutes field.
+	orderDescCompensateMinutes := orderFields[11].Descriptor()
+	// order.DefaultCompensateMinutes holds the default value on creation for the compensate_minutes field.
+	order.DefaultCompensateMinutes = orderDescCompensateMinutes.Default.(uint32)
+	// orderDescCompensateElapsedMinutes is the schema descriptor for compensate_elapsed_minutes field.
+	orderDescCompensateElapsedMinutes := orderFields[12].Descriptor()
+	// order.DefaultCompensateElapsedMinutes holds the default value on creation for the compensate_elapsed_minutes field.
+	order.DefaultCompensateElapsedMinutes = orderDescCompensateElapsedMinutes.Default.(uint32)
+	// orderDescCreateAt is the schema descriptor for create_at field.
+	orderDescCreateAt := orderFields[16].Descriptor()
+	// order.DefaultCreateAt holds the default value on creation for the create_at field.
+	order.DefaultCreateAt = orderDescCreateAt.Default.(func() uint32)
+	// orderDescUpdateAt is the schema descriptor for update_at field.
+	orderDescUpdateAt := orderFields[17].Descriptor()
+	// order.DefaultUpdateAt holds the default value on creation for the update_at field.
+	order.DefaultUpdateAt = orderDescUpdateAt.Default.(func() uint32)
+	// order.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	order.UpdateDefaultUpdateAt = orderDescUpdateAt.UpdateDefault.(func() uint32)
+	// orderDescDeleteAt is the schema descriptor for delete_at field.
+	orderDescDeleteAt := orderFields[18].Descriptor()
+	// order.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	order.DefaultDeleteAt = orderDescDeleteAt.Default.(func() uint32)
+	// orderDescID is the schema descriptor for id field.
+	orderDescID := orderFields[0].Descriptor()
+	// order.DefaultID holds the default value on creation for the id field.
+	order.DefaultID = orderDescID.Default.(func() uuid.UUID)
 }

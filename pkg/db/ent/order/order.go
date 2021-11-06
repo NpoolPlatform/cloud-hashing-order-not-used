@@ -2,11 +2,53 @@
 
 package order
 
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+)
+
 const (
 	// Label holds the string label denoting the order type in the database.
 	Label = "order"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldGoodID holds the string denoting the good_id field in the database.
+	FieldGoodID = "good_id"
+	// FieldAppID holds the string denoting the app_id field in the database.
+	FieldAppID = "app_id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
+	// FieldUints holds the string denoting the uints field in the database.
+	FieldUints = "uints"
+	// FieldDiscount holds the string denoting the discount field in the database.
+	FieldDiscount = "discount"
+	// FieldSpecialReductionAmount holds the string denoting the special_reduction_amount field in the database.
+	FieldSpecialReductionAmount = "special_reduction_amount"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
+	// FieldGoodPayID holds the string denoting the good_pay_id field in the database.
+	FieldGoodPayID = "good_pay_id"
+	// FieldStart holds the string denoting the start field in the database.
+	FieldStart = "start"
+	// FieldEnd holds the string denoting the end field in the database.
+	FieldEnd = "end"
+	// FieldCompensateMinutes holds the string denoting the compensate_minutes field in the database.
+	FieldCompensateMinutes = "compensate_minutes"
+	// FieldCompensateElapsedMinutes holds the string denoting the compensate_elapsed_minutes field in the database.
+	FieldCompensateElapsedMinutes = "compensate_elapsed_minutes"
+	// FieldGasStart holds the string denoting the gas_start field in the database.
+	FieldGasStart = "gas_start"
+	// FieldGasEnd holds the string denoting the gas_end field in the database.
+	FieldGasEnd = "gas_end"
+	// FieldCouponID holds the string denoting the coupon_id field in the database.
+	FieldCouponID = "coupon_id"
+	// FieldCreateAt holds the string denoting the create_at field in the database.
+	FieldCreateAt = "create_at"
+	// FieldUpdateAt holds the string denoting the update_at field in the database.
+	FieldUpdateAt = "update_at"
+	// FieldDeleteAt holds the string denoting the delete_at field in the database.
+	FieldDeleteAt = "delete_at"
 	// Table holds the table name of the order in the database.
 	Table = "orders"
 )
@@ -14,6 +56,24 @@ const (
 // Columns holds all SQL columns for order fields.
 var Columns = []string{
 	FieldID,
+	FieldGoodID,
+	FieldAppID,
+	FieldUserID,
+	FieldUints,
+	FieldDiscount,
+	FieldSpecialReductionAmount,
+	FieldState,
+	FieldGoodPayID,
+	FieldStart,
+	FieldEnd,
+	FieldCompensateMinutes,
+	FieldCompensateElapsedMinutes,
+	FieldGasStart,
+	FieldGasEnd,
+	FieldCouponID,
+	FieldCreateAt,
+	FieldUpdateAt,
+	FieldDeleteAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -24,4 +84,51 @@ func ValidColumn(column string) bool {
 		}
 	}
 	return false
+}
+
+var (
+	// DefaultDiscount holds the default value on creation for the "discount" field.
+	DefaultDiscount uint32
+	// DefaultSpecialReductionAmount holds the default value on creation for the "special_reduction_amount" field.
+	DefaultSpecialReductionAmount uint32
+	// DefaultCompensateMinutes holds the default value on creation for the "compensate_minutes" field.
+	DefaultCompensateMinutes uint32
+	// DefaultCompensateElapsedMinutes holds the default value on creation for the "compensate_elapsed_minutes" field.
+	DefaultCompensateElapsedMinutes uint32
+	// DefaultCreateAt holds the default value on creation for the "create_at" field.
+	DefaultCreateAt func() uint32
+	// DefaultUpdateAt holds the default value on creation for the "update_at" field.
+	DefaultUpdateAt func() uint32
+	// UpdateDefaultUpdateAt holds the default value on update for the "update_at" field.
+	UpdateDefaultUpdateAt func() uint32
+	// DefaultDeleteAt holds the default value on creation for the "delete_at" field.
+	DefaultDeleteAt func() uint32
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() uuid.UUID
+)
+
+// State defines the type for the "state" enum field.
+type State string
+
+// State values.
+const (
+	StateCreated  State = "created"
+	StatePaying   State = "paying"
+	StatePaid     State = "paid"
+	StateTimeout  State = "timeout"
+	StateCanceled State = "canceled"
+)
+
+func (s State) String() string {
+	return string(s)
+}
+
+// StateValidator is a validator for the "state" field enum values. It is called by the builders before save.
+func StateValidator(s State) error {
+	switch s {
+	case StateCreated, StatePaying, StatePaid, StateTimeout, StateCanceled:
+		return nil
+	default:
+		return fmt.Errorf("order: invalid enum value for state field: %q", s)
+	}
 }
