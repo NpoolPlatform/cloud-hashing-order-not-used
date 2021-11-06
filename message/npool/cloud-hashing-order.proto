@@ -16,9 +16,207 @@ service CloudHashingOrder {
             body: "*"
         };
     }
+
+    rpc CreateGoodPaying(CreateGoodPayingRequest) returns (CreateGoodPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/create/good/paying"
+            body: "*"
+        };
+    }
+    rpc GetGoodPaying(GetGoodPayingRequest) returns (GetGoodPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/good/paying"
+            body: "*"
+        };
+    }
+
+    rpc CreateGasPaying(CreateGasPayingRequest) returns (CreateGasPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/create/gas/paying"
+            body: "*"
+        };
+    }
+    rpc GetGasPaying(GetGasPayingRequest) returns (GetGasPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/gas/paying"
+            body: "*"
+        };
+    }
+    rpc UpdateGasPaying(UpdateGasPayingRequest) returns (UpdateGasPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/update/gas/paying"
+            body: "*"
+        };
+    }
+
+    rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse) {
+        option (google.api.http) = {
+            post: "/v1/create/order"
+            body: "*"
+        };
+    }
+    rpc GetOrder(GetOrderRequest) returns (GetOrderResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/order"
+            body: "*"
+        };
+    }
+    rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse) {
+        option (google.api.http) = {
+            post: "/v1/update/order"
+            body: "*"
+        };
+    }
+    rpc GetOrdersByAppUser(GetOrdersByAppUserRequest) returns (GetOrdersByAppUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/by/app/user"
+            body: "*"
+        };
+    }
+    rpc GetOrdersByApp(GetOrdersByAppRequest) returns (GetOrdersByAppResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/by/app"
+            body: "*"
+        };
+    }
+    rpc GetOrdersByGood(GetOrdersByGoodRequest) returns (GetOrdersByGoodResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/by/good"
+            body: "*"
+        };
+    }
 }
 
 // request body and response
 message VersionResponse {
     string Info = 100;
+}
+
+message GoodPaying {
+    string ID = 200;
+    string OrderID = 201;
+    string AccountID = 202;
+    string State = 203;
+    string ChainTransactionID = 204;
+    string PlatformTransactionID = 205;
+}
+
+message CreateGoodPayingRequest {
+    GoodPaying Info = 300;
+}
+
+message CreateGoodPayingResponse {
+    GoodPaying Info = 400;
+}
+
+message GetGoodPayingRequest {
+    GoodPaying Info = 500;
+}
+
+message GetGoodPayingResponse {
+    GoodPaying Info = 600;
+}
+
+message GasPaying {
+    string ID = 700;
+    string OrderID = 701;
+    string AccountID = 702;
+    string State = 703;
+    string ChainTransactionID = 704;
+    string PlatformTransactionID = 705;
+    uint32 DurationMinutes = 706;
+    bool Used = 707;
+}
+
+message CreateGasPayingRequest {
+    GasPaying Info = 800;
+}
+
+message CreateGasPayingResponse {
+    GasPaying Info = 900;
+}
+
+message GetGasPayingRequest {
+    GasPaying Info = 1000;
+}
+
+message GetGasPayingResponse {
+    GasPaying Info = 1100;
+}
+
+message UpdateGasPayingRequest {
+    GasPaying Info = 1200;
+}
+
+message UpdateGasPayingResponse {
+    GasPaying Info = 1300;
+}
+
+message Order {
+    string ID = 1400;
+    string GoodID = 1401;
+    uint32 Units = 1402;
+    uint32 Discount = 1403;
+    double SpecialReductionAmount = 1404;
+    string UserID = 1405;
+    string AppID = 1406;
+    string State = 1407;
+    string GoodPayID = 1408;
+    uint32 Start = 1409;
+    uint32 End = 1410;
+    uint32 CompensateMinutes = 1411;
+    uint32 CompensateElapsedMinutes = 1412;
+    uint32 GasStart = 1413;
+    uint32 GasEnd = 1414;
+    repeated string GasPayIDs = 1415;
+    string CouponID = 1416;
+}
+
+message CreateOrderRequest {
+    Order Info = 1500;
+}
+
+message CreateOrderResponse {
+    Order Info = 1600;
+}
+
+message GetOrderRequest {
+    string ID = 1700;
+}
+
+message GetOrderResponse {
+    Order Info = 1800;
+}
+
+message UpdateOrderRequest {
+    Order Info = 1900;
+}
+
+message UpdateOrderResponse {
+    Order Info = 2000;
+}
+
+message GetOrdersByAppUserRequest {
+    string AppID = 2100;
+    string UserID = 2101;
+}
+
+message GetOrdersByAppUserResponse {
+    Order Info = 2200;
+}
+
+message GetOrdersByAppRequest {
+    string AppID = 2300;
+}
+
+message GetOrdersByAppResponse {
+    Order Info = 2400;
+}
+
+message GetOrdersByGoodRequest {
+    string GoodID = 2500;
+}
+
+message GetOrdersByGoodResponse {
+    Order Info = 2600;
 }
