@@ -107,7 +107,30 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 }
 
 func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderResponse, error) {
-	return nil, nil
+	id, err := uuid.Parse(in.GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid id: %v", err)
+	}
+
+	infos, err := db.Client().
+		Order.
+		Query().
+		Where(
+			order.And(
+				order.ID(id),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+	if len(infos) == 0 {
+		return nil, xerrors.Errorf("empty order")
+	}
+
+	return &npool.GetOrderResponse{
+		Info: dbRowToOrder(infos[0]),
+	}, nil
 }
 
 func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrderResponse, error) {

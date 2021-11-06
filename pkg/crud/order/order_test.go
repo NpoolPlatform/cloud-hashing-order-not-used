@@ -89,4 +89,12 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
 		assertOrder(t, resp1.Info, &order)
 	}
+
+	resp2, err := Get(context.Background(), &npool.GetOrderRequest{
+		ID: resp.Info.ID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
+		assertOrder(t, resp2.Info, &order)
+	}
 }
