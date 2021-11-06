@@ -78,4 +78,15 @@ func TestCRUD(t *testing.T) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{})
 		assertOrder(t, resp.Info, &order)
 	}
+
+	order.State = "paying"
+	order.ID = resp.Info.ID
+
+	resp1, err := Update(context.Background(), &npool.UpdateOrderRequest{
+		Info: &order,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
+		assertOrder(t, resp1.Info, &order)
+	}
 }

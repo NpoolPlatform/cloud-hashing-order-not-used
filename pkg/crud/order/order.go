@@ -111,7 +111,36 @@ func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderRespons
 }
 
 func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrderResponse, error) {
-	return nil, nil
+	if err := validateOrder(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	gasPayIDs := []uuid.UUID{}
+	for _, gasPayID := range in.GetInfo().GetGasPayIDs() {
+		gasPayIDs = append(gasPayIDs, uuid.MustParse(gasPayID))
+	}
+
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid id: %v", err)
+	}
+
+	info, err := db.Client().
+		Order.
+		UpdateOneID(id).
+		SetState(order.State(in.GetInfo().GetState())).
+		SetGasPayIds(gasPayIDs).
+		SetGasEnd(in.GetInfo().GetGasEnd()).
+		SetCompensateMinutes(in.GetInfo().GetCompensateMinutes()).
+		SetCompensateElapsedMinutes(in.GetInfo().GetCompensateElapsedMinutes()).
+		Save(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail update order: %v", err)
+	}
+
+	return &npool.UpdateOrderResponse{
+		Info: dbRowToOrder(info),
+	}, nil
 }
 
 func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*npool.GetOrdersByAppUserResponse, error) {
