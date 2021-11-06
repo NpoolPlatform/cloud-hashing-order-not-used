@@ -23,6 +23,7 @@ type CloudHashingOrderClient interface {
 	Version(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*VersionResponse, error)
 	CreateGoodPaying(ctx context.Context, in *CreateGoodPayingRequest, opts ...grpc.CallOption) (*CreateGoodPayingResponse, error)
 	GetGoodPaying(ctx context.Context, in *GetGoodPayingRequest, opts ...grpc.CallOption) (*GetGoodPayingResponse, error)
+	UpdateGoodPaying(ctx context.Context, in *UpdateGoodPayingRequest, opts ...grpc.CallOption) (*UpdateGoodPayingResponse, error)
 	CreateGasPaying(ctx context.Context, in *CreateGasPayingRequest, opts ...grpc.CallOption) (*CreateGasPayingResponse, error)
 	GetGasPaying(ctx context.Context, in *GetGasPayingRequest, opts ...grpc.CallOption) (*GetGasPayingResponse, error)
 	UpdateGasPaying(ctx context.Context, in *UpdateGasPayingRequest, opts ...grpc.CallOption) (*UpdateGasPayingResponse, error)
@@ -63,6 +64,15 @@ func (c *cloudHashingOrderClient) CreateGoodPaying(ctx context.Context, in *Crea
 func (c *cloudHashingOrderClient) GetGoodPaying(ctx context.Context, in *GetGoodPayingRequest, opts ...grpc.CallOption) (*GetGoodPayingResponse, error) {
 	out := new(GetGoodPayingResponse)
 	err := c.cc.Invoke(ctx, "/cloud.hashing.order.v1.CloudHashingOrder/GetGoodPaying", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cloudHashingOrderClient) UpdateGoodPaying(ctx context.Context, in *UpdateGoodPayingRequest, opts ...grpc.CallOption) (*UpdateGoodPayingResponse, error) {
+	out := new(UpdateGoodPayingResponse)
+	err := c.cc.Invoke(ctx, "/cloud.hashing.order.v1.CloudHashingOrder/UpdateGoodPaying", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -158,6 +168,7 @@ type CloudHashingOrderServer interface {
 	Version(context.Context, *emptypb.Empty) (*VersionResponse, error)
 	CreateGoodPaying(context.Context, *CreateGoodPayingRequest) (*CreateGoodPayingResponse, error)
 	GetGoodPaying(context.Context, *GetGoodPayingRequest) (*GetGoodPayingResponse, error)
+	UpdateGoodPaying(context.Context, *UpdateGoodPayingRequest) (*UpdateGoodPayingResponse, error)
 	CreateGasPaying(context.Context, *CreateGasPayingRequest) (*CreateGasPayingResponse, error)
 	GetGasPaying(context.Context, *GetGasPayingRequest) (*GetGasPayingResponse, error)
 	UpdateGasPaying(context.Context, *UpdateGasPayingRequest) (*UpdateGasPayingResponse, error)
@@ -182,6 +193,9 @@ func (UnimplementedCloudHashingOrderServer) CreateGoodPaying(context.Context, *C
 }
 func (UnimplementedCloudHashingOrderServer) GetGoodPaying(context.Context, *GetGoodPayingRequest) (*GetGoodPayingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGoodPaying not implemented")
+}
+func (UnimplementedCloudHashingOrderServer) UpdateGoodPaying(context.Context, *UpdateGoodPayingRequest) (*UpdateGoodPayingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGoodPaying not implemented")
 }
 func (UnimplementedCloudHashingOrderServer) CreateGasPaying(context.Context, *CreateGasPayingRequest) (*CreateGasPayingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGasPaying not implemented")
@@ -273,6 +287,24 @@ func _CloudHashingOrder_GetGoodPaying_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CloudHashingOrderServer).GetGoodPaying(ctx, req.(*GetGoodPayingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CloudHashingOrder_UpdateGoodPaying_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGoodPayingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CloudHashingOrderServer).UpdateGoodPaying(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cloud.hashing.order.v1.CloudHashingOrder/UpdateGoodPaying",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CloudHashingOrderServer).UpdateGoodPaying(ctx, req.(*UpdateGoodPayingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -457,6 +489,10 @@ var CloudHashingOrder_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGoodPaying",
 			Handler:    _CloudHashingOrder_GetGoodPaying_Handler,
+		},
+		{
+			MethodName: "UpdateGoodPaying",
+			Handler:    _CloudHashingOrder_UpdateGoodPaying_Handler,
 		},
 		{
 			MethodName: "CreateGasPaying",

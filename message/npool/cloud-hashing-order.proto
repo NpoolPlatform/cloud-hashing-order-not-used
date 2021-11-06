@@ -30,6 +30,13 @@ service CloudHashingOrder {
         };
     }
 
+    rpc UpdateGoodPaying(UpdateGoodPayingRequest) returns (UpdateGoodPayingResponse) {
+        option (google.api.http) = {
+            post: "/v1/update/good/paying"
+            body: "*"
+        };
+    }
+
     rpc CreateGasPaying(CreateGasPayingRequest) returns (CreateGasPayingResponse) {
         option (google.api.http) = {
             post: "/v1/create/gas/paying"
@@ -115,6 +122,14 @@ message GetGoodPayingRequest {
 
 message GetGoodPayingResponse {
     GoodPaying Info = 600;
+}
+
+message UpdateGoodPayingRequest {
+    GoodPaying Info = 610;
+}
+
+message UpdateGoodPayingResponse {
+    GoodPaying Info = 620;
 }
 
 message GasPaying {

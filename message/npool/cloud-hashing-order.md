@@ -27,6 +27,8 @@
     - [Order](#cloud.hashing.order.v1.Order)
     - [UpdateGasPayingRequest](#cloud.hashing.order.v1.UpdateGasPayingRequest)
     - [UpdateGasPayingResponse](#cloud.hashing.order.v1.UpdateGasPayingResponse)
+    - [UpdateGoodPayingRequest](#cloud.hashing.order.v1.UpdateGoodPayingRequest)
+    - [UpdateGoodPayingResponse](#cloud.hashing.order.v1.UpdateGoodPayingResponse)
     - [UpdateOrderRequest](#cloud.hashing.order.v1.UpdateOrderRequest)
     - [UpdateOrderResponse](#cloud.hashing.order.v1.UpdateOrderResponse)
     - [VersionResponse](#cloud.hashing.order.v1.VersionResponse)
@@ -418,6 +420,36 @@
 
 
 
+<a name="cloud.hashing.order.v1.UpdateGoodPayingRequest"></a>
+
+### UpdateGoodPayingRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Info | [GoodPaying](#cloud.hashing.order.v1.GoodPaying) |  |  |
+
+
+
+
+
+
+<a name="cloud.hashing.order.v1.UpdateGoodPayingResponse"></a>
+
+### UpdateGoodPayingResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Info | [GoodPaying](#cloud.hashing.order.v1.GoodPaying) |  |  |
+
+
+
+
+
+
 <a name="cloud.hashing.order.v1.UpdateOrderRequest"></a>
 
 ### UpdateOrderRequest
@@ -479,6 +511,7 @@ Service Name
 | Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#cloud.hashing.order.v1.VersionResponse) | Method Version |
 | CreateGoodPaying | [CreateGoodPayingRequest](#cloud.hashing.order.v1.CreateGoodPayingRequest) | [CreateGoodPayingResponse](#cloud.hashing.order.v1.CreateGoodPayingResponse) |  |
 | GetGoodPaying | [GetGoodPayingRequest](#cloud.hashing.order.v1.GetGoodPayingRequest) | [GetGoodPayingResponse](#cloud.hashing.order.v1.GetGoodPayingResponse) |  |
+| UpdateGoodPaying | [UpdateGoodPayingRequest](#cloud.hashing.order.v1.UpdateGoodPayingRequest) | [UpdateGoodPayingResponse](#cloud.hashing.order.v1.UpdateGoodPayingResponse) |  |
 | CreateGasPaying | [CreateGasPayingRequest](#cloud.hashing.order.v1.CreateGasPayingRequest) | [CreateGasPayingResponse](#cloud.hashing.order.v1.CreateGasPayingResponse) |  |
 | GetGasPaying | [GetGasPayingRequest](#cloud.hashing.order.v1.GetGasPayingRequest) | [GetGasPayingResponse](#cloud.hashing.order.v1.GetGasPayingResponse) |  |
 | UpdateGasPaying | [UpdateGasPayingRequest](#cloud.hashing.order.v1.UpdateGasPayingRequest) | [UpdateGasPayingResponse](#cloud.hashing.order.v1.UpdateGasPayingResponse) |  |
