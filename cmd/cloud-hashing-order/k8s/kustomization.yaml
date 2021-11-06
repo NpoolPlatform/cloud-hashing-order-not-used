@@ -1,0 +1,6 @@
+commonLabels:
+  # app: cloud-hashing-order
+
+resources:
+- 01-cloud-hashing-order.yaml
+- 02-ingress.yaml

@@ -3,23 +3,23 @@
 
 ## Table of Contents
 
-- [npool/service-sample.proto](#npool/service-sample.proto)
-    - [VersionResponse](#service.sample.v1.VersionResponse)
+- [npool/cloud-hashing-order.proto](#npool/cloud-hashing-order.proto)
+    - [VersionResponse](#cloud.hashing.order.v1.VersionResponse)
   
-    - [ServiceExample](#service.sample.v1.ServiceExample)
+    - [CloudHashingOrder](#cloud.hashing.order.v1.CloudHashingOrder)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="npool/service-sample.proto"></a>
+<a name="npool/cloud-hashing-order.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## npool/service-sample.proto
+## npool/cloud-hashing-order.proto
 
 
 
-<a name="service.sample.v1.VersionResponse"></a>
+<a name="cloud.hashing.order.v1.VersionResponse"></a>
 
 ### VersionResponse
 request body and response
@@ -40,14 +40,14 @@ request body and response
  
 
 
-<a name="service.sample.v1.ServiceExample"></a>
+<a name="cloud.hashing.order.v1.CloudHashingOrder"></a>
 
-### ServiceExample
+### CloudHashingOrder
 Service Name
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#service.sample.v1.VersionResponse) | Method Version |
+| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#cloud.hashing.order.v1.VersionResponse) | Method Version |
 
  
 

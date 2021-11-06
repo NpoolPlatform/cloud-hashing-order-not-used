@@ -6,18 +6,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 )
 
-// The EmptyFunc type is an adapter to allow the use of ordinary
-// function as Empty mutator.
-type EmptyFunc func(context.Context, *ent.EmptyMutation) (ent.Value, error)
+// The OrderFunc type is an adapter to allow the use of ordinary
+// function as Order mutator.
+type OrderFunc func(context.Context, *ent.OrderMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f EmptyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EmptyMutation)
+func (f OrderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.OrderMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmptyMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OrderMutation", m)
 	}
 	return f(ctx, mv)
 }
