@@ -152,7 +152,7 @@ message CreateGasPayingResponse {
 }
 
 message GetGasPayingRequest {
-    GasPaying Info = 1000;
+    string ID = 1000;
 }
 
 message GetGasPayingResponse {

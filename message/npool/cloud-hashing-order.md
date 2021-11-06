@@ -166,7 +166,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [GasPaying](#cloud.hashing.order.v1.GasPaying) |  |  |
+| ID | [string](#string) |  |  |
 
 
 
