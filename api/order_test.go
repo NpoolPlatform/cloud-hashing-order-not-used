@@ -60,13 +60,18 @@ func TestOrderCRUD(t *testing.T) {
 		OrderID:   orderResp.Info.ID,
 		AccountID: uuid.New().String(),
 	}
-	_, err = cli.R().
+	resp, err = cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.CreateGoodPayingRequest{
 			Info: &goodPaying,
 		}).
 		Post("http://localhost:36759/v1/create/good/paying")
 	assert.Nil(t, err)
+
+	goodPayingResp := npool.CreateGoodPayingResponse{}
+	err = json.Unmarshal(resp.Body(), &goodPayingResp)
+	assert.Nil(t, err)
+	myOrder.GoodPayID = goodPayingResp.Info.ID
 
 	gasPaying1 := npool.GasPaying{
 		OrderID:         orderResp.Info.ID,
@@ -81,6 +86,11 @@ func TestOrderCRUD(t *testing.T) {
 		Post("http://localhost:36759/v1/create/gas/paying")
 	assert.Nil(t, err)
 
+	gasPayingResp := npool.CreateGasPayingResponse{}
+	err = json.Unmarshal(resp.Body(), &gasPayingResp)
+	assert.Nil(t, err)
+	myOrder.GasPayIDs = append(myOrder.GasPayIDs, gasPayingResp.Info.ID)
+
 	gasPaying2 := npool.GasPaying{
 		OrderID:         orderResp.Info.ID,
 		AccountID:       uuid.New().String(),
@@ -94,11 +104,59 @@ func TestOrderCRUD(t *testing.T) {
 		Post("http://localhost:36759/v1/create/gas/paying")
 	assert.Nil(t, err)
 
+	err = json.Unmarshal(resp.Body(), &gasPayingResp)
+	assert.Nil(t, err)
+	myOrder.GasPayIDs = append(myOrder.GasPayIDs, gasPayingResp.Info.ID)
+
 	_, err = cli.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(npool.GetOrderDetailRequest{
 			ID: orderResp.Info.ID,
 		}).
 		Post("http://localhost:36759/v1/get/order/detail")
+	assert.Nil(t, err)
+
+	myOrder.ID = orderResp.Info.ID
+	myOrder.State = "paying"
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.UpdateOrderRequest{
+			Info: &myOrder,
+		}).
+		Post("http://localhost:36759/v1/update/order")
+	assert.Nil(t, err)
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.GetOrderRequest{
+			ID: myOrder.ID,
+		}).
+		Post("http://localhost:36759/v1/get/order")
+	assert.Nil(t, err)
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.GetOrderDetailRequest{
+			ID: myOrder.ID,
+		}).
+		Post("http://localhost:36759/v1/get/order/detail")
+	assert.Nil(t, err)
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.GetOrdersDetailByAppUserRequest{
+			AppID:  myOrder.AppID,
+			UserID: myOrder.UserID,
+		}).
+		Post("http://localhost:36759/v1/get/orders/detail/by/app/user")
+	assert.Nil(t, err)
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.GetOrdersDetailByGoodRequest{
+			GoodID: myOrder.GoodID,
+		}).
+		Post("http://localhost:36759/v1/get/orders/detail/by/good")
 	assert.Nil(t, err)
 }
