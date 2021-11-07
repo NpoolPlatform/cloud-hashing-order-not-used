@@ -143,4 +143,26 @@ func TestGetDetail(t *testing.T) {
 				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
 		}
 	}
+
+	orderDetails1, err := GetByApp(context.Background(), &npool.GetOrdersDetailByAppRequest{
+		AppID: appID,
+	})
+	if assert.Nil(t, err) {
+		if assert.Equal(t, len(orderDetails1.Details), 1) {
+			assert.Equal(t, orderDetails1.Details[0].ID, orderResp1.Info.ID)
+			assertOrderDetail(t, orderDetails1.Details[0], &myOrder, goodPayingResp.Info,
+				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+		}
+	}
+
+	orderDetails2, err := GetByGood(context.Background(), &npool.GetOrdersDetailByGoodRequest{
+		GoodID: goodID,
+	})
+	if assert.Nil(t, err) {
+		if assert.Equal(t, len(orderDetails2.Details), 1) {
+			assert.Equal(t, orderDetails2.Details[0].ID, orderResp1.Info.ID)
+			assertOrderDetail(t, orderDetails2.Details[0], &myOrder, goodPayingResp.Info,
+				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+		}
+	}
 }

@@ -106,9 +106,37 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersDetailByAppUserRequest
 }
 
 func GetByApp(ctx context.Context, in *npool.GetOrdersDetailByAppRequest) (*npool.GetOrdersDetailByAppResponse, error) {
-	return nil, nil
+	resp, err := order.GetByApp(ctx, &npool.GetOrdersByAppRequest{
+		AppID: in.GetAppID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders by app: %v", err)
+	}
+
+	details, err := getOrdersDetail(ctx, resp.Infos)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders detail: %v", err)
+	}
+
+	return &npool.GetOrdersDetailByAppResponse{
+		Details: details,
+	}, nil
 }
 
 func GetByGood(ctx context.Context, in *npool.GetOrdersDetailByGoodRequest) (*npool.GetOrdersDetailByGoodResponse, error) {
-	return nil, nil
+	resp, err := order.GetByGood(ctx, &npool.GetOrdersByGoodRequest{
+		GoodID: in.GetGoodID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders by app: %v", err)
+	}
+
+	details, err := getOrdersDetail(ctx, resp.Infos)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders detail: %v", err)
+	}
+
+	return &npool.GetOrdersDetailByGoodResponse{
+		Details: details,
+	}, nil
 }
