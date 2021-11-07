@@ -13,32 +13,35 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func assertGoodPaying(t *testing.T, actual, expected *npool.GoodPaying) {
+func assertGasPaying(t *testing.T, actual, expected *npool.GasPaying) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
 	assert.Equal(t, actual.AccountID, expected.AccountID)
 	assert.Equal(t, actual.State, expected.State)
+	assert.Equal(t, actual.DurationMinutes, expected.DurationMinutes)
+	assert.Equal(t, actual.Used, expected.Used)
 }
 
-func TestGoodPayingCRUD(t *testing.T) {
+func TestGasPayingCRUD(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
 
-	goodPaying := npool.GoodPaying{
-		OrderID:   uuid.New().String(),
-		AccountID: uuid.New().String(),
+	gasPaying := npool.GasPaying{
+		OrderID:         uuid.New().String(),
+		AccountID:       uuid.New().String(),
+		DurationMinutes: 24 * 10 * 60,
 	}
-	firstCreateInfo := npool.CreateGoodPayingResponse{}
+	firstCreateInfo := npool.CreateGasPayingResponse{}
 
 	cli := resty.New()
 
 	resp, err := cli.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(npool.CreateGoodPayingRequest{
-			Info: &goodPaying,
+		SetBody(npool.CreateGasPayingRequest{
+			Info: &gasPaying,
 		}).
-		Post("http://localhost:36759/v1/create/good/paying")
-	goodPaying.State = "wait"
+		Post("http://localhost:36759/v1/create/gas/paying")
+	gasPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		err := json.Unmarshal(resp.Body(), &firstCreateInfo)
@@ -46,48 +49,49 @@ func TestGoodPayingCRUD(t *testing.T) {
 			assert.NotEqual(t, firstCreateInfo.Info.ID, uuid.UUID{}.String())
 			assert.Equal(t, firstCreateInfo.Info.ChainTransactionID, "")
 			assert.Equal(t, firstCreateInfo.Info.PlatformTransactionID, uuid.UUID{}.String())
-			assertGoodPaying(t, firstCreateInfo.Info, &goodPaying)
+			assertGasPaying(t, firstCreateInfo.Info, &gasPaying)
 		}
 	}
 
-	goodPaying.State = "done"
-	goodPaying.ChainTransactionID = "MOCKTRANSACTIONID"
-	goodPaying.PlatformTransactionID = uuid.New().String()
-	goodPaying.ID = firstCreateInfo.Info.ID
+	gasPaying.State = "done"
+	gasPaying.Used = true
+	gasPaying.ChainTransactionID = "MOCKTRANSACTIONID"
+	gasPaying.PlatformTransactionID = uuid.New().String()
+	gasPaying.ID = firstCreateInfo.Info.ID
 
 	resp, err = cli.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(npool.UpdateGoodPayingRequest{
-			Info: &goodPaying,
+		SetBody(npool.UpdateGasPayingRequest{
+			Info: &gasPaying,
 		}).
-		Post("http://localhost:36759/v1/update/good/paying")
+		Post("http://localhost:36759/v1/update/gas/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
-		info := npool.UpdateGoodPayingResponse{}
+		info := npool.UpdateGasPayingResponse{}
 		err := json.Unmarshal(resp.Body(), &info)
 		if assert.Nil(t, err) {
 			assert.Equal(t, info.Info.ID, firstCreateInfo.Info.ID)
-			assert.Equal(t, info.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-			assert.Equal(t, info.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
-			assertGoodPaying(t, info.Info, &goodPaying)
+			assert.Equal(t, info.Info.ChainTransactionID, gasPaying.ChainTransactionID)
+			assert.Equal(t, info.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
+			assertGasPaying(t, info.Info, &gasPaying)
 		}
 	}
 
 	resp, err = cli.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(npool.GetGoodPayingRequest{
-			ID: goodPaying.ID,
+		SetBody(npool.GetGasPayingRequest{
+			ID: gasPaying.ID,
 		}).
-		Post("http://localhost:36759/v1/get/good/paying")
+		Post("http://localhost:36759/v1/get/gas/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
-		info := npool.GetGoodPayingResponse{}
+		info := npool.GetGasPayingResponse{}
 		err := json.Unmarshal(resp.Body(), &info)
 		if assert.Nil(t, err) {
 			assert.Equal(t, info.Info.ID, firstCreateInfo.Info.ID)
-			assert.Equal(t, info.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-			assert.Equal(t, info.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
-			assertGoodPaying(t, info.Info, &goodPaying)
+			assert.Equal(t, info.Info.ChainTransactionID, gasPaying.ChainTransactionID)
+			assert.Equal(t, info.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
+			assertGasPaying(t, info.Info, &gasPaying)
 		}
 	}
 }
