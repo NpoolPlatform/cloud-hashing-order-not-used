@@ -93,4 +93,12 @@ func TestOrderCRUD(t *testing.T) {
 		}).
 		Post("http://localhost:36759/v1/create/gas/paying")
 	assert.Nil(t, err)
+
+	_, err = cli.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(npool.GetOrderDetailRequest{
+			ID: orderResp.Info.ID,
+		}).
+		Post("http://localhost:36759/v1/get/order/detail")
+	assert.Nil(t, err)
 }
