@@ -9,6 +9,8 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/order"
 
+	"github.com/google/uuid"
+
 	"golang.org/x/xerrors"
 )
 
@@ -35,15 +37,25 @@ func constructOrderDetail(info *npool.Order, goodPaying *npool.GoodPaying, gasPa
 }
 
 func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail, error) {
-	goodPaying, err := goodpaying.Get(ctx, &npool.GetGoodPayingRequest{
-		ID: info.GoodPayID,
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("fail get good pay: %v", err)
+	invalidUUID := uuid.UUID{}.String()
+
+	var goodPayingInfo *npool.GoodPaying
+
+	if info.GoodPayID != invalidUUID {
+		goodPaying, err := goodpaying.Get(ctx, &npool.GetGoodPayingRequest{
+			ID: info.GoodPayID,
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("fail get good pay: %v", err)
+		}
+		goodPayingInfo = goodPaying.Info
 	}
 
 	gasPayings := []*npool.GasPaying{}
 	for _, gasPayID := range info.GasPayIDs {
+		if gasPayID == invalidUUID {
+			continue
+		}
 		gasPaying, err := gaspaying.Get(ctx, &npool.GetGasPayingRequest{
 			ID: gasPayID,
 		})
@@ -53,7 +65,7 @@ func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail,
 		gasPayings = append(gasPayings, gasPaying.Info)
 	}
 
-	return constructOrderDetail(info, goodPaying.Info, gasPayings), nil
+	return constructOrderDetail(info, goodPayingInfo, gasPayings), nil
 }
 
 func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderDetailResponse, error) {

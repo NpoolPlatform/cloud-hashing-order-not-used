@@ -37,12 +37,16 @@ func assertOrderDetail(t *testing.T, actual *npool.OrderDetail, orderInfo *npool
 	assert.Equal(t, actual.UserID, orderInfo.UserID)
 	assert.Equal(t, actual.AppID, orderInfo.AppID)
 
-	assert.Equal(t, actual.GoodPaying.ID, goodPaying.ID)
-	assert.Equal(t, actual.GoodPaying.OrderID, goodPaying.OrderID)
-	assert.Equal(t, actual.GoodPaying.AccountID, goodPaying.AccountID)
-	assert.Equal(t, actual.GoodPaying.State, goodPaying.State)
-	assert.Equal(t, actual.GoodPaying.ChainTransactionID, goodPaying.ChainTransactionID)
-	assert.Equal(t, actual.GoodPaying.PlatformTransactionID, goodPaying.PlatformTransactionID)
+	assert.Equal(t, actual.GoodPaying, goodPaying)
+
+	if goodPaying != nil && actual.GoodPaying != nil {
+		assert.Equal(t, actual.GoodPaying.ID, goodPaying.ID)
+		assert.Equal(t, actual.GoodPaying.OrderID, goodPaying.OrderID)
+		assert.Equal(t, actual.GoodPaying.AccountID, goodPaying.AccountID)
+		assert.Equal(t, actual.GoodPaying.State, goodPaying.State)
+		assert.Equal(t, actual.GoodPaying.ChainTransactionID, goodPaying.ChainTransactionID)
+		assert.Equal(t, actual.GoodPaying.PlatformTransactionID, goodPaying.PlatformTransactionID)
+	}
 
 	assert.Equal(t, actual.Start, orderInfo.Start)
 	assert.Equal(t, actual.End, orderInfo.End)
@@ -117,6 +121,15 @@ func TestGetDetail(t *testing.T) {
 	assert.Nil(t, err)
 	gasPaying2.ID = gasPayingResp2.Info.ID
 
+	orderDetail, err := Get(context.Background(), &npool.GetOrderDetailRequest{
+		ID: orderResp.Info.ID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, orderDetail.Detail.ID, orderResp.Info.ID)
+		assertOrderDetail(t, orderDetail.Detail, &myOrder, nil,
+			[]*npool.GasPaying{})
+	}
+
 	myOrder.GasPayIDs = []string{gasPayingResp1.Info.ID, gasPayingResp2.Info.ID}
 	myOrder.GoodPayID = goodPayingResp.Info.ID
 	myOrder.ID = orderResp.Info.ID
@@ -127,7 +140,7 @@ func TestGetDetail(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	orderDetail, err := Get(context.Background(), &npool.GetOrderDetailRequest{
+	orderDetail, err = Get(context.Background(), &npool.GetOrderDetailRequest{
 		ID: orderResp.Info.ID,
 	})
 	if assert.Nil(t, err) {
