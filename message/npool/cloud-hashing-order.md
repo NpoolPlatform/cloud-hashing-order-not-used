@@ -250,7 +250,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Info | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) |  |  |
+| Detail | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) |  |  |
 
 
 
@@ -401,7 +401,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Infos | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
+| Details | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
 
 
 
@@ -432,7 +432,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Infos | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
+| Details | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
 
 
 
@@ -462,7 +462,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Infos | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
+| Details | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
 
 
 

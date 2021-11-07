@@ -286,7 +286,7 @@ message GetOrderDetailRequest {
 }
 
 message GetOrderDetailResponse {
-    OrderDetail Info = 2900;
+    OrderDetail Detail = 2900;
 }
 
 message GetOrdersDetailByAppUserRequest {
@@ -295,7 +295,7 @@ message GetOrdersDetailByAppUserRequest {
 }
 
 message GetOrdersDetailByAppUserResponse {
-    repeated OrderDetail Infos = 3100;
+    repeated OrderDetail Details = 3100;
 }
 
 message GetOrdersDetailByAppRequest {
@@ -303,7 +303,7 @@ message GetOrdersDetailByAppRequest {
 }
 
 message GetOrdersDetailByAppResponse {
-    repeated OrderDetail Infos = 3300;
+    repeated OrderDetail Details = 3300;
 }
 
 message GetOrdersDetailByGoodRequest {
@@ -311,5 +311,5 @@ message GetOrdersDetailByGoodRequest {
 }
 
 message GetOrdersDetailByGoodResponse {
-    repeated OrderDetail Infos = 3500;
+    repeated OrderDetail Details = 3500;
 }

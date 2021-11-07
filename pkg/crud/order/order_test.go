@@ -58,14 +58,14 @@ func TestCRUD(t *testing.T) {
 		SpecialReductionAmount:   20,
 		UserID:                   uuid.New().String(),
 		AppID:                    uuid.New().String(),
-		GoodPayID:                uuid.New().String(),
+		GoodPayID:                uuid.UUID{}.String(),
 		Start:                    second,
 		End:                      second + 20,
 		CompensateMinutes:        1000,
 		CompensateElapsedMinutes: 100,
 		GasStart:                 second,
 		GasEnd:                   second + 10,
-		GasPayIDs:                []string{uuid.New().String(), uuid.New().String()},
+		GasPayIDs:                []string{},
 		CouponID:                 uuid.New().String(),
 	}
 
@@ -81,12 +81,16 @@ func TestCRUD(t *testing.T) {
 
 	order.State = "paying"
 	order.ID = resp.Info.ID
+	order.GoodPayID = uuid.New().String()
+	order.GasPayIDs = []string{uuid.New().String(), uuid.New().String()}
 
 	resp1, err := Update(context.Background(), &npool.UpdateOrderRequest{
 		Info: &order,
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
+		assert.Equal(t, resp1.Info.GoodPayID, order.GoodPayID)
+		assert.Equal(t, resp1.Info.GasPayIDs, order.GasPayIDs)
 		assertOrder(t, resp1.Info, &order)
 	}
 
@@ -95,6 +99,8 @@ func TestCRUD(t *testing.T) {
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
+		assert.Equal(t, resp2.Info.GoodPayID, order.GoodPayID)
+		assert.Equal(t, resp2.Info.GasPayIDs, order.GasPayIDs)
 		assertOrder(t, resp2.Info, &order)
 	}
 

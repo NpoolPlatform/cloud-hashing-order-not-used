@@ -72,11 +72,6 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	gasPayIDs := []uuid.UUID{}
-	for _, gasPayID := range in.GetInfo().GetGasPayIDs() {
-		gasPayIDs = append(gasPayIDs, uuid.MustParse(gasPayID))
-	}
-
 	info, err := db.Client().
 		Order.
 		Create().
@@ -87,14 +82,14 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetState("created").
-		SetGoodPayID(uuid.MustParse(in.GetInfo().GetGoodPayID())).
 		SetStart(in.GetInfo().GetStart()).
 		SetEnd(in.GetInfo().GetEnd()).
 		SetCompensateMinutes(in.GetInfo().GetCompensateMinutes()).
 		SetCompensateElapsedMinutes(in.GetInfo().GetCompensateElapsedMinutes()).
 		SetGasStart(in.GetInfo().GetGasStart()).
 		SetGasEnd(in.GetInfo().GetGasEnd()).
-		SetGasPayIds(gasPayIDs).
+		SetGoodPayID(uuid.UUID{}).
+		SetGasPayIds([]uuid.UUID{}).
 		SetCouponID(uuid.MustParse(in.GetInfo().GetCouponID())).
 		Save(ctx)
 	if err != nil {
@@ -164,10 +159,12 @@ func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrd
 		return nil, xerrors.Errorf("empty gas pay ids")
 	}
 
+	invalidUUID := uuid.UUID{}
+
 	for _, oldGasPayID := range oldGasPayIDs[0].GasPayIds {
 		found := false
 		for _, gasPayID := range gasPayIDs {
-			if gasPayID == oldGasPayID {
+			if gasPayID == oldGasPayID && oldGasPayID != invalidUUID {
 				found = true
 				break
 			}
@@ -186,6 +183,8 @@ func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrd
 		SetGasEnd(in.GetInfo().GetGasEnd()).
 		SetCompensateMinutes(in.GetInfo().GetCompensateMinutes()).
 		SetCompensateElapsedMinutes(in.GetInfo().GetCompensateElapsedMinutes()).
+		SetGoodPayID(uuid.MustParse(in.GetInfo().GetGoodPayID())).
+		SetGasPayIds(gasPayIDs).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update order: %v", err)
