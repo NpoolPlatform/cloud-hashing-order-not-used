@@ -54,6 +54,10 @@ func assertOrderDetail(t *testing.T, actual *npool.OrderDetail, orderInfo *npool
 }
 
 func TestGetDetail(t *testing.T) {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+		return
+	}
+
 	second := uint32(time.Now().Unix())
 
 	appID := uuid.New().String()
