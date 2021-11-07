@@ -56,13 +56,17 @@ func assertOrderDetail(t *testing.T, actual *npool.OrderDetail, orderInfo *npool
 func TestGetDetail(t *testing.T) {
 	second := uint32(time.Now().Unix())
 
+	appID := uuid.New().String()
+	userID := uuid.New().String()
+	goodID := uuid.New().String()
+
 	myOrder := npool.Order{
-		GoodID:                   uuid.New().String(),
+		GoodID:                   goodID,
 		Units:                    10,
 		Discount:                 10,
 		SpecialReductionAmount:   20,
-		UserID:                   uuid.New().String(),
-		AppID:                    uuid.New().String(),
+		UserID:                   userID,
+		AppID:                    appID,
 		GoodPayID:                uuid.UUID{}.String(),
 		Start:                    second,
 		End:                      second + 20,
@@ -126,5 +130,17 @@ func TestGetDetail(t *testing.T) {
 		assert.Equal(t, orderDetail.Detail.ID, orderResp1.Info.ID)
 		assertOrderDetail(t, orderDetail.Detail, &myOrder, goodPayingResp.Info,
 			[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+	}
+
+	orderDetails, err := GetByAppUser(context.Background(), &npool.GetOrdersDetailByAppUserRequest{
+		AppID:  appID,
+		UserID: userID,
+	})
+	if assert.Nil(t, err) {
+		if assert.Equal(t, len(orderDetails.Details), 1) {
+			assert.Equal(t, orderDetails.Details[0].ID, orderResp1.Info.ID)
+			assertOrderDetail(t, orderDetails.Details[0], &myOrder, goodPayingResp.Info,
+				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+		}
 	}
 }
