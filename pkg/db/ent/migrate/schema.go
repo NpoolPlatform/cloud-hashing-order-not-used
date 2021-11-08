@@ -10,7 +10,7 @@ import (
 var (
 	// GasPayingsColumns holds the columns for the "gas_payings" table.
 	GasPayingsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
 		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
@@ -30,7 +30,7 @@ var (
 	}
 	// GoodPayingsColumns holds the columns for the "good_payings" table.
 	GoodPayingsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
 		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
@@ -48,7 +48,7 @@ var (
 	}
 	// OrdersColumns holds the columns for the "orders" table.
 	OrdersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},

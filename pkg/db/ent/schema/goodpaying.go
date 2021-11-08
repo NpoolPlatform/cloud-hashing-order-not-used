@@ -18,7 +18,8 @@ type GoodPaying struct {
 func (GoodPaying) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
-			Default(uuid.New),
+			Default(uuid.New).
+			Unique(),
 		field.UUID("order_id", uuid.UUID{}),
 		field.UUID("account_id", uuid.UUID{}),
 		field.Enum("state").
