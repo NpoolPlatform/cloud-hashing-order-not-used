@@ -50,7 +50,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.CreateOrderRequest{
 			Info: &myOrder,
 		}).
-		Post("http://localhost:36759/v1/create/order")
+		Post("http://localhost:50040/v1/create/order")
 	assert.Nil(t, err)
 
 	err = json.Unmarshal(resp.Body(), &orderResp)
@@ -65,7 +65,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.CreateGoodPayingRequest{
 			Info: &goodPaying,
 		}).
-		Post("http://localhost:36759/v1/create/good/paying")
+		Post("http://localhost:50040/v1/create/good/paying")
 	assert.Nil(t, err)
 
 	goodPayingResp := npool.CreateGoodPayingResponse{}
@@ -83,7 +83,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.CreateGasPayingRequest{
 			Info: &gasPaying1,
 		}).
-		Post("http://localhost:36759/v1/create/gas/paying")
+		Post("http://localhost:50040/v1/create/gas/paying")
 	assert.Nil(t, err)
 
 	gasPayingResp := npool.CreateGasPayingResponse{}
@@ -101,7 +101,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.CreateGasPayingRequest{
 			Info: &gasPaying2,
 		}).
-		Post("http://localhost:36759/v1/create/gas/paying")
+		Post("http://localhost:50040/v1/create/gas/paying")
 	assert.Nil(t, err)
 
 	err = json.Unmarshal(resp.Body(), &gasPayingResp)
@@ -113,7 +113,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.GetOrderDetailRequest{
 			ID: orderResp.Info.ID,
 		}).
-		Post("http://localhost:36759/v1/get/order/detail")
+		Post("http://localhost:50040/v1/get/order/detail")
 	assert.Nil(t, err)
 
 	myOrder.ID = orderResp.Info.ID
@@ -124,7 +124,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.UpdateOrderRequest{
 			Info: &myOrder,
 		}).
-		Post("http://localhost:36759/v1/update/order")
+		Post("http://localhost:50040/v1/update/order")
 	assert.Nil(t, err)
 
 	_, err = cli.R().
@@ -132,7 +132,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.GetOrderRequest{
 			ID: myOrder.ID,
 		}).
-		Post("http://localhost:36759/v1/get/order")
+		Post("http://localhost:50040/v1/get/order")
 	assert.Nil(t, err)
 
 	_, err = cli.R().
@@ -140,7 +140,7 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.GetOrderDetailRequest{
 			ID: myOrder.ID,
 		}).
-		Post("http://localhost:36759/v1/get/order/detail")
+		Post("http://localhost:50040/v1/get/order/detail")
 	assert.Nil(t, err)
 
 	_, err = cli.R().
@@ -149,7 +149,7 @@ func TestOrderCRUD(t *testing.T) {
 			AppID:  myOrder.AppID,
 			UserID: myOrder.UserID,
 		}).
-		Post("http://localhost:36759/v1/get/orders/detail/by/app/user")
+		Post("http://localhost:50040/v1/get/orders/detail/by/app/user")
 	assert.Nil(t, err)
 
 	_, err = cli.R().
@@ -157,6 +157,6 @@ func TestOrderCRUD(t *testing.T) {
 		SetBody(npool.GetOrdersDetailByGoodRequest{
 			GoodID: myOrder.GoodID,
 		}).
-		Post("http://localhost:36759/v1/get/orders/detail/by/good")
+		Post("http://localhost:50040/v1/get/orders/detail/by/good")
 	assert.Nil(t, err)
 }

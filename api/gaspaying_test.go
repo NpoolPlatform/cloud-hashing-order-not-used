@@ -40,7 +40,7 @@ func TestGasPayingCRUD(t *testing.T) {
 		SetBody(npool.CreateGasPayingRequest{
 			Info: &gasPaying,
 		}).
-		Post("http://localhost:36759/v1/create/gas/paying")
+		Post("http://localhost:50040/v1/create/gas/paying")
 	gasPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
@@ -64,7 +64,7 @@ func TestGasPayingCRUD(t *testing.T) {
 		SetBody(npool.UpdateGasPayingRequest{
 			Info: &gasPaying,
 		}).
-		Post("http://localhost:36759/v1/update/gas/paying")
+		Post("http://localhost:50040/v1/update/gas/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		info := npool.UpdateGasPayingResponse{}
@@ -82,7 +82,7 @@ func TestGasPayingCRUD(t *testing.T) {
 		SetBody(npool.GetGasPayingRequest{
 			ID: gasPaying.ID,
 		}).
-		Post("http://localhost:36759/v1/get/gas/paying")
+		Post("http://localhost:50040/v1/get/gas/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		info := npool.GetGasPayingResponse{}

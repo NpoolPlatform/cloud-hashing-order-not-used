@@ -37,7 +37,7 @@ func TestGoodPayingCRUD(t *testing.T) {
 		SetBody(npool.CreateGoodPayingRequest{
 			Info: &goodPaying,
 		}).
-		Post("http://localhost:36759/v1/create/good/paying")
+		Post("http://localhost:50040/v1/create/good/paying")
 	goodPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
@@ -60,7 +60,7 @@ func TestGoodPayingCRUD(t *testing.T) {
 		SetBody(npool.UpdateGoodPayingRequest{
 			Info: &goodPaying,
 		}).
-		Post("http://localhost:36759/v1/update/good/paying")
+		Post("http://localhost:50040/v1/update/good/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		info := npool.UpdateGoodPayingResponse{}
@@ -78,7 +78,7 @@ func TestGoodPayingCRUD(t *testing.T) {
 		SetBody(npool.GetGoodPayingRequest{
 			ID: goodPaying.ID,
 		}).
-		Post("http://localhost:36759/v1/get/good/paying")
+		Post("http://localhost:50040/v1/get/good/paying")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		info := npool.GetGoodPayingResponse{}
