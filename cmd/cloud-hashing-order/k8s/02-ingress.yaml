@@ -1,39 +1,57 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: cloud-hashing-order-npool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: cloud-hashing-order
-    k8s.kuboard.cn/workload: cloud-hashing-order
+    k8s.kuboard.cn/displayName: cloud-hashing-order-npool
+    k8s.kuboard.cn/workload: cloud-hashing-order-npool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd
+
 spec:
   rules:
-  - host: api.npool.top
-    http:
-      paths:
-      - path: /cloud-hashing-order
-        backend:
-          serviceName: cloud-hashing-order
-          servicePort: http
+    - host: api.npool.top
+      http:
+        paths:
+          - path: /cloud-hashing-order
+            backend:
+              serviceName: cloud-hashing-order
+              servicePort: 50040
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: cloud-hashing-order-xpool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: cloud-hashing-order
-    k8s.kuboard.cn/workload: cloud-hashing-order
+    k8s.kuboard.cn/displayName: cloud-hashing-order-xpool
+    k8s.kuboard.cn/workload: cloud-hashing-order-xpool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd
+
 spec:
   rules:
-  - host: api.xpool.top
-    http:
-      paths:
-      - path: /cloud-hashing-order
-        backend:
-          serviceName: cloud-hashing-order
-          servicePort: http
+    - host: api.xpool.top
+      http:
+        paths:
+          - path: /cloud-hashing-order
+            backend:
+              serviceName: cloud-hashing-order
+              servicePort: 50040
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-cloud-hashing-order-prefix
+  namespace: kube-system
+spec:
+  stripPrefix:
+    prefixes:
+      - /cloud-hashing-order
