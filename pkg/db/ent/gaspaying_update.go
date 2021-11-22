@@ -33,27 +33,9 @@ func (gpu *GasPayingUpdate) SetOrderID(u uuid.UUID) *GasPayingUpdate {
 	return gpu
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpu *GasPayingUpdate) SetAccountID(u uuid.UUID) *GasPayingUpdate {
-	gpu.mutation.SetAccountID(u)
-	return gpu
-}
-
-// SetState sets the "state" field.
-func (gpu *GasPayingUpdate) SetState(ga gaspaying.State) *GasPayingUpdate {
-	gpu.mutation.SetState(ga)
-	return gpu
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpu *GasPayingUpdate) SetChainTransactionID(s string) *GasPayingUpdate {
-	gpu.mutation.SetChainTransactionID(s)
-	return gpu
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpu *GasPayingUpdate) SetPlatformTransactionID(u uuid.UUID) *GasPayingUpdate {
-	gpu.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpu *GasPayingUpdate) SetPaymentID(u uuid.UUID) *GasPayingUpdate {
+	gpu.mutation.SetPaymentID(u)
 	return gpu
 }
 
@@ -67,12 +49,6 @@ func (gpu *GasPayingUpdate) SetDurationMinutes(u uint32) *GasPayingUpdate {
 // AddDurationMinutes adds u to the "duration_minutes" field.
 func (gpu *GasPayingUpdate) AddDurationMinutes(u uint32) *GasPayingUpdate {
 	gpu.mutation.AddDurationMinutes(u)
-	return gpu
-}
-
-// SetUsed sets the "used" field.
-func (gpu *GasPayingUpdate) SetUsed(b bool) *GasPayingUpdate {
-	gpu.mutation.SetUsed(b)
 	return gpu
 }
 
@@ -144,18 +120,12 @@ func (gpu *GasPayingUpdate) Save(ctx context.Context) (int, error) {
 	)
 	gpu.defaults()
 	if len(gpu.hooks) == 0 {
-		if err = gpu.check(); err != nil {
-			return 0, err
-		}
 		affected, err = gpu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*GasPayingMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gpu.check(); err != nil {
-				return 0, err
 			}
 			gpu.mutation = mutation
 			affected, err = gpu.sqlSave(ctx)
@@ -205,16 +175,6 @@ func (gpu *GasPayingUpdate) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (gpu *GasPayingUpdate) check() error {
-	if v, ok := gpu.mutation.State(); ok {
-		if err := gaspaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
-}
-
 func (gpu *GasPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -240,32 +200,11 @@ func (gpu *GasPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: gaspaying.FieldOrderID,
 		})
 	}
-	if value, ok := gpu.mutation.AccountID(); ok {
+	if value, ok := gpu.mutation.PaymentID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: gaspaying.FieldAccountID,
-		})
-	}
-	if value, ok := gpu.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: gaspaying.FieldState,
-		})
-	}
-	if value, ok := gpu.mutation.ChainTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: gaspaying.FieldChainTransactionID,
-		})
-	}
-	if value, ok := gpu.mutation.PlatformTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: gaspaying.FieldPlatformTransactionID,
+			Column: gaspaying.FieldPaymentID,
 		})
 	}
 	if value, ok := gpu.mutation.DurationMinutes(); ok {
@@ -280,13 +219,6 @@ func (gpu *GasPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: gaspaying.FieldDurationMinutes,
-		})
-	}
-	if value, ok := gpu.mutation.Used(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: gaspaying.FieldUsed,
 		})
 	}
 	if value, ok := gpu.mutation.CreateAt(); ok {
@@ -356,27 +288,9 @@ func (gpuo *GasPayingUpdateOne) SetOrderID(u uuid.UUID) *GasPayingUpdateOne {
 	return gpuo
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpuo *GasPayingUpdateOne) SetAccountID(u uuid.UUID) *GasPayingUpdateOne {
-	gpuo.mutation.SetAccountID(u)
-	return gpuo
-}
-
-// SetState sets the "state" field.
-func (gpuo *GasPayingUpdateOne) SetState(ga gaspaying.State) *GasPayingUpdateOne {
-	gpuo.mutation.SetState(ga)
-	return gpuo
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpuo *GasPayingUpdateOne) SetChainTransactionID(s string) *GasPayingUpdateOne {
-	gpuo.mutation.SetChainTransactionID(s)
-	return gpuo
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpuo *GasPayingUpdateOne) SetPlatformTransactionID(u uuid.UUID) *GasPayingUpdateOne {
-	gpuo.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpuo *GasPayingUpdateOne) SetPaymentID(u uuid.UUID) *GasPayingUpdateOne {
+	gpuo.mutation.SetPaymentID(u)
 	return gpuo
 }
 
@@ -390,12 +304,6 @@ func (gpuo *GasPayingUpdateOne) SetDurationMinutes(u uint32) *GasPayingUpdateOne
 // AddDurationMinutes adds u to the "duration_minutes" field.
 func (gpuo *GasPayingUpdateOne) AddDurationMinutes(u uint32) *GasPayingUpdateOne {
 	gpuo.mutation.AddDurationMinutes(u)
-	return gpuo
-}
-
-// SetUsed sets the "used" field.
-func (gpuo *GasPayingUpdateOne) SetUsed(b bool) *GasPayingUpdateOne {
-	gpuo.mutation.SetUsed(b)
 	return gpuo
 }
 
@@ -474,18 +382,12 @@ func (gpuo *GasPayingUpdateOne) Save(ctx context.Context) (*GasPaying, error) {
 	)
 	gpuo.defaults()
 	if len(gpuo.hooks) == 0 {
-		if err = gpuo.check(); err != nil {
-			return nil, err
-		}
 		node, err = gpuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*GasPayingMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gpuo.check(); err != nil {
-				return nil, err
 			}
 			gpuo.mutation = mutation
 			node, err = gpuo.sqlSave(ctx)
@@ -535,16 +437,6 @@ func (gpuo *GasPayingUpdateOne) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (gpuo *GasPayingUpdateOne) check() error {
-	if v, ok := gpuo.mutation.State(); ok {
-		if err := gaspaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
-}
-
 func (gpuo *GasPayingUpdateOne) sqlSave(ctx context.Context) (_node *GasPaying, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -587,32 +479,11 @@ func (gpuo *GasPayingUpdateOne) sqlSave(ctx context.Context) (_node *GasPaying, 
 			Column: gaspaying.FieldOrderID,
 		})
 	}
-	if value, ok := gpuo.mutation.AccountID(); ok {
+	if value, ok := gpuo.mutation.PaymentID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: gaspaying.FieldAccountID,
-		})
-	}
-	if value, ok := gpuo.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: gaspaying.FieldState,
-		})
-	}
-	if value, ok := gpuo.mutation.ChainTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: gaspaying.FieldChainTransactionID,
-		})
-	}
-	if value, ok := gpuo.mutation.PlatformTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: gaspaying.FieldPlatformTransactionID,
+			Column: gaspaying.FieldPaymentID,
 		})
 	}
 	if value, ok := gpuo.mutation.DurationMinutes(); ok {
@@ -627,13 +498,6 @@ func (gpuo *GasPayingUpdateOne) sqlSave(ctx context.Context) (_node *GasPaying, 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: gaspaying.FieldDurationMinutes,
-		})
-	}
-	if value, ok := gpuo.mutation.Used(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: gaspaying.FieldUsed,
 		})
 	}
 	if value, ok := gpuo.mutation.CreateAt(); ok {

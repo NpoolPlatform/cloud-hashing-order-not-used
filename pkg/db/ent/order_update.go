@@ -100,18 +100,6 @@ func (ou *OrderUpdate) AddSpecialReductionAmount(u uint64) *OrderUpdate {
 	return ou
 }
 
-// SetState sets the "state" field.
-func (ou *OrderUpdate) SetState(o order.State) *OrderUpdate {
-	ou.mutation.SetState(o)
-	return ou
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (ou *OrderUpdate) SetGoodPayID(u uuid.UUID) *OrderUpdate {
-	ou.mutation.SetGoodPayID(u)
-	return ou
-}
-
 // SetStart sets the "start" field.
 func (ou *OrderUpdate) SetStart(u uint32) *OrderUpdate {
 	ou.mutation.ResetStart()
@@ -135,80 +123,6 @@ func (ou *OrderUpdate) SetEnd(u uint32) *OrderUpdate {
 // AddEnd adds u to the "end" field.
 func (ou *OrderUpdate) AddEnd(u uint32) *OrderUpdate {
 	ou.mutation.AddEnd(u)
-	return ou
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (ou *OrderUpdate) SetCompensateMinutes(u uint32) *OrderUpdate {
-	ou.mutation.ResetCompensateMinutes()
-	ou.mutation.SetCompensateMinutes(u)
-	return ou
-}
-
-// SetNillableCompensateMinutes sets the "compensate_minutes" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableCompensateMinutes(u *uint32) *OrderUpdate {
-	if u != nil {
-		ou.SetCompensateMinutes(*u)
-	}
-	return ou
-}
-
-// AddCompensateMinutes adds u to the "compensate_minutes" field.
-func (ou *OrderUpdate) AddCompensateMinutes(u uint32) *OrderUpdate {
-	ou.mutation.AddCompensateMinutes(u)
-	return ou
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (ou *OrderUpdate) SetCompensateElapsedMinutes(u uint32) *OrderUpdate {
-	ou.mutation.ResetCompensateElapsedMinutes()
-	ou.mutation.SetCompensateElapsedMinutes(u)
-	return ou
-}
-
-// SetNillableCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableCompensateElapsedMinutes(u *uint32) *OrderUpdate {
-	if u != nil {
-		ou.SetCompensateElapsedMinutes(*u)
-	}
-	return ou
-}
-
-// AddCompensateElapsedMinutes adds u to the "compensate_elapsed_minutes" field.
-func (ou *OrderUpdate) AddCompensateElapsedMinutes(u uint32) *OrderUpdate {
-	ou.mutation.AddCompensateElapsedMinutes(u)
-	return ou
-}
-
-// SetGasStart sets the "gas_start" field.
-func (ou *OrderUpdate) SetGasStart(u uint32) *OrderUpdate {
-	ou.mutation.ResetGasStart()
-	ou.mutation.SetGasStart(u)
-	return ou
-}
-
-// AddGasStart adds u to the "gas_start" field.
-func (ou *OrderUpdate) AddGasStart(u uint32) *OrderUpdate {
-	ou.mutation.AddGasStart(u)
-	return ou
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (ou *OrderUpdate) SetGasEnd(u uint32) *OrderUpdate {
-	ou.mutation.ResetGasEnd()
-	ou.mutation.SetGasEnd(u)
-	return ou
-}
-
-// AddGasEnd adds u to the "gas_end" field.
-func (ou *OrderUpdate) AddGasEnd(u uint32) *OrderUpdate {
-	ou.mutation.AddGasEnd(u)
-	return ou
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (ou *OrderUpdate) SetGasPayIds(u []uuid.UUID) *OrderUpdate {
-	ou.mutation.SetGasPayIds(u)
 	return ou
 }
 
@@ -286,18 +200,12 @@ func (ou *OrderUpdate) Save(ctx context.Context) (int, error) {
 	)
 	ou.defaults()
 	if len(ou.hooks) == 0 {
-		if err = ou.check(); err != nil {
-			return 0, err
-		}
 		affected, err = ou.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*OrderMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = ou.check(); err != nil {
-				return 0, err
 			}
 			ou.mutation = mutation
 			affected, err = ou.sqlSave(ctx)
@@ -345,16 +253,6 @@ func (ou *OrderUpdate) defaults() {
 		v := order.UpdateDefaultUpdateAt()
 		ou.mutation.SetUpdateAt(v)
 	}
-}
-
-// check runs all checks and user-defined validators on the builder.
-func (ou *OrderUpdate) check() error {
-	if v, ok := ou.mutation.State(); ok {
-		if err := order.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
 }
 
 func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -438,20 +336,6 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldSpecialReductionAmount,
 		})
 	}
-	if value, ok := ou.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: order.FieldState,
-		})
-	}
-	if value, ok := ou.mutation.GoodPayID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: order.FieldGoodPayID,
-		})
-	}
 	if value, ok := ou.mutation.Start(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -478,69 +362,6 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: order.FieldEnd,
-		})
-	}
-	if value, ok := ou.mutation.CompensateMinutes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateMinutes,
-		})
-	}
-	if value, ok := ou.mutation.AddedCompensateMinutes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateMinutes,
-		})
-	}
-	if value, ok := ou.mutation.CompensateElapsedMinutes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateElapsedMinutes,
-		})
-	}
-	if value, ok := ou.mutation.AddedCompensateElapsedMinutes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateElapsedMinutes,
-		})
-	}
-	if value, ok := ou.mutation.GasStart(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasStart,
-		})
-	}
-	if value, ok := ou.mutation.AddedGasStart(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasStart,
-		})
-	}
-	if value, ok := ou.mutation.GasEnd(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasEnd,
-		})
-	}
-	if value, ok := ou.mutation.AddedGasEnd(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasEnd,
-		})
-	}
-	if value, ok := ou.mutation.GasPayIds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: order.FieldGasPayIds,
 		})
 	}
 	if value, ok := ou.mutation.CouponID(); ok {
@@ -684,18 +505,6 @@ func (ouo *OrderUpdateOne) AddSpecialReductionAmount(u uint64) *OrderUpdateOne {
 	return ouo
 }
 
-// SetState sets the "state" field.
-func (ouo *OrderUpdateOne) SetState(o order.State) *OrderUpdateOne {
-	ouo.mutation.SetState(o)
-	return ouo
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (ouo *OrderUpdateOne) SetGoodPayID(u uuid.UUID) *OrderUpdateOne {
-	ouo.mutation.SetGoodPayID(u)
-	return ouo
-}
-
 // SetStart sets the "start" field.
 func (ouo *OrderUpdateOne) SetStart(u uint32) *OrderUpdateOne {
 	ouo.mutation.ResetStart()
@@ -719,80 +528,6 @@ func (ouo *OrderUpdateOne) SetEnd(u uint32) *OrderUpdateOne {
 // AddEnd adds u to the "end" field.
 func (ouo *OrderUpdateOne) AddEnd(u uint32) *OrderUpdateOne {
 	ouo.mutation.AddEnd(u)
-	return ouo
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (ouo *OrderUpdateOne) SetCompensateMinutes(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetCompensateMinutes()
-	ouo.mutation.SetCompensateMinutes(u)
-	return ouo
-}
-
-// SetNillableCompensateMinutes sets the "compensate_minutes" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableCompensateMinutes(u *uint32) *OrderUpdateOne {
-	if u != nil {
-		ouo.SetCompensateMinutes(*u)
-	}
-	return ouo
-}
-
-// AddCompensateMinutes adds u to the "compensate_minutes" field.
-func (ouo *OrderUpdateOne) AddCompensateMinutes(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddCompensateMinutes(u)
-	return ouo
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (ouo *OrderUpdateOne) SetCompensateElapsedMinutes(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetCompensateElapsedMinutes()
-	ouo.mutation.SetCompensateElapsedMinutes(u)
-	return ouo
-}
-
-// SetNillableCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableCompensateElapsedMinutes(u *uint32) *OrderUpdateOne {
-	if u != nil {
-		ouo.SetCompensateElapsedMinutes(*u)
-	}
-	return ouo
-}
-
-// AddCompensateElapsedMinutes adds u to the "compensate_elapsed_minutes" field.
-func (ouo *OrderUpdateOne) AddCompensateElapsedMinutes(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddCompensateElapsedMinutes(u)
-	return ouo
-}
-
-// SetGasStart sets the "gas_start" field.
-func (ouo *OrderUpdateOne) SetGasStart(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetGasStart()
-	ouo.mutation.SetGasStart(u)
-	return ouo
-}
-
-// AddGasStart adds u to the "gas_start" field.
-func (ouo *OrderUpdateOne) AddGasStart(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddGasStart(u)
-	return ouo
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (ouo *OrderUpdateOne) SetGasEnd(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetGasEnd()
-	ouo.mutation.SetGasEnd(u)
-	return ouo
-}
-
-// AddGasEnd adds u to the "gas_end" field.
-func (ouo *OrderUpdateOne) AddGasEnd(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddGasEnd(u)
-	return ouo
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (ouo *OrderUpdateOne) SetGasPayIds(u []uuid.UUID) *OrderUpdateOne {
-	ouo.mutation.SetGasPayIds(u)
 	return ouo
 }
 
@@ -877,18 +612,12 @@ func (ouo *OrderUpdateOne) Save(ctx context.Context) (*Order, error) {
 	)
 	ouo.defaults()
 	if len(ouo.hooks) == 0 {
-		if err = ouo.check(); err != nil {
-			return nil, err
-		}
 		node, err = ouo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*OrderMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = ouo.check(); err != nil {
-				return nil, err
 			}
 			ouo.mutation = mutation
 			node, err = ouo.sqlSave(ctx)
@@ -936,16 +665,6 @@ func (ouo *OrderUpdateOne) defaults() {
 		v := order.UpdateDefaultUpdateAt()
 		ouo.mutation.SetUpdateAt(v)
 	}
-}
-
-// check runs all checks and user-defined validators on the builder.
-func (ouo *OrderUpdateOne) check() error {
-	if v, ok := ouo.mutation.State(); ok {
-		if err := order.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
 }
 
 func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error) {
@@ -1046,20 +765,6 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Column: order.FieldSpecialReductionAmount,
 		})
 	}
-	if value, ok := ouo.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: order.FieldState,
-		})
-	}
-	if value, ok := ouo.mutation.GoodPayID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: order.FieldGoodPayID,
-		})
-	}
 	if value, ok := ouo.mutation.Start(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -1086,69 +791,6 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: order.FieldEnd,
-		})
-	}
-	if value, ok := ouo.mutation.CompensateMinutes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateMinutes,
-		})
-	}
-	if value, ok := ouo.mutation.AddedCompensateMinutes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateMinutes,
-		})
-	}
-	if value, ok := ouo.mutation.CompensateElapsedMinutes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateElapsedMinutes,
-		})
-	}
-	if value, ok := ouo.mutation.AddedCompensateElapsedMinutes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateElapsedMinutes,
-		})
-	}
-	if value, ok := ouo.mutation.GasStart(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasStart,
-		})
-	}
-	if value, ok := ouo.mutation.AddedGasStart(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasStart,
-		})
-	}
-	if value, ok := ouo.mutation.GasEnd(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasEnd,
-		})
-	}
-	if value, ok := ouo.mutation.AddedGasEnd(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasEnd,
-		})
-	}
-	if value, ok := ouo.mutation.GasPayIds(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: order.FieldGasPayIds,
 		})
 	}
 	if value, ok := ouo.mutation.CouponID(); ok {

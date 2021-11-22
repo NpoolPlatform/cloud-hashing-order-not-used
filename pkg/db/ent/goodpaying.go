@@ -18,14 +18,8 @@ type GoodPaying struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
 	OrderID uuid.UUID `json:"order_id,omitempty"`
-	// AccountID holds the value of the "account_id" field.
-	AccountID uuid.UUID `json:"account_id,omitempty"`
-	// State holds the value of the "state" field.
-	State goodpaying.State `json:"state,omitempty"`
-	// ChainTransactionID holds the value of the "chain_transaction_id" field.
-	ChainTransactionID string `json:"chain_transaction_id,omitempty"`
-	// PlatformTransactionID holds the value of the "platform_transaction_id" field.
-	PlatformTransactionID uuid.UUID `json:"platform_transaction_id,omitempty"`
+	// PaymentID holds the value of the "payment_id" field.
+	PaymentID uuid.UUID `json:"payment_id,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -41,9 +35,7 @@ func (*GoodPaying) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case goodpaying.FieldCreateAt, goodpaying.FieldUpdateAt, goodpaying.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case goodpaying.FieldState, goodpaying.FieldChainTransactionID:
-			values[i] = new(sql.NullString)
-		case goodpaying.FieldID, goodpaying.FieldOrderID, goodpaying.FieldAccountID, goodpaying.FieldPlatformTransactionID:
+		case goodpaying.FieldID, goodpaying.FieldOrderID, goodpaying.FieldPaymentID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GoodPaying", columns[i])
@@ -72,29 +64,11 @@ func (gp *GoodPaying) assignValues(columns []string, values []interface{}) error
 			} else if value != nil {
 				gp.OrderID = *value
 			}
-		case goodpaying.FieldAccountID:
+		case goodpaying.FieldPaymentID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field account_id", values[i])
+				return fmt.Errorf("unexpected type %T for field payment_id", values[i])
 			} else if value != nil {
-				gp.AccountID = *value
-			}
-		case goodpaying.FieldState:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field state", values[i])
-			} else if value.Valid {
-				gp.State = goodpaying.State(value.String)
-			}
-		case goodpaying.FieldChainTransactionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field chain_transaction_id", values[i])
-			} else if value.Valid {
-				gp.ChainTransactionID = value.String
-			}
-		case goodpaying.FieldPlatformTransactionID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field platform_transaction_id", values[i])
-			} else if value != nil {
-				gp.PlatformTransactionID = *value
+				gp.PaymentID = *value
 			}
 		case goodpaying.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -144,14 +118,8 @@ func (gp *GoodPaying) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", gp.ID))
 	builder.WriteString(", order_id=")
 	builder.WriteString(fmt.Sprintf("%v", gp.OrderID))
-	builder.WriteString(", account_id=")
-	builder.WriteString(fmt.Sprintf("%v", gp.AccountID))
-	builder.WriteString(", state=")
-	builder.WriteString(fmt.Sprintf("%v", gp.State))
-	builder.WriteString(", chain_transaction_id=")
-	builder.WriteString(gp.ChainTransactionID)
-	builder.WriteString(", platform_transaction_id=")
-	builder.WriteString(fmt.Sprintf("%v", gp.PlatformTransactionID))
+	builder.WriteString(", payment_id=")
+	builder.WriteString(fmt.Sprintf("%v", gp.PaymentID))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", gp.CreateAt))
 	builder.WriteString(", update_at=")

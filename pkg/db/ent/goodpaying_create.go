@@ -29,27 +29,9 @@ func (gpc *GoodPayingCreate) SetOrderID(u uuid.UUID) *GoodPayingCreate {
 	return gpc
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpc *GoodPayingCreate) SetAccountID(u uuid.UUID) *GoodPayingCreate {
-	gpc.mutation.SetAccountID(u)
-	return gpc
-}
-
-// SetState sets the "state" field.
-func (gpc *GoodPayingCreate) SetState(_go goodpaying.State) *GoodPayingCreate {
-	gpc.mutation.SetState(_go)
-	return gpc
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpc *GoodPayingCreate) SetChainTransactionID(s string) *GoodPayingCreate {
-	gpc.mutation.SetChainTransactionID(s)
-	return gpc
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpc *GoodPayingCreate) SetPlatformTransactionID(u uuid.UUID) *GoodPayingCreate {
-	gpc.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpc *GoodPayingCreate) SetPaymentID(u uuid.UUID) *GoodPayingCreate {
+	gpc.mutation.SetPaymentID(u)
 	return gpc
 }
 
@@ -195,22 +177,8 @@ func (gpc *GoodPayingCreate) check() error {
 	if _, ok := gpc.mutation.OrderID(); !ok {
 		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
 	}
-	if _, ok := gpc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "account_id"`)}
-	}
-	if _, ok := gpc.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "state"`)}
-	}
-	if v, ok := gpc.mutation.State(); ok {
-		if err := goodpaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "state": %w`, err)}
-		}
-	}
-	if _, ok := gpc.mutation.ChainTransactionID(); !ok {
-		return &ValidationError{Name: "chain_transaction_id", err: errors.New(`ent: missing required field "chain_transaction_id"`)}
-	}
-	if _, ok := gpc.mutation.PlatformTransactionID(); !ok {
-		return &ValidationError{Name: "platform_transaction_id", err: errors.New(`ent: missing required field "platform_transaction_id"`)}
+	if _, ok := gpc.mutation.PaymentID(); !ok {
+		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "payment_id"`)}
 	}
 	if _, ok := gpc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
@@ -262,37 +230,13 @@ func (gpc *GoodPayingCreate) createSpec() (*GoodPaying, *sqlgraph.CreateSpec) {
 		})
 		_node.OrderID = value
 	}
-	if value, ok := gpc.mutation.AccountID(); ok {
+	if value, ok := gpc.mutation.PaymentID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodpaying.FieldAccountID,
+			Column: goodpaying.FieldPaymentID,
 		})
-		_node.AccountID = value
-	}
-	if value, ok := gpc.mutation.State(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: goodpaying.FieldState,
-		})
-		_node.State = value
-	}
-	if value, ok := gpc.mutation.ChainTransactionID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: goodpaying.FieldChainTransactionID,
-		})
-		_node.ChainTransactionID = value
-	}
-	if value, ok := gpc.mutation.PlatformTransactionID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodpaying.FieldPlatformTransactionID,
-		})
-		_node.PlatformTransactionID = value
+		_node.PaymentID = value
 	}
 	if value, ok := gpc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -384,51 +328,15 @@ func (u *GoodPayingUpsert) UpdateOrderID() *GoodPayingUpsert {
 	return u
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GoodPayingUpsert) SetAccountID(v uuid.UUID) *GoodPayingUpsert {
-	u.Set(goodpaying.FieldAccountID, v)
+// SetPaymentID sets the "payment_id" field.
+func (u *GoodPayingUpsert) SetPaymentID(v uuid.UUID) *GoodPayingUpsert {
+	u.Set(goodpaying.FieldPaymentID, v)
 	return u
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GoodPayingUpsert) UpdateAccountID() *GoodPayingUpsert {
-	u.SetExcluded(goodpaying.FieldAccountID)
-	return u
-}
-
-// SetState sets the "state" field.
-func (u *GoodPayingUpsert) SetState(v goodpaying.State) *GoodPayingUpsert {
-	u.Set(goodpaying.FieldState, v)
-	return u
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GoodPayingUpsert) UpdateState() *GoodPayingUpsert {
-	u.SetExcluded(goodpaying.FieldState)
-	return u
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GoodPayingUpsert) SetChainTransactionID(v string) *GoodPayingUpsert {
-	u.Set(goodpaying.FieldChainTransactionID, v)
-	return u
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsert) UpdateChainTransactionID() *GoodPayingUpsert {
-	u.SetExcluded(goodpaying.FieldChainTransactionID)
-	return u
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GoodPayingUpsert) SetPlatformTransactionID(v uuid.UUID) *GoodPayingUpsert {
-	u.Set(goodpaying.FieldPlatformTransactionID, v)
-	return u
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsert) UpdatePlatformTransactionID() *GoodPayingUpsert {
-	u.SetExcluded(goodpaying.FieldPlatformTransactionID)
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GoodPayingUpsert) UpdatePaymentID() *GoodPayingUpsert {
+	u.SetExcluded(goodpaying.FieldPaymentID)
 	return u
 }
 
@@ -532,59 +440,17 @@ func (u *GoodPayingUpsertOne) UpdateOrderID() *GoodPayingUpsertOne {
 	})
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GoodPayingUpsertOne) SetAccountID(v uuid.UUID) *GoodPayingUpsertOne {
+// SetPaymentID sets the "payment_id" field.
+func (u *GoodPayingUpsertOne) SetPaymentID(v uuid.UUID) *GoodPayingUpsertOne {
 	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetAccountID(v)
+		s.SetPaymentID(v)
 	})
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertOne) UpdateAccountID() *GoodPayingUpsertOne {
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GoodPayingUpsertOne) UpdatePaymentID() *GoodPayingUpsertOne {
 	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateAccountID()
-	})
-}
-
-// SetState sets the "state" field.
-func (u *GoodPayingUpsertOne) SetState(v goodpaying.State) *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GoodPayingUpsertOne) UpdateState() *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GoodPayingUpsertOne) SetChainTransactionID(v string) *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetChainTransactionID(v)
-	})
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertOne) UpdateChainTransactionID() *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateChainTransactionID()
-	})
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GoodPayingUpsertOne) SetPlatformTransactionID(v uuid.UUID) *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetPlatformTransactionID(v)
-	})
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertOne) UpdatePlatformTransactionID() *GoodPayingUpsertOne {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdatePlatformTransactionID()
+		s.UpdatePaymentID()
 	})
 }
 
@@ -860,59 +726,17 @@ func (u *GoodPayingUpsertBulk) UpdateOrderID() *GoodPayingUpsertBulk {
 	})
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GoodPayingUpsertBulk) SetAccountID(v uuid.UUID) *GoodPayingUpsertBulk {
+// SetPaymentID sets the "payment_id" field.
+func (u *GoodPayingUpsertBulk) SetPaymentID(v uuid.UUID) *GoodPayingUpsertBulk {
 	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetAccountID(v)
+		s.SetPaymentID(v)
 	})
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertBulk) UpdateAccountID() *GoodPayingUpsertBulk {
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GoodPayingUpsertBulk) UpdatePaymentID() *GoodPayingUpsertBulk {
 	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateAccountID()
-	})
-}
-
-// SetState sets the "state" field.
-func (u *GoodPayingUpsertBulk) SetState(v goodpaying.State) *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GoodPayingUpsertBulk) UpdateState() *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GoodPayingUpsertBulk) SetChainTransactionID(v string) *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetChainTransactionID(v)
-	})
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertBulk) UpdateChainTransactionID() *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdateChainTransactionID()
-	})
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GoodPayingUpsertBulk) SetPlatformTransactionID(v uuid.UUID) *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.SetPlatformTransactionID(v)
-	})
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GoodPayingUpsertBulk) UpdatePlatformTransactionID() *GoodPayingUpsertBulk {
-	return u.Update(func(s *GoodPayingUpsert) {
-		s.UpdatePlatformTransactionID()
+		s.UpdatePaymentID()
 	})
 }
 

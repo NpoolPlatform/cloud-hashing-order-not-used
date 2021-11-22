@@ -18,22 +18,18 @@ func validateGasPaying(info *npool.GasPaying) error {
 	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetAccountID()); err != nil {
-		return xerrors.Errorf("invalid account id: %v", err)
+	if _, err := uuid.Parse(info.GetPaymentID()); err != nil {
+		return xerrors.Errorf("invalid payment id: %v", err)
 	}
 	return nil
 }
 
 func dbRowToGasPaying(row *ent.GasPaying) *npool.GasPaying {
 	return &npool.GasPaying{
-		ID:                    row.ID.String(),
-		OrderID:               row.OrderID.String(),
-		AccountID:             row.AccountID.String(),
-		State:                 string(row.State),
-		ChainTransactionID:    row.ChainTransactionID,
-		PlatformTransactionID: row.PlatformTransactionID.String(),
-		DurationMinutes:       row.DurationMinutes,
-		Used:                  row.Used,
+		ID:              row.ID.String(),
+		OrderID:         row.OrderID.String(),
+		DurationMinutes: row.DurationMinutes,
+		PaymentID:       row.PaymentID.String(),
 	}
 }
 
@@ -46,12 +42,8 @@ func Create(ctx context.Context, in *npool.CreateGasPayingRequest) (*npool.Creat
 		GasPaying.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
-		SetAccountID(uuid.MustParse(in.GetInfo().GetAccountID())).
-		SetChainTransactionID("").
-		SetPlatformTransactionID(uuid.UUID{}).
-		SetState("wait").
+		SetPaymentID(uuid.MustParse(in.GetInfo().GetPaymentID())).
 		SetDurationMinutes(in.GetInfo().GetDurationMinutes()).
-		SetUsed(false).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create gas paying: %v", err)
@@ -86,37 +78,5 @@ func Get(ctx context.Context, in *npool.GetGasPayingRequest) (*npool.GetGasPayin
 
 	return &npool.GetGasPayingResponse{
 		Info: dbRowToGasPaying(infos[0]),
-	}, nil
-}
-
-func Update(ctx context.Context, in *npool.UpdateGasPayingRequest) (*npool.UpdateGasPayingResponse, error) {
-	if err := validateGasPaying(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
-	}
-
-	id, err := uuid.Parse(in.GetInfo().GetID())
-	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
-	}
-
-	platformTID, err := uuid.Parse(in.GetInfo().GetPlatformTransactionID())
-	if err != nil {
-		return nil, xerrors.Errorf("invalid platform transaction id: %v", err)
-	}
-
-	info, err := db.Client().
-		GasPaying.
-		UpdateOneID(id).
-		SetState(gaspaying.State(in.GetInfo().GetState())).
-		SetChainTransactionID(in.GetInfo().GetChainTransactionID()).
-		SetPlatformTransactionID(platformTID).
-		SetUsed(in.GetInfo().GetUsed()).
-		Save(ctx)
-	if err != nil {
-		return nil, xerrors.Errorf("fail update gas paying: %v", err)
-	}
-
-	return &npool.UpdateGasPayingResponse{
-		Info: dbRowToGasPaying(info),
 	}, nil
 }

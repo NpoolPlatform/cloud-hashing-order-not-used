@@ -18,18 +18,10 @@ type GasPaying struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
 	OrderID uuid.UUID `json:"order_id,omitempty"`
-	// AccountID holds the value of the "account_id" field.
-	AccountID uuid.UUID `json:"account_id,omitempty"`
-	// State holds the value of the "state" field.
-	State gaspaying.State `json:"state,omitempty"`
-	// ChainTransactionID holds the value of the "chain_transaction_id" field.
-	ChainTransactionID string `json:"chain_transaction_id,omitempty"`
-	// PlatformTransactionID holds the value of the "platform_transaction_id" field.
-	PlatformTransactionID uuid.UUID `json:"platform_transaction_id,omitempty"`
+	// PaymentID holds the value of the "payment_id" field.
+	PaymentID uuid.UUID `json:"payment_id,omitempty"`
 	// DurationMinutes holds the value of the "duration_minutes" field.
 	DurationMinutes uint32 `json:"duration_minutes,omitempty"`
-	// Used holds the value of the "used" field.
-	Used bool `json:"used,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -43,13 +35,9 @@ func (*GasPaying) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case gaspaying.FieldUsed:
-			values[i] = new(sql.NullBool)
 		case gaspaying.FieldDurationMinutes, gaspaying.FieldCreateAt, gaspaying.FieldUpdateAt, gaspaying.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case gaspaying.FieldState, gaspaying.FieldChainTransactionID:
-			values[i] = new(sql.NullString)
-		case gaspaying.FieldID, gaspaying.FieldOrderID, gaspaying.FieldAccountID, gaspaying.FieldPlatformTransactionID:
+		case gaspaying.FieldID, gaspaying.FieldOrderID, gaspaying.FieldPaymentID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GasPaying", columns[i])
@@ -78,41 +66,17 @@ func (gp *GasPaying) assignValues(columns []string, values []interface{}) error 
 			} else if value != nil {
 				gp.OrderID = *value
 			}
-		case gaspaying.FieldAccountID:
+		case gaspaying.FieldPaymentID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field account_id", values[i])
+				return fmt.Errorf("unexpected type %T for field payment_id", values[i])
 			} else if value != nil {
-				gp.AccountID = *value
-			}
-		case gaspaying.FieldState:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field state", values[i])
-			} else if value.Valid {
-				gp.State = gaspaying.State(value.String)
-			}
-		case gaspaying.FieldChainTransactionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field chain_transaction_id", values[i])
-			} else if value.Valid {
-				gp.ChainTransactionID = value.String
-			}
-		case gaspaying.FieldPlatformTransactionID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field platform_transaction_id", values[i])
-			} else if value != nil {
-				gp.PlatformTransactionID = *value
+				gp.PaymentID = *value
 			}
 		case gaspaying.FieldDurationMinutes:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field duration_minutes", values[i])
 			} else if value.Valid {
 				gp.DurationMinutes = uint32(value.Int64)
-			}
-		case gaspaying.FieldUsed:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field used", values[i])
-			} else if value.Valid {
-				gp.Used = value.Bool
 			}
 		case gaspaying.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -162,18 +126,10 @@ func (gp *GasPaying) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", gp.ID))
 	builder.WriteString(", order_id=")
 	builder.WriteString(fmt.Sprintf("%v", gp.OrderID))
-	builder.WriteString(", account_id=")
-	builder.WriteString(fmt.Sprintf("%v", gp.AccountID))
-	builder.WriteString(", state=")
-	builder.WriteString(fmt.Sprintf("%v", gp.State))
-	builder.WriteString(", chain_transaction_id=")
-	builder.WriteString(gp.ChainTransactionID)
-	builder.WriteString(", platform_transaction_id=")
-	builder.WriteString(fmt.Sprintf("%v", gp.PlatformTransactionID))
+	builder.WriteString(", payment_id=")
+	builder.WriteString(fmt.Sprintf("%v", gp.PaymentID))
 	builder.WriteString(", duration_minutes=")
 	builder.WriteString(fmt.Sprintf("%v", gp.DurationMinutes))
-	builder.WriteString(", used=")
-	builder.WriteString(fmt.Sprintf("%v", gp.Used))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", gp.CreateAt))
 	builder.WriteString(", update_at=")

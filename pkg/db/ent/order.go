@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -29,24 +28,10 @@ type Order struct {
 	Discount uint32 `json:"discount,omitempty"`
 	// SpecialReductionAmount holds the value of the "special_reduction_amount" field.
 	SpecialReductionAmount uint64 `json:"special_reduction_amount,omitempty"`
-	// State holds the value of the "state" field.
-	State order.State `json:"state,omitempty"`
-	// GoodPayID holds the value of the "good_pay_id" field.
-	GoodPayID uuid.UUID `json:"good_pay_id,omitempty"`
 	// Start holds the value of the "start" field.
 	Start uint32 `json:"start,omitempty"`
 	// End holds the value of the "end" field.
 	End uint32 `json:"end,omitempty"`
-	// CompensateMinutes holds the value of the "compensate_minutes" field.
-	CompensateMinutes uint32 `json:"compensate_minutes,omitempty"`
-	// CompensateElapsedMinutes holds the value of the "compensate_elapsed_minutes" field.
-	CompensateElapsedMinutes uint32 `json:"compensate_elapsed_minutes,omitempty"`
-	// GasStart holds the value of the "gas_start" field.
-	GasStart uint32 `json:"gas_start,omitempty"`
-	// GasEnd holds the value of the "gas_end" field.
-	GasEnd uint32 `json:"gas_end,omitempty"`
-	// GasPayIds holds the value of the "gas_pay_ids" field.
-	GasPayIds []uuid.UUID `json:"gas_pay_ids,omitempty"`
 	// CouponID holds the value of the "coupon_id" field.
 	CouponID uuid.UUID `json:"coupon_id,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
@@ -62,13 +47,9 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldGasPayIds:
-			values[i] = new([]byte)
-		case order.FieldUnits, order.FieldDiscount, order.FieldSpecialReductionAmount, order.FieldStart, order.FieldEnd, order.FieldCompensateMinutes, order.FieldCompensateElapsedMinutes, order.FieldGasStart, order.FieldGasEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
+		case order.FieldUnits, order.FieldDiscount, order.FieldSpecialReductionAmount, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldState:
-			values[i] = new(sql.NullString)
-		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldGoodPayID, order.FieldCouponID:
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldCouponID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
@@ -127,18 +108,6 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				o.SpecialReductionAmount = uint64(value.Int64)
 			}
-		case order.FieldState:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field state", values[i])
-			} else if value.Valid {
-				o.State = order.State(value.String)
-			}
-		case order.FieldGoodPayID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field good_pay_id", values[i])
-			} else if value != nil {
-				o.GoodPayID = *value
-			}
 		case order.FieldStart:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field start", values[i])
@@ -150,38 +119,6 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
 				o.End = uint32(value.Int64)
-			}
-		case order.FieldCompensateMinutes:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field compensate_minutes", values[i])
-			} else if value.Valid {
-				o.CompensateMinutes = uint32(value.Int64)
-			}
-		case order.FieldCompensateElapsedMinutes:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field compensate_elapsed_minutes", values[i])
-			} else if value.Valid {
-				o.CompensateElapsedMinutes = uint32(value.Int64)
-			}
-		case order.FieldGasStart:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field gas_start", values[i])
-			} else if value.Valid {
-				o.GasStart = uint32(value.Int64)
-			}
-		case order.FieldGasEnd:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field gas_end", values[i])
-			} else if value.Valid {
-				o.GasEnd = uint32(value.Int64)
-			}
-		case order.FieldGasPayIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field gas_pay_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &o.GasPayIds); err != nil {
-					return fmt.Errorf("unmarshal field gas_pay_ids: %w", err)
-				}
 			}
 		case order.FieldCouponID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -247,24 +184,10 @@ func (o *Order) String() string {
 	builder.WriteString(fmt.Sprintf("%v", o.Discount))
 	builder.WriteString(", special_reduction_amount=")
 	builder.WriteString(fmt.Sprintf("%v", o.SpecialReductionAmount))
-	builder.WriteString(", state=")
-	builder.WriteString(fmt.Sprintf("%v", o.State))
-	builder.WriteString(", good_pay_id=")
-	builder.WriteString(fmt.Sprintf("%v", o.GoodPayID))
 	builder.WriteString(", start=")
 	builder.WriteString(fmt.Sprintf("%v", o.Start))
 	builder.WriteString(", end=")
 	builder.WriteString(fmt.Sprintf("%v", o.End))
-	builder.WriteString(", compensate_minutes=")
-	builder.WriteString(fmt.Sprintf("%v", o.CompensateMinutes))
-	builder.WriteString(", compensate_elapsed_minutes=")
-	builder.WriteString(fmt.Sprintf("%v", o.CompensateElapsedMinutes))
-	builder.WriteString(", gas_start=")
-	builder.WriteString(fmt.Sprintf("%v", o.GasStart))
-	builder.WriteString(", gas_end=")
-	builder.WriteString(fmt.Sprintf("%v", o.GasEnd))
-	builder.WriteString(", gas_pay_ids=")
-	builder.WriteString(fmt.Sprintf("%v", o.GasPayIds))
 	builder.WriteString(", coupon_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.CouponID))
 	builder.WriteString(", create_at=")

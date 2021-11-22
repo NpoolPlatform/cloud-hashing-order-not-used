@@ -3,8 +3,6 @@
 package gaspaying
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
 )
 
@@ -15,18 +13,10 @@ const (
 	FieldID = "id"
 	// FieldOrderID holds the string denoting the order_id field in the database.
 	FieldOrderID = "order_id"
-	// FieldAccountID holds the string denoting the account_id field in the database.
-	FieldAccountID = "account_id"
-	// FieldState holds the string denoting the state field in the database.
-	FieldState = "state"
-	// FieldChainTransactionID holds the string denoting the chain_transaction_id field in the database.
-	FieldChainTransactionID = "chain_transaction_id"
-	// FieldPlatformTransactionID holds the string denoting the platform_transaction_id field in the database.
-	FieldPlatformTransactionID = "platform_transaction_id"
+	// FieldPaymentID holds the string denoting the payment_id field in the database.
+	FieldPaymentID = "payment_id"
 	// FieldDurationMinutes holds the string denoting the duration_minutes field in the database.
 	FieldDurationMinutes = "duration_minutes"
-	// FieldUsed holds the string denoting the used field in the database.
-	FieldUsed = "used"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -41,12 +31,8 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldOrderID,
-	FieldAccountID,
-	FieldState,
-	FieldChainTransactionID,
-	FieldPlatformTransactionID,
+	FieldPaymentID,
 	FieldDurationMinutes,
-	FieldUsed,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,
@@ -74,28 +60,3 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
-
-// State defines the type for the "state" enum field.
-type State string
-
-// State values.
-const (
-	StateWait     State = "wait"
-	StateDone     State = "done"
-	StateCanceled State = "canceled"
-	StateTimeout  State = "timeout"
-)
-
-func (s State) String() string {
-	return string(s)
-}
-
-// StateValidator is a validator for the "state" field enum values. It is called by the builders before save.
-func StateValidator(s State) error {
-	switch s {
-	case StateWait, StateDone, StateCanceled, StateTimeout:
-		return nil
-	default:
-		return fmt.Errorf("gaspaying: invalid enum value for state field: %q", s)
-	}
-}

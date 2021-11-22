@@ -5,11 +5,11 @@ import (
 
 	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint
-	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
+	_ "github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint
+	_ "github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/order"
 
-	"github.com/google/uuid"
+	_ "github.com/google/uuid"
 
 	"golang.org/x/xerrors"
 )
@@ -29,43 +29,13 @@ func constructOrderDetail(info *npool.Order, goodPaying *npool.GoodPaying, gasPa
 		End:                      info.End,
 		CompensateMinutes:        info.CompensateMinutes,
 		CompensateElapsedMinutes: info.CompensateElapsedMinutes,
-		GasStart:                 info.GasStart,
-		GasEnd:                   info.GasEnd,
-		GasPayings:               gasPayings,
 		CouponID:                 info.CouponID,
 	}
 }
 
 func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail, error) {
-	invalidUUID := uuid.UUID{}.String()
-
 	var goodPayingInfo *npool.GoodPaying
-
-	if info.GoodPayID != invalidUUID {
-		goodPaying, err := goodpaying.Get(ctx, &npool.GetGoodPayingRequest{
-			ID: info.GoodPayID,
-		})
-		if err != nil {
-			return nil, xerrors.Errorf("fail get good pay: %v", err)
-		}
-		goodPayingInfo = goodPaying.Info
-	}
-
-	gasPayings := []*npool.GasPaying{}
-	for _, gasPayID := range info.GasPayIDs {
-		if gasPayID == invalidUUID {
-			continue
-		}
-		gasPaying, err := gaspaying.Get(ctx, &npool.GetGasPayingRequest{
-			ID: gasPayID,
-		})
-		if err != nil {
-			return nil, xerrors.Errorf("fail get gas pay: %v", err)
-		}
-		gasPayings = append(gasPayings, gasPaying.Info)
-	}
-
-	return constructOrderDetail(info, goodPayingInfo, gasPayings), nil
+	return constructOrderDetail(info, goodPayingInfo, nil), nil
 }
 
 func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderDetailResponse, error) {

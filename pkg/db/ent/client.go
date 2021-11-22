@@ -10,9 +10,13 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/migrate"
 	"github.com/google/uuid"
 
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/canceledorder"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/compensate"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/outofgas"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/payment"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -23,12 +27,20 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// CanceledOrder is the client for interacting with the CanceledOrder builders.
+	CanceledOrder *CanceledOrderClient
+	// Compensate is the client for interacting with the Compensate builders.
+	Compensate *CompensateClient
 	// GasPaying is the client for interacting with the GasPaying builders.
 	GasPaying *GasPayingClient
 	// GoodPaying is the client for interacting with the GoodPaying builders.
 	GoodPaying *GoodPayingClient
 	// Order is the client for interacting with the Order builders.
 	Order *OrderClient
+	// OutOfGas is the client for interacting with the OutOfGas builders.
+	OutOfGas *OutOfGasClient
+	// Payment is the client for interacting with the Payment builders.
+	Payment *PaymentClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -42,9 +54,13 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.CanceledOrder = NewCanceledOrderClient(c.config)
+	c.Compensate = NewCompensateClient(c.config)
 	c.GasPaying = NewGasPayingClient(c.config)
 	c.GoodPaying = NewGoodPayingClient(c.config)
 	c.Order = NewOrderClient(c.config)
+	c.OutOfGas = NewOutOfGasClient(c.config)
+	c.Payment = NewPaymentClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -76,11 +92,15 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:        ctx,
-		config:     cfg,
-		GasPaying:  NewGasPayingClient(cfg),
-		GoodPaying: NewGoodPayingClient(cfg),
-		Order:      NewOrderClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		CanceledOrder: NewCanceledOrderClient(cfg),
+		Compensate:    NewCompensateClient(cfg),
+		GasPaying:     NewGasPayingClient(cfg),
+		GoodPaying:    NewGoodPayingClient(cfg),
+		Order:         NewOrderClient(cfg),
+		OutOfGas:      NewOutOfGasClient(cfg),
+		Payment:       NewPaymentClient(cfg),
 	}, nil
 }
 
@@ -98,17 +118,21 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		config:     cfg,
-		GasPaying:  NewGasPayingClient(cfg),
-		GoodPaying: NewGoodPayingClient(cfg),
-		Order:      NewOrderClient(cfg),
+		config:        cfg,
+		CanceledOrder: NewCanceledOrderClient(cfg),
+		Compensate:    NewCompensateClient(cfg),
+		GasPaying:     NewGasPayingClient(cfg),
+		GoodPaying:    NewGoodPayingClient(cfg),
+		Order:         NewOrderClient(cfg),
+		OutOfGas:      NewOutOfGasClient(cfg),
+		Payment:       NewPaymentClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		GasPaying.
+//		CanceledOrder.
 //		Query().
 //		Count(ctx)
 //
@@ -131,9 +155,193 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.CanceledOrder.Use(hooks...)
+	c.Compensate.Use(hooks...)
 	c.GasPaying.Use(hooks...)
 	c.GoodPaying.Use(hooks...)
 	c.Order.Use(hooks...)
+	c.OutOfGas.Use(hooks...)
+	c.Payment.Use(hooks...)
+}
+
+// CanceledOrderClient is a client for the CanceledOrder schema.
+type CanceledOrderClient struct {
+	config
+}
+
+// NewCanceledOrderClient returns a client for the CanceledOrder from the given config.
+func NewCanceledOrderClient(c config) *CanceledOrderClient {
+	return &CanceledOrderClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `canceledorder.Hooks(f(g(h())))`.
+func (c *CanceledOrderClient) Use(hooks ...Hook) {
+	c.hooks.CanceledOrder = append(c.hooks.CanceledOrder, hooks...)
+}
+
+// Create returns a create builder for CanceledOrder.
+func (c *CanceledOrderClient) Create() *CanceledOrderCreate {
+	mutation := newCanceledOrderMutation(c.config, OpCreate)
+	return &CanceledOrderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of CanceledOrder entities.
+func (c *CanceledOrderClient) CreateBulk(builders ...*CanceledOrderCreate) *CanceledOrderCreateBulk {
+	return &CanceledOrderCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for CanceledOrder.
+func (c *CanceledOrderClient) Update() *CanceledOrderUpdate {
+	mutation := newCanceledOrderMutation(c.config, OpUpdate)
+	return &CanceledOrderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CanceledOrderClient) UpdateOne(co *CanceledOrder) *CanceledOrderUpdateOne {
+	mutation := newCanceledOrderMutation(c.config, OpUpdateOne, withCanceledOrder(co))
+	return &CanceledOrderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CanceledOrderClient) UpdateOneID(id uuid.UUID) *CanceledOrderUpdateOne {
+	mutation := newCanceledOrderMutation(c.config, OpUpdateOne, withCanceledOrderID(id))
+	return &CanceledOrderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for CanceledOrder.
+func (c *CanceledOrderClient) Delete() *CanceledOrderDelete {
+	mutation := newCanceledOrderMutation(c.config, OpDelete)
+	return &CanceledOrderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *CanceledOrderClient) DeleteOne(co *CanceledOrder) *CanceledOrderDeleteOne {
+	return c.DeleteOneID(co.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *CanceledOrderClient) DeleteOneID(id uuid.UUID) *CanceledOrderDeleteOne {
+	builder := c.Delete().Where(canceledorder.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CanceledOrderDeleteOne{builder}
+}
+
+// Query returns a query builder for CanceledOrder.
+func (c *CanceledOrderClient) Query() *CanceledOrderQuery {
+	return &CanceledOrderQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a CanceledOrder entity by its id.
+func (c *CanceledOrderClient) Get(ctx context.Context, id uuid.UUID) (*CanceledOrder, error) {
+	return c.Query().Where(canceledorder.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CanceledOrderClient) GetX(ctx context.Context, id uuid.UUID) *CanceledOrder {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *CanceledOrderClient) Hooks() []Hook {
+	return c.hooks.CanceledOrder
+}
+
+// CompensateClient is a client for the Compensate schema.
+type CompensateClient struct {
+	config
+}
+
+// NewCompensateClient returns a client for the Compensate from the given config.
+func NewCompensateClient(c config) *CompensateClient {
+	return &CompensateClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `compensate.Hooks(f(g(h())))`.
+func (c *CompensateClient) Use(hooks ...Hook) {
+	c.hooks.Compensate = append(c.hooks.Compensate, hooks...)
+}
+
+// Create returns a create builder for Compensate.
+func (c *CompensateClient) Create() *CompensateCreate {
+	mutation := newCompensateMutation(c.config, OpCreate)
+	return &CompensateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Compensate entities.
+func (c *CompensateClient) CreateBulk(builders ...*CompensateCreate) *CompensateCreateBulk {
+	return &CompensateCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Compensate.
+func (c *CompensateClient) Update() *CompensateUpdate {
+	mutation := newCompensateMutation(c.config, OpUpdate)
+	return &CompensateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CompensateClient) UpdateOne(co *Compensate) *CompensateUpdateOne {
+	mutation := newCompensateMutation(c.config, OpUpdateOne, withCompensate(co))
+	return &CompensateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CompensateClient) UpdateOneID(id uuid.UUID) *CompensateUpdateOne {
+	mutation := newCompensateMutation(c.config, OpUpdateOne, withCompensateID(id))
+	return &CompensateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Compensate.
+func (c *CompensateClient) Delete() *CompensateDelete {
+	mutation := newCompensateMutation(c.config, OpDelete)
+	return &CompensateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *CompensateClient) DeleteOne(co *Compensate) *CompensateDeleteOne {
+	return c.DeleteOneID(co.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *CompensateClient) DeleteOneID(id uuid.UUID) *CompensateDeleteOne {
+	builder := c.Delete().Where(compensate.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CompensateDeleteOne{builder}
+}
+
+// Query returns a query builder for Compensate.
+func (c *CompensateClient) Query() *CompensateQuery {
+	return &CompensateQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Compensate entity by its id.
+func (c *CompensateClient) Get(ctx context.Context, id uuid.UUID) (*Compensate, error) {
+	return c.Query().Where(compensate.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CompensateClient) GetX(ctx context.Context, id uuid.UUID) *Compensate {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *CompensateClient) Hooks() []Hook {
+	return c.hooks.Compensate
 }
 
 // GasPayingClient is a client for the GasPaying schema.
@@ -404,4 +612,184 @@ func (c *OrderClient) GetX(ctx context.Context, id uuid.UUID) *Order {
 // Hooks returns the client hooks.
 func (c *OrderClient) Hooks() []Hook {
 	return c.hooks.Order
+}
+
+// OutOfGasClient is a client for the OutOfGas schema.
+type OutOfGasClient struct {
+	config
+}
+
+// NewOutOfGasClient returns a client for the OutOfGas from the given config.
+func NewOutOfGasClient(c config) *OutOfGasClient {
+	return &OutOfGasClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `outofgas.Hooks(f(g(h())))`.
+func (c *OutOfGasClient) Use(hooks ...Hook) {
+	c.hooks.OutOfGas = append(c.hooks.OutOfGas, hooks...)
+}
+
+// Create returns a create builder for OutOfGas.
+func (c *OutOfGasClient) Create() *OutOfGasCreate {
+	mutation := newOutOfGasMutation(c.config, OpCreate)
+	return &OutOfGasCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OutOfGas entities.
+func (c *OutOfGasClient) CreateBulk(builders ...*OutOfGasCreate) *OutOfGasCreateBulk {
+	return &OutOfGasCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OutOfGas.
+func (c *OutOfGasClient) Update() *OutOfGasUpdate {
+	mutation := newOutOfGasMutation(c.config, OpUpdate)
+	return &OutOfGasUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OutOfGasClient) UpdateOne(oog *OutOfGas) *OutOfGasUpdateOne {
+	mutation := newOutOfGasMutation(c.config, OpUpdateOne, withOutOfGas(oog))
+	return &OutOfGasUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OutOfGasClient) UpdateOneID(id uuid.UUID) *OutOfGasUpdateOne {
+	mutation := newOutOfGasMutation(c.config, OpUpdateOne, withOutOfGasID(id))
+	return &OutOfGasUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OutOfGas.
+func (c *OutOfGasClient) Delete() *OutOfGasDelete {
+	mutation := newOutOfGasMutation(c.config, OpDelete)
+	return &OutOfGasDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *OutOfGasClient) DeleteOne(oog *OutOfGas) *OutOfGasDeleteOne {
+	return c.DeleteOneID(oog.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *OutOfGasClient) DeleteOneID(id uuid.UUID) *OutOfGasDeleteOne {
+	builder := c.Delete().Where(outofgas.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OutOfGasDeleteOne{builder}
+}
+
+// Query returns a query builder for OutOfGas.
+func (c *OutOfGasClient) Query() *OutOfGasQuery {
+	return &OutOfGasQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a OutOfGas entity by its id.
+func (c *OutOfGasClient) Get(ctx context.Context, id uuid.UUID) (*OutOfGas, error) {
+	return c.Query().Where(outofgas.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OutOfGasClient) GetX(ctx context.Context, id uuid.UUID) *OutOfGas {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OutOfGasClient) Hooks() []Hook {
+	return c.hooks.OutOfGas
+}
+
+// PaymentClient is a client for the Payment schema.
+type PaymentClient struct {
+	config
+}
+
+// NewPaymentClient returns a client for the Payment from the given config.
+func NewPaymentClient(c config) *PaymentClient {
+	return &PaymentClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `payment.Hooks(f(g(h())))`.
+func (c *PaymentClient) Use(hooks ...Hook) {
+	c.hooks.Payment = append(c.hooks.Payment, hooks...)
+}
+
+// Create returns a create builder for Payment.
+func (c *PaymentClient) Create() *PaymentCreate {
+	mutation := newPaymentMutation(c.config, OpCreate)
+	return &PaymentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Payment entities.
+func (c *PaymentClient) CreateBulk(builders ...*PaymentCreate) *PaymentCreateBulk {
+	return &PaymentCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Payment.
+func (c *PaymentClient) Update() *PaymentUpdate {
+	mutation := newPaymentMutation(c.config, OpUpdate)
+	return &PaymentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PaymentClient) UpdateOne(pa *Payment) *PaymentUpdateOne {
+	mutation := newPaymentMutation(c.config, OpUpdateOne, withPayment(pa))
+	return &PaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PaymentClient) UpdateOneID(id uuid.UUID) *PaymentUpdateOne {
+	mutation := newPaymentMutation(c.config, OpUpdateOne, withPaymentID(id))
+	return &PaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Payment.
+func (c *PaymentClient) Delete() *PaymentDelete {
+	mutation := newPaymentMutation(c.config, OpDelete)
+	return &PaymentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *PaymentClient) DeleteOne(pa *Payment) *PaymentDeleteOne {
+	return c.DeleteOneID(pa.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PaymentClient) DeleteOneID(id uuid.UUID) *PaymentDeleteOne {
+	builder := c.Delete().Where(payment.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PaymentDeleteOne{builder}
+}
+
+// Query returns a query builder for Payment.
+func (c *PaymentClient) Query() *PaymentQuery {
+	return &PaymentQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Payment entity by its id.
+func (c *PaymentClient) Get(ctx context.Context, id uuid.UUID) (*Payment, error) {
+	return c.Query().Where(payment.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PaymentClient) GetX(ctx context.Context, id uuid.UUID) *Payment {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PaymentClient) Hooks() []Hook {
+	return c.hooks.Payment
 }

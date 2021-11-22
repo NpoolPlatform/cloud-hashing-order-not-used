@@ -3,8 +3,6 @@
 package order
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
 )
 
@@ -25,24 +23,10 @@ const (
 	FieldDiscount = "discount"
 	// FieldSpecialReductionAmount holds the string denoting the special_reduction_amount field in the database.
 	FieldSpecialReductionAmount = "special_reduction_amount"
-	// FieldState holds the string denoting the state field in the database.
-	FieldState = "state"
-	// FieldGoodPayID holds the string denoting the good_pay_id field in the database.
-	FieldGoodPayID = "good_pay_id"
 	// FieldStart holds the string denoting the start field in the database.
 	FieldStart = "start"
 	// FieldEnd holds the string denoting the end field in the database.
 	FieldEnd = "end"
-	// FieldCompensateMinutes holds the string denoting the compensate_minutes field in the database.
-	FieldCompensateMinutes = "compensate_minutes"
-	// FieldCompensateElapsedMinutes holds the string denoting the compensate_elapsed_minutes field in the database.
-	FieldCompensateElapsedMinutes = "compensate_elapsed_minutes"
-	// FieldGasStart holds the string denoting the gas_start field in the database.
-	FieldGasStart = "gas_start"
-	// FieldGasEnd holds the string denoting the gas_end field in the database.
-	FieldGasEnd = "gas_end"
-	// FieldGasPayIds holds the string denoting the gas_pay_ids field in the database.
-	FieldGasPayIds = "gas_pay_ids"
 	// FieldCouponID holds the string denoting the coupon_id field in the database.
 	FieldCouponID = "coupon_id"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
@@ -64,15 +48,8 @@ var Columns = []string{
 	FieldUnits,
 	FieldDiscount,
 	FieldSpecialReductionAmount,
-	FieldState,
-	FieldGoodPayID,
 	FieldStart,
 	FieldEnd,
-	FieldCompensateMinutes,
-	FieldCompensateElapsedMinutes,
-	FieldGasStart,
-	FieldGasEnd,
-	FieldGasPayIds,
 	FieldCouponID,
 	FieldCreateAt,
 	FieldUpdateAt,
@@ -94,10 +71,6 @@ var (
 	DefaultDiscount uint32
 	// DefaultSpecialReductionAmount holds the default value on creation for the "special_reduction_amount" field.
 	DefaultSpecialReductionAmount uint64
-	// DefaultCompensateMinutes holds the default value on creation for the "compensate_minutes" field.
-	DefaultCompensateMinutes uint32
-	// DefaultCompensateElapsedMinutes holds the default value on creation for the "compensate_elapsed_minutes" field.
-	DefaultCompensateElapsedMinutes uint32
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.
@@ -109,29 +82,3 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
-
-// State defines the type for the "state" enum field.
-type State string
-
-// State values.
-const (
-	StateCreated  State = "created"
-	StatePaying   State = "paying"
-	StatePaid     State = "paid"
-	StateTimeout  State = "timeout"
-	StateCanceled State = "canceled"
-)
-
-func (s State) String() string {
-	return string(s)
-}
-
-// StateValidator is a validator for the "state" field enum values. It is called by the builders before save.
-func StateValidator(s State) error {
-	switch s {
-	case StateCreated, StatePaying, StatePaid, StateTimeout, StateCanceled:
-		return nil
-	default:
-		return fmt.Errorf("order: invalid enum value for state field: %q", s)
-	}
-}

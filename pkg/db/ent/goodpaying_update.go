@@ -33,27 +33,9 @@ func (gpu *GoodPayingUpdate) SetOrderID(u uuid.UUID) *GoodPayingUpdate {
 	return gpu
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpu *GoodPayingUpdate) SetAccountID(u uuid.UUID) *GoodPayingUpdate {
-	gpu.mutation.SetAccountID(u)
-	return gpu
-}
-
-// SetState sets the "state" field.
-func (gpu *GoodPayingUpdate) SetState(_go goodpaying.State) *GoodPayingUpdate {
-	gpu.mutation.SetState(_go)
-	return gpu
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpu *GoodPayingUpdate) SetChainTransactionID(s string) *GoodPayingUpdate {
-	gpu.mutation.SetChainTransactionID(s)
-	return gpu
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpu *GoodPayingUpdate) SetPlatformTransactionID(u uuid.UUID) *GoodPayingUpdate {
-	gpu.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpu *GoodPayingUpdate) SetPaymentID(u uuid.UUID) *GoodPayingUpdate {
+	gpu.mutation.SetPaymentID(u)
 	return gpu
 }
 
@@ -125,18 +107,12 @@ func (gpu *GoodPayingUpdate) Save(ctx context.Context) (int, error) {
 	)
 	gpu.defaults()
 	if len(gpu.hooks) == 0 {
-		if err = gpu.check(); err != nil {
-			return 0, err
-		}
 		affected, err = gpu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*GoodPayingMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gpu.check(); err != nil {
-				return 0, err
 			}
 			gpu.mutation = mutation
 			affected, err = gpu.sqlSave(ctx)
@@ -186,16 +162,6 @@ func (gpu *GoodPayingUpdate) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (gpu *GoodPayingUpdate) check() error {
-	if v, ok := gpu.mutation.State(); ok {
-		if err := goodpaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
-}
-
 func (gpu *GoodPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -221,32 +187,11 @@ func (gpu *GoodPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: goodpaying.FieldOrderID,
 		})
 	}
-	if value, ok := gpu.mutation.AccountID(); ok {
+	if value, ok := gpu.mutation.PaymentID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodpaying.FieldAccountID,
-		})
-	}
-	if value, ok := gpu.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: goodpaying.FieldState,
-		})
-	}
-	if value, ok := gpu.mutation.ChainTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: goodpaying.FieldChainTransactionID,
-		})
-	}
-	if value, ok := gpu.mutation.PlatformTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodpaying.FieldPlatformTransactionID,
+			Column: goodpaying.FieldPaymentID,
 		})
 	}
 	if value, ok := gpu.mutation.CreateAt(); ok {
@@ -316,27 +261,9 @@ func (gpuo *GoodPayingUpdateOne) SetOrderID(u uuid.UUID) *GoodPayingUpdateOne {
 	return gpuo
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpuo *GoodPayingUpdateOne) SetAccountID(u uuid.UUID) *GoodPayingUpdateOne {
-	gpuo.mutation.SetAccountID(u)
-	return gpuo
-}
-
-// SetState sets the "state" field.
-func (gpuo *GoodPayingUpdateOne) SetState(_go goodpaying.State) *GoodPayingUpdateOne {
-	gpuo.mutation.SetState(_go)
-	return gpuo
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpuo *GoodPayingUpdateOne) SetChainTransactionID(s string) *GoodPayingUpdateOne {
-	gpuo.mutation.SetChainTransactionID(s)
-	return gpuo
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpuo *GoodPayingUpdateOne) SetPlatformTransactionID(u uuid.UUID) *GoodPayingUpdateOne {
-	gpuo.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpuo *GoodPayingUpdateOne) SetPaymentID(u uuid.UUID) *GoodPayingUpdateOne {
+	gpuo.mutation.SetPaymentID(u)
 	return gpuo
 }
 
@@ -415,18 +342,12 @@ func (gpuo *GoodPayingUpdateOne) Save(ctx context.Context) (*GoodPaying, error) 
 	)
 	gpuo.defaults()
 	if len(gpuo.hooks) == 0 {
-		if err = gpuo.check(); err != nil {
-			return nil, err
-		}
 		node, err = gpuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*GoodPayingMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gpuo.check(); err != nil {
-				return nil, err
 			}
 			gpuo.mutation = mutation
 			node, err = gpuo.sqlSave(ctx)
@@ -476,16 +397,6 @@ func (gpuo *GoodPayingUpdateOne) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (gpuo *GoodPayingUpdateOne) check() error {
-	if v, ok := gpuo.mutation.State(); ok {
-		if err := goodpaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
-		}
-	}
-	return nil
-}
-
 func (gpuo *GoodPayingUpdateOne) sqlSave(ctx context.Context) (_node *GoodPaying, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -528,32 +439,11 @@ func (gpuo *GoodPayingUpdateOne) sqlSave(ctx context.Context) (_node *GoodPaying
 			Column: goodpaying.FieldOrderID,
 		})
 	}
-	if value, ok := gpuo.mutation.AccountID(); ok {
+	if value, ok := gpuo.mutation.PaymentID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: goodpaying.FieldAccountID,
-		})
-	}
-	if value, ok := gpuo.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: goodpaying.FieldState,
-		})
-	}
-	if value, ok := gpuo.mutation.ChainTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: goodpaying.FieldChainTransactionID,
-		})
-	}
-	if value, ok := gpuo.mutation.PlatformTransactionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: goodpaying.FieldPlatformTransactionID,
+			Column: goodpaying.FieldPaymentID,
 		})
 	}
 	if value, ok := gpuo.mutation.CreateAt(); ok {

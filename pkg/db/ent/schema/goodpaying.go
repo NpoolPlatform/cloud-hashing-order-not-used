@@ -21,11 +21,7 @@ func (GoodPaying) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.UUID("order_id", uuid.UUID{}),
-		field.UUID("account_id", uuid.UUID{}),
-		field.Enum("state").
-			Values("wait", "done", "canceled", "timeout"),
-		field.String("chain_transaction_id"),
-		field.UUID("platform_transaction_id", uuid.UUID{}),
+		field.UUID("payment_id", uuid.UUID{}),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

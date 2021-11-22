@@ -30,13 +30,6 @@ service CloudHashingOrder {
         };
     }
 
-    rpc UpdateGoodPaying(UpdateGoodPayingRequest) returns (UpdateGoodPayingResponse) {
-        option (google.api.http) = {
-            post: "/v1/update/good/paying"
-            body: "*"
-        };
-    }
-
     rpc CreateGasPaying(CreateGasPayingRequest) returns (CreateGasPayingResponse) {
         option (google.api.http) = {
             post: "/v1/create/gas/paying"
@@ -46,12 +39,6 @@ service CloudHashingOrder {
     rpc GetGasPaying(GetGasPayingRequest) returns (GetGasPayingResponse) {
         option (google.api.http) = {
             post: "/v1/get/gas/paying"
-            body: "*"
-        };
-    }
-    rpc UpdateGasPaying(UpdateGasPayingRequest) returns (UpdateGasPayingResponse) {
-        option (google.api.http) = {
-            post: "/v1/update/gas/paying"
             body: "*"
         };
     }
@@ -71,12 +58,6 @@ service CloudHashingOrder {
     rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailResponse) {
         option (google.api.http) = {
             post: "/v1/get/order/detail"
-            body: "*"
-        };
-    }
-    rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse) {
-        option (google.api.http) = {
-            post: "/v1/update/order"
             body: "*"
         };
     }
@@ -124,13 +105,19 @@ message VersionResponse {
     string Info = 100;
 }
 
+message Payment {
+    string ID = 110;
+    string OrderID = 111;
+    string AccountID = 112;
+    string State = 113;
+    string ChainTransactionID = 114;
+    string PlatformTransactionID = 115;
+}
+
 message GoodPaying {
     string ID = 200;
     string OrderID = 201;
-    string AccountID = 202;
-    string State = 203;
-    string ChainTransactionID = 204;
-    string PlatformTransactionID = 205;
+    string PaymentID = 202;
 }
 
 message CreateGoodPayingRequest {
@@ -149,23 +136,11 @@ message GetGoodPayingResponse {
     GoodPaying Info = 600;
 }
 
-message UpdateGoodPayingRequest {
-    GoodPaying Info = 610;
-}
-
-message UpdateGoodPayingResponse {
-    GoodPaying Info = 620;
-}
-
 message GasPaying {
     string ID = 700;
     string OrderID = 701;
-    string AccountID = 702;
-    string State = 703;
-    string ChainTransactionID = 704;
-    string PlatformTransactionID = 705;
-    uint32 DurationMinutes = 706;
-    bool Used = 707;
+    string PaymentID = 702;
+    uint32 DurationMinutes = 703;
 }
 
 message CreateGasPayingRequest {
@@ -184,14 +159,6 @@ message GetGasPayingResponse {
     GasPaying Info = 1100;
 }
 
-message UpdateGasPayingRequest {
-    GasPaying Info = 1200;
-}
-
-message UpdateGasPayingResponse {
-    GasPaying Info = 1300;
-}
-
 message Order {
     string ID = 1400;
     string GoodID = 1401;
@@ -201,14 +168,10 @@ message Order {
     string UserID = 1405;
     string AppID = 1406;
     string State = 1407;
-    string GoodPayID = 1408;
     uint32 Start = 1409;
     uint32 End = 1410;
     uint32 CompensateMinutes = 1411;
     uint32 CompensateElapsedMinutes = 1412;
-    uint32 GasStart = 1413;
-    uint32 GasEnd = 1414;
-    repeated string GasPayIDs = 1415;
     string CouponID = 1416;
 }
 
@@ -226,14 +189,6 @@ message GetOrderRequest {
 
 message GetOrderResponse {
     Order Info = 1800;
-}
-
-message UpdateOrderRequest {
-    Order Info = 1900;
-}
-
-message UpdateOrderResponse {
-    Order Info = 2000;
 }
 
 message GetOrdersByAppUserRequest {

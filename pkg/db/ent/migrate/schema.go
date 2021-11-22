@@ -8,16 +8,42 @@ import (
 )
 
 var (
+	// CanceledOrdersColumns holds the columns for the "canceled_orders" table.
+	CanceledOrdersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// CanceledOrdersTable holds the schema information for the "canceled_orders" table.
+	CanceledOrdersTable = &schema.Table{
+		Name:       "canceled_orders",
+		Columns:    CanceledOrdersColumns,
+		PrimaryKey: []*schema.Column{CanceledOrdersColumns[0]},
+	}
+	// CompensatesColumns holds the columns for the "compensates" table.
+	CompensatesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "start", Type: field.TypeUint32},
+		{Name: "end", Type: field.TypeUint32},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// CompensatesTable holds the schema information for the "compensates" table.
+	CompensatesTable = &schema.Table{
+		Name:       "compensates",
+		Columns:    CompensatesColumns,
+		PrimaryKey: []*schema.Column{CompensatesColumns[0]},
+	}
 	// GasPayingsColumns holds the columns for the "gas_payings" table.
 	GasPayingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
-		{Name: "account_id", Type: field.TypeUUID},
-		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
-		{Name: "chain_transaction_id", Type: field.TypeString},
-		{Name: "platform_transaction_id", Type: field.TypeUUID},
+		{Name: "payment_id", Type: field.TypeUUID},
 		{Name: "duration_minutes", Type: field.TypeUint32},
-		{Name: "used", Type: field.TypeBool},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
@@ -32,10 +58,7 @@ var (
 	GoodPayingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
-		{Name: "account_id", Type: field.TypeUUID},
-		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
-		{Name: "chain_transaction_id", Type: field.TypeString},
-		{Name: "platform_transaction_id", Type: field.TypeUUID},
+		{Name: "payment_id", Type: field.TypeUUID},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
@@ -55,15 +78,8 @@ var (
 		{Name: "units", Type: field.TypeUint32},
 		{Name: "discount", Type: field.TypeUint32, Default: 0},
 		{Name: "special_reduction_amount", Type: field.TypeUint64, Default: 0},
-		{Name: "state", Type: field.TypeEnum, Enums: []string{"created", "paying", "paid", "timeout", "canceled"}},
-		{Name: "good_pay_id", Type: field.TypeUUID},
 		{Name: "start", Type: field.TypeUint32},
 		{Name: "end", Type: field.TypeUint32},
-		{Name: "compensate_minutes", Type: field.TypeUint32, Default: 0},
-		{Name: "compensate_elapsed_minutes", Type: field.TypeUint32, Default: 0},
-		{Name: "gas_start", Type: field.TypeUint32},
-		{Name: "gas_end", Type: field.TypeUint32},
-		{Name: "gas_pay_ids", Type: field.TypeJSON},
 		{Name: "coupon_id", Type: field.TypeUUID},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
@@ -75,11 +91,51 @@ var (
 		Columns:    OrdersColumns,
 		PrimaryKey: []*schema.Column{OrdersColumns[0]},
 	}
+	// OutOfGasColumns holds the columns for the "out_of_gas" table.
+	OutOfGasColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "start", Type: field.TypeUint32},
+		{Name: "end", Type: field.TypeUint32},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// OutOfGasTable holds the schema information for the "out_of_gas" table.
+	OutOfGasTable = &schema.Table{
+		Name:       "out_of_gas",
+		Columns:    OutOfGasColumns,
+		PrimaryKey: []*schema.Column{OutOfGasColumns[0]},
+	}
+	// PaymentsColumns holds the columns for the "payments" table.
+	PaymentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "account_id", Type: field.TypeUUID},
+		{Name: "amount", Type: field.TypeUint64},
+		{Name: "coin_info_id", Type: field.TypeUUID},
+		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
+		{Name: "chain_transaction_id", Type: field.TypeString},
+		{Name: "platform_transaction_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// PaymentsTable holds the schema information for the "payments" table.
+	PaymentsTable = &schema.Table{
+		Name:       "payments",
+		Columns:    PaymentsColumns,
+		PrimaryKey: []*schema.Column{PaymentsColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CanceledOrdersTable,
+		CompensatesTable,
 		GasPayingsTable,
 		GoodPayingsTable,
 		OrdersTable,
+		OutOfGasTable,
+		PaymentsTable,
 	}
 )
 

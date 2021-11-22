@@ -23,15 +23,6 @@ func (s *Server) CreateGasPaying(ctx context.Context, in *npool.CreateGasPayingR
 	return resp, nil
 }
 
-func (s *Server) UpdateGasPaying(ctx context.Context, in *npool.UpdateGasPayingRequest) (*npool.UpdateGasPayingResponse, error) {
-	resp, err := gaspaying.Update(ctx, in)
-	if err != nil {
-		logger.Sugar().Errorw("create gas paying error: %w", err)
-		return &npool.UpdateGasPayingResponse{}, status.Error(codes.Internal, "internal server error")
-	}
-	return resp, nil
-}
-
 func (s *Server) GetGasPaying(ctx context.Context, in *npool.GetGasPayingRequest) (*npool.GetGasPayingResponse, error) {
 	resp, err := gaspaying.Get(ctx, in)
 	if err != nil {

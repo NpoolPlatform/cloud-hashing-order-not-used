@@ -26,44 +26,24 @@ func validateOrder(info *npool.Order) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		return xerrors.Errorf("invalid app id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetGoodPayID()); err != nil {
-		return xerrors.Errorf("invalid good pay id: %v", err)
-	}
 	if _, err := uuid.Parse(info.GetCouponID()); err != nil {
 		return xerrors.Errorf("invalid coupon id: %v", err)
-	}
-	for _, payID := range info.GetGasPayIDs() {
-		if _, err := uuid.Parse(payID); err != nil {
-			return xerrors.Errorf("invalid gas pay id: %v", err)
-		}
 	}
 	return nil
 }
 
 func dbRowToOrder(row *ent.Order) *npool.Order {
-	gasPayIDs := []string{}
-	for _, payID := range row.GasPayIds {
-		gasPayIDs = append(gasPayIDs, payID.String())
-	}
-
 	return &npool.Order{
-		ID:                       row.ID.String(),
-		GoodID:                   row.GoodID.String(),
-		Units:                    row.Units,
-		Discount:                 row.Discount,
-		SpecialReductionAmount:   price.DBPriceToVisualPrice(row.SpecialReductionAmount),
-		UserID:                   row.UserID.String(),
-		AppID:                    row.AppID.String(),
-		State:                    string(row.State),
-		GoodPayID:                row.GoodPayID.String(),
-		Start:                    row.Start,
-		End:                      row.End,
-		CompensateMinutes:        row.CompensateMinutes,
-		CompensateElapsedMinutes: row.CompensateElapsedMinutes,
-		GasStart:                 row.GasStart,
-		GasEnd:                   row.GasEnd,
-		GasPayIDs:                gasPayIDs,
-		CouponID:                 row.CouponID.String(),
+		ID:                     row.ID.String(),
+		GoodID:                 row.GoodID.String(),
+		Units:                  row.Units,
+		Discount:               row.Discount,
+		SpecialReductionAmount: price.DBPriceToVisualPrice(row.SpecialReductionAmount),
+		UserID:                 row.UserID.String(),
+		AppID:                  row.AppID.String(),
+		Start:                  row.Start,
+		End:                    row.End,
+		CouponID:               row.CouponID.String(),
 	}
 }
 
@@ -81,15 +61,8 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetSpecialReductionAmount(price.VisualPriceToDBPrice(in.GetInfo().GetSpecialReductionAmount())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
-		SetState("created").
 		SetStart(in.GetInfo().GetStart()).
 		SetEnd(in.GetInfo().GetEnd()).
-		SetCompensateMinutes(in.GetInfo().GetCompensateMinutes()).
-		SetCompensateElapsedMinutes(in.GetInfo().GetCompensateElapsedMinutes()).
-		SetGasStart(in.GetInfo().GetGasStart()).
-		SetGasEnd(in.GetInfo().GetGasEnd()).
-		SetGoodPayID(uuid.UUID{}).
-		SetGasPayIds([]uuid.UUID{}).
 		SetCouponID(uuid.MustParse(in.GetInfo().GetCouponID())).
 		Save(ctx)
 	if err != nil {
@@ -125,73 +98,6 @@ func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderRespons
 
 	return &npool.GetOrderResponse{
 		Info: dbRowToOrder(infos[0]),
-	}, nil
-}
-
-func Update(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrderResponse, error) {
-	if err := validateOrder(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
-	}
-
-	gasPayIDs := []uuid.UUID{}
-	for _, gasPayID := range in.GetInfo().GetGasPayIDs() {
-		gasPayIDs = append(gasPayIDs, uuid.MustParse(gasPayID))
-	}
-
-	id, err := uuid.Parse(in.GetInfo().GetID())
-	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
-	}
-
-	oldGasPayIDs, err := db.Client().
-		Order.
-		Query().
-		Where(
-			order.And(
-				order.ID(id),
-			),
-		).
-		All(ctx)
-	if err != nil {
-		return nil, xerrors.Errorf("fail query old gas pay id: %v", err)
-	}
-	if len(oldGasPayIDs) == 0 {
-		return nil, xerrors.Errorf("empty gas pay ids")
-	}
-
-	invalidUUID := uuid.UUID{}
-
-	for _, oldGasPayID := range oldGasPayIDs[0].GasPayIds {
-		found := false
-		for _, gasPayID := range gasPayIDs {
-			if gasPayID == oldGasPayID && oldGasPayID != invalidUUID {
-				found = true
-				break
-			}
-		}
-		if found {
-			continue
-		}
-		gasPayIDs = append(gasPayIDs, oldGasPayID)
-	}
-
-	info, err := db.Client().
-		Order.
-		UpdateOneID(id).
-		SetState(order.State(in.GetInfo().GetState())).
-		SetGasPayIds(gasPayIDs).
-		SetGasEnd(in.GetInfo().GetGasEnd()).
-		SetCompensateMinutes(in.GetInfo().GetCompensateMinutes()).
-		SetCompensateElapsedMinutes(in.GetInfo().GetCompensateElapsedMinutes()).
-		SetGoodPayID(uuid.MustParse(in.GetInfo().GetGoodPayID())).
-		SetGasPayIds(gasPayIDs).
-		Save(ctx)
-	if err != nil {
-		return nil, xerrors.Errorf("fail update order: %v", err)
-	}
-
-	return &npool.UpdateOrderResponse{
-		Info: dbRowToOrder(info),
 	}, nil
 }
 

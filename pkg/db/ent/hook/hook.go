@@ -9,6 +9,32 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 )
 
+// The CanceledOrderFunc type is an adapter to allow the use of ordinary
+// function as CanceledOrder mutator.
+type CanceledOrderFunc func(context.Context, *ent.CanceledOrderMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CanceledOrderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CanceledOrderMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CanceledOrderMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The CompensateFunc type is an adapter to allow the use of ordinary
+// function as Compensate mutator.
+type CompensateFunc func(context.Context, *ent.CompensateMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CompensateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CompensateMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CompensateMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The GasPayingFunc type is an adapter to allow the use of ordinary
 // function as GasPaying mutator.
 type GasPayingFunc func(context.Context, *ent.GasPayingMutation) (ent.Value, error)
@@ -44,6 +70,32 @@ func (f OrderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	mv, ok := m.(*ent.OrderMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OrderMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The OutOfGasFunc type is an adapter to allow the use of ordinary
+// function as OutOfGas mutator.
+type OutOfGasFunc func(context.Context, *ent.OutOfGasMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OutOfGasFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.OutOfGasMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OutOfGasMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The PaymentFunc type is an adapter to allow the use of ordinary
+// function as Payment mutator.
+type PaymentFunc func(context.Context, *ent.PaymentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PaymentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PaymentMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PaymentMutation", m)
 	}
 	return f(ctx, mv)
 }

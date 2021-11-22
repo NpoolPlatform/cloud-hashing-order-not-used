@@ -28,18 +28,8 @@ func (Order) Fields() []ent.Field {
 			Default(0),
 		field.Uint64("special_reduction_amount").
 			Default(0),
-		field.Enum("state").
-			Values("created", "paying", "paid", "timeout", "canceled"),
-		field.UUID("good_pay_id", uuid.UUID{}),
 		field.Uint32("start"),
 		field.Uint32("end"),
-		field.Uint32("compensate_minutes").
-			Default(0),
-		field.Uint32("compensate_elapsed_minutes").
-			Default(0),
-		field.Uint32("gas_start"),
-		field.Uint32("gas_end"),
-		field.JSON("gas_pay_ids", []uuid.UUID{}),
 		field.UUID("coupon_id", uuid.UUID{}),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {

@@ -24,15 +24,6 @@ func (s *Server) CreateOrder(ctx context.Context, in *npool.CreateOrderRequest) 
 	return resp, nil
 }
 
-func (s *Server) UpdateOrder(ctx context.Context, in *npool.UpdateOrderRequest) (*npool.UpdateOrderResponse, error) {
-	resp, err := order.Update(ctx, in)
-	if err != nil {
-		logger.Sugar().Errorw("update order error: %w", err)
-		return &npool.UpdateOrderResponse{}, status.Error(codes.Internal, "internal server error")
-	}
-	return resp, nil
-}
-
 func (s *Server) GetOrder(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderResponse, error) {
 	resp, err := order.Get(ctx, in)
 	if err != nil {

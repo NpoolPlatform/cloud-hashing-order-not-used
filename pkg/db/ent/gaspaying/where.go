@@ -98,24 +98,10 @@ func OrderID(v uuid.UUID) predicate.GasPaying {
 	})
 }
 
-// AccountID applies equality check predicate on the "account_id" field. It's identical to AccountIDEQ.
-func AccountID(v uuid.UUID) predicate.GasPaying {
+// PaymentID applies equality check predicate on the "payment_id" field. It's identical to PaymentIDEQ.
+func PaymentID(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAccountID), v))
-	})
-}
-
-// ChainTransactionID applies equality check predicate on the "chain_transaction_id" field. It's identical to ChainTransactionIDEQ.
-func ChainTransactionID(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// PlatformTransactionID applies equality check predicate on the "platform_transaction_id" field. It's identical to PlatformTransactionIDEQ.
-func PlatformTransactionID(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPlatformTransactionID), v))
+		s.Where(sql.EQ(s.C(FieldPaymentID), v))
 	})
 }
 
@@ -123,13 +109,6 @@ func PlatformTransactionID(v uuid.UUID) predicate.GasPaying {
 func DurationMinutes(v uint32) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDurationMinutes), v))
-	})
-}
-
-// Used applies equality check predicate on the "used" field. It's identical to UsedEQ.
-func Used(v bool) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUsed), v))
 	})
 }
 
@@ -230,22 +209,22 @@ func OrderIDLTE(v uuid.UUID) predicate.GasPaying {
 	})
 }
 
-// AccountIDEQ applies the EQ predicate on the "account_id" field.
-func AccountIDEQ(v uuid.UUID) predicate.GasPaying {
+// PaymentIDEQ applies the EQ predicate on the "payment_id" field.
+func PaymentIDEQ(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAccountID), v))
+		s.Where(sql.EQ(s.C(FieldPaymentID), v))
 	})
 }
 
-// AccountIDNEQ applies the NEQ predicate on the "account_id" field.
-func AccountIDNEQ(v uuid.UUID) predicate.GasPaying {
+// PaymentIDNEQ applies the NEQ predicate on the "payment_id" field.
+func PaymentIDNEQ(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAccountID), v))
+		s.Where(sql.NEQ(s.C(FieldPaymentID), v))
 	})
 }
 
-// AccountIDIn applies the In predicate on the "account_id" field.
-func AccountIDIn(vs ...uuid.UUID) predicate.GasPaying {
+// PaymentIDIn applies the In predicate on the "payment_id" field.
+func PaymentIDIn(vs ...uuid.UUID) predicate.GasPaying {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -257,12 +236,12 @@ func AccountIDIn(vs ...uuid.UUID) predicate.GasPaying {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAccountID), v...))
+		s.Where(sql.In(s.C(FieldPaymentID), v...))
 	})
 }
 
-// AccountIDNotIn applies the NotIn predicate on the "account_id" field.
-func AccountIDNotIn(vs ...uuid.UUID) predicate.GasPaying {
+// PaymentIDNotIn applies the NotIn predicate on the "payment_id" field.
+func PaymentIDNotIn(vs ...uuid.UUID) predicate.GasPaying {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -274,270 +253,35 @@ func AccountIDNotIn(vs ...uuid.UUID) predicate.GasPaying {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAccountID), v...))
+		s.Where(sql.NotIn(s.C(FieldPaymentID), v...))
 	})
 }
 
-// AccountIDGT applies the GT predicate on the "account_id" field.
-func AccountIDGT(v uuid.UUID) predicate.GasPaying {
+// PaymentIDGT applies the GT predicate on the "payment_id" field.
+func PaymentIDGT(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAccountID), v))
+		s.Where(sql.GT(s.C(FieldPaymentID), v))
 	})
 }
 
-// AccountIDGTE applies the GTE predicate on the "account_id" field.
-func AccountIDGTE(v uuid.UUID) predicate.GasPaying {
+// PaymentIDGTE applies the GTE predicate on the "payment_id" field.
+func PaymentIDGTE(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAccountID), v))
+		s.Where(sql.GTE(s.C(FieldPaymentID), v))
 	})
 }
 
-// AccountIDLT applies the LT predicate on the "account_id" field.
-func AccountIDLT(v uuid.UUID) predicate.GasPaying {
+// PaymentIDLT applies the LT predicate on the "payment_id" field.
+func PaymentIDLT(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAccountID), v))
+		s.Where(sql.LT(s.C(FieldPaymentID), v))
 	})
 }
 
-// AccountIDLTE applies the LTE predicate on the "account_id" field.
-func AccountIDLTE(v uuid.UUID) predicate.GasPaying {
+// PaymentIDLTE applies the LTE predicate on the "payment_id" field.
+func PaymentIDLTE(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAccountID), v))
-	})
-}
-
-// StateEQ applies the EQ predicate on the "state" field.
-func StateEQ(v State) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldState), v))
-	})
-}
-
-// StateNEQ applies the NEQ predicate on the "state" field.
-func StateNEQ(v State) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldState), v))
-	})
-}
-
-// StateIn applies the In predicate on the "state" field.
-func StateIn(vs ...State) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldState), v...))
-	})
-}
-
-// StateNotIn applies the NotIn predicate on the "state" field.
-func StateNotIn(vs ...State) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldState), v...))
-	})
-}
-
-// ChainTransactionIDEQ applies the EQ predicate on the "chain_transaction_id" field.
-func ChainTransactionIDEQ(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDNEQ applies the NEQ predicate on the "chain_transaction_id" field.
-func ChainTransactionIDNEQ(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDIn applies the In predicate on the "chain_transaction_id" field.
-func ChainTransactionIDIn(vs ...string) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldChainTransactionID), v...))
-	})
-}
-
-// ChainTransactionIDNotIn applies the NotIn predicate on the "chain_transaction_id" field.
-func ChainTransactionIDNotIn(vs ...string) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldChainTransactionID), v...))
-	})
-}
-
-// ChainTransactionIDGT applies the GT predicate on the "chain_transaction_id" field.
-func ChainTransactionIDGT(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDGTE applies the GTE predicate on the "chain_transaction_id" field.
-func ChainTransactionIDGTE(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDLT applies the LT predicate on the "chain_transaction_id" field.
-func ChainTransactionIDLT(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDLTE applies the LTE predicate on the "chain_transaction_id" field.
-func ChainTransactionIDLTE(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDContains applies the Contains predicate on the "chain_transaction_id" field.
-func ChainTransactionIDContains(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDHasPrefix applies the HasPrefix predicate on the "chain_transaction_id" field.
-func ChainTransactionIDHasPrefix(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDHasSuffix applies the HasSuffix predicate on the "chain_transaction_id" field.
-func ChainTransactionIDHasSuffix(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDEqualFold applies the EqualFold predicate on the "chain_transaction_id" field.
-func ChainTransactionIDEqualFold(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// ChainTransactionIDContainsFold applies the ContainsFold predicate on the "chain_transaction_id" field.
-func ChainTransactionIDContainsFold(v string) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldChainTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDEQ applies the EQ predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDEQ(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPlatformTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDNEQ applies the NEQ predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDNEQ(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPlatformTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDIn applies the In predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDIn(vs ...uuid.UUID) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldPlatformTransactionID), v...))
-	})
-}
-
-// PlatformTransactionIDNotIn applies the NotIn predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDNotIn(vs ...uuid.UUID) predicate.GasPaying {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.GasPaying(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldPlatformTransactionID), v...))
-	})
-}
-
-// PlatformTransactionIDGT applies the GT predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDGT(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPlatformTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDGTE applies the GTE predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDGTE(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPlatformTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDLT applies the LT predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDLT(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPlatformTransactionID), v))
-	})
-}
-
-// PlatformTransactionIDLTE applies the LTE predicate on the "platform_transaction_id" field.
-func PlatformTransactionIDLTE(v uuid.UUID) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPlatformTransactionID), v))
+		s.Where(sql.LTE(s.C(FieldPaymentID), v))
 	})
 }
 
@@ -614,20 +358,6 @@ func DurationMinutesLT(v uint32) predicate.GasPaying {
 func DurationMinutesLTE(v uint32) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDurationMinutes), v))
-	})
-}
-
-// UsedEQ applies the EQ predicate on the "used" field.
-func UsedEQ(v bool) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUsed), v))
-	})
-}
-
-// UsedNEQ applies the NEQ predicate on the "used" field.
-func UsedNEQ(v bool) predicate.GasPaying {
-	return predicate.GasPaying(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUsed), v))
 	})
 }
 

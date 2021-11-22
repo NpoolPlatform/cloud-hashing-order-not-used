@@ -29,39 +29,15 @@ func (gpc *GasPayingCreate) SetOrderID(u uuid.UUID) *GasPayingCreate {
 	return gpc
 }
 
-// SetAccountID sets the "account_id" field.
-func (gpc *GasPayingCreate) SetAccountID(u uuid.UUID) *GasPayingCreate {
-	gpc.mutation.SetAccountID(u)
-	return gpc
-}
-
-// SetState sets the "state" field.
-func (gpc *GasPayingCreate) SetState(ga gaspaying.State) *GasPayingCreate {
-	gpc.mutation.SetState(ga)
-	return gpc
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (gpc *GasPayingCreate) SetChainTransactionID(s string) *GasPayingCreate {
-	gpc.mutation.SetChainTransactionID(s)
-	return gpc
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (gpc *GasPayingCreate) SetPlatformTransactionID(u uuid.UUID) *GasPayingCreate {
-	gpc.mutation.SetPlatformTransactionID(u)
+// SetPaymentID sets the "payment_id" field.
+func (gpc *GasPayingCreate) SetPaymentID(u uuid.UUID) *GasPayingCreate {
+	gpc.mutation.SetPaymentID(u)
 	return gpc
 }
 
 // SetDurationMinutes sets the "duration_minutes" field.
 func (gpc *GasPayingCreate) SetDurationMinutes(u uint32) *GasPayingCreate {
 	gpc.mutation.SetDurationMinutes(u)
-	return gpc
-}
-
-// SetUsed sets the "used" field.
-func (gpc *GasPayingCreate) SetUsed(b bool) *GasPayingCreate {
-	gpc.mutation.SetUsed(b)
 	return gpc
 }
 
@@ -207,28 +183,11 @@ func (gpc *GasPayingCreate) check() error {
 	if _, ok := gpc.mutation.OrderID(); !ok {
 		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
 	}
-	if _, ok := gpc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "account_id"`)}
-	}
-	if _, ok := gpc.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "state"`)}
-	}
-	if v, ok := gpc.mutation.State(); ok {
-		if err := gaspaying.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "state": %w`, err)}
-		}
-	}
-	if _, ok := gpc.mutation.ChainTransactionID(); !ok {
-		return &ValidationError{Name: "chain_transaction_id", err: errors.New(`ent: missing required field "chain_transaction_id"`)}
-	}
-	if _, ok := gpc.mutation.PlatformTransactionID(); !ok {
-		return &ValidationError{Name: "platform_transaction_id", err: errors.New(`ent: missing required field "platform_transaction_id"`)}
+	if _, ok := gpc.mutation.PaymentID(); !ok {
+		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "payment_id"`)}
 	}
 	if _, ok := gpc.mutation.DurationMinutes(); !ok {
 		return &ValidationError{Name: "duration_minutes", err: errors.New(`ent: missing required field "duration_minutes"`)}
-	}
-	if _, ok := gpc.mutation.Used(); !ok {
-		return &ValidationError{Name: "used", err: errors.New(`ent: missing required field "used"`)}
 	}
 	if _, ok := gpc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
@@ -280,37 +239,13 @@ func (gpc *GasPayingCreate) createSpec() (*GasPaying, *sqlgraph.CreateSpec) {
 		})
 		_node.OrderID = value
 	}
-	if value, ok := gpc.mutation.AccountID(); ok {
+	if value, ok := gpc.mutation.PaymentID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: gaspaying.FieldAccountID,
+			Column: gaspaying.FieldPaymentID,
 		})
-		_node.AccountID = value
-	}
-	if value, ok := gpc.mutation.State(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: gaspaying.FieldState,
-		})
-		_node.State = value
-	}
-	if value, ok := gpc.mutation.ChainTransactionID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: gaspaying.FieldChainTransactionID,
-		})
-		_node.ChainTransactionID = value
-	}
-	if value, ok := gpc.mutation.PlatformTransactionID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: gaspaying.FieldPlatformTransactionID,
-		})
-		_node.PlatformTransactionID = value
+		_node.PaymentID = value
 	}
 	if value, ok := gpc.mutation.DurationMinutes(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -319,14 +254,6 @@ func (gpc *GasPayingCreate) createSpec() (*GasPaying, *sqlgraph.CreateSpec) {
 			Column: gaspaying.FieldDurationMinutes,
 		})
 		_node.DurationMinutes = value
-	}
-	if value, ok := gpc.mutation.Used(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: gaspaying.FieldUsed,
-		})
-		_node.Used = value
 	}
 	if value, ok := gpc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -418,51 +345,15 @@ func (u *GasPayingUpsert) UpdateOrderID() *GasPayingUpsert {
 	return u
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GasPayingUpsert) SetAccountID(v uuid.UUID) *GasPayingUpsert {
-	u.Set(gaspaying.FieldAccountID, v)
+// SetPaymentID sets the "payment_id" field.
+func (u *GasPayingUpsert) SetPaymentID(v uuid.UUID) *GasPayingUpsert {
+	u.Set(gaspaying.FieldPaymentID, v)
 	return u
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GasPayingUpsert) UpdateAccountID() *GasPayingUpsert {
-	u.SetExcluded(gaspaying.FieldAccountID)
-	return u
-}
-
-// SetState sets the "state" field.
-func (u *GasPayingUpsert) SetState(v gaspaying.State) *GasPayingUpsert {
-	u.Set(gaspaying.FieldState, v)
-	return u
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GasPayingUpsert) UpdateState() *GasPayingUpsert {
-	u.SetExcluded(gaspaying.FieldState)
-	return u
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GasPayingUpsert) SetChainTransactionID(v string) *GasPayingUpsert {
-	u.Set(gaspaying.FieldChainTransactionID, v)
-	return u
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsert) UpdateChainTransactionID() *GasPayingUpsert {
-	u.SetExcluded(gaspaying.FieldChainTransactionID)
-	return u
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GasPayingUpsert) SetPlatformTransactionID(v uuid.UUID) *GasPayingUpsert {
-	u.Set(gaspaying.FieldPlatformTransactionID, v)
-	return u
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsert) UpdatePlatformTransactionID() *GasPayingUpsert {
-	u.SetExcluded(gaspaying.FieldPlatformTransactionID)
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GasPayingUpsert) UpdatePaymentID() *GasPayingUpsert {
+	u.SetExcluded(gaspaying.FieldPaymentID)
 	return u
 }
 
@@ -475,18 +366,6 @@ func (u *GasPayingUpsert) SetDurationMinutes(v uint32) *GasPayingUpsert {
 // UpdateDurationMinutes sets the "duration_minutes" field to the value that was provided on create.
 func (u *GasPayingUpsert) UpdateDurationMinutes() *GasPayingUpsert {
 	u.SetExcluded(gaspaying.FieldDurationMinutes)
-	return u
-}
-
-// SetUsed sets the "used" field.
-func (u *GasPayingUpsert) SetUsed(v bool) *GasPayingUpsert {
-	u.Set(gaspaying.FieldUsed, v)
-	return u
-}
-
-// UpdateUsed sets the "used" field to the value that was provided on create.
-func (u *GasPayingUpsert) UpdateUsed() *GasPayingUpsert {
-	u.SetExcluded(gaspaying.FieldUsed)
 	return u
 }
 
@@ -590,59 +469,17 @@ func (u *GasPayingUpsertOne) UpdateOrderID() *GasPayingUpsertOne {
 	})
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GasPayingUpsertOne) SetAccountID(v uuid.UUID) *GasPayingUpsertOne {
+// SetPaymentID sets the "payment_id" field.
+func (u *GasPayingUpsertOne) SetPaymentID(v uuid.UUID) *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
-		s.SetAccountID(v)
+		s.SetPaymentID(v)
 	})
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GasPayingUpsertOne) UpdateAccountID() *GasPayingUpsertOne {
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GasPayingUpsertOne) UpdatePaymentID() *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateAccountID()
-	})
-}
-
-// SetState sets the "state" field.
-func (u *GasPayingUpsertOne) SetState(v gaspaying.State) *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GasPayingUpsertOne) UpdateState() *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GasPayingUpsertOne) SetChainTransactionID(v string) *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetChainTransactionID(v)
-	})
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsertOne) UpdateChainTransactionID() *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateChainTransactionID()
-	})
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GasPayingUpsertOne) SetPlatformTransactionID(v uuid.UUID) *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetPlatformTransactionID(v)
-	})
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsertOne) UpdatePlatformTransactionID() *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdatePlatformTransactionID()
+		s.UpdatePaymentID()
 	})
 }
 
@@ -657,20 +494,6 @@ func (u *GasPayingUpsertOne) SetDurationMinutes(v uint32) *GasPayingUpsertOne {
 func (u *GasPayingUpsertOne) UpdateDurationMinutes() *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.UpdateDurationMinutes()
-	})
-}
-
-// SetUsed sets the "used" field.
-func (u *GasPayingUpsertOne) SetUsed(v bool) *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetUsed(v)
-	})
-}
-
-// UpdateUsed sets the "used" field to the value that was provided on create.
-func (u *GasPayingUpsertOne) UpdateUsed() *GasPayingUpsertOne {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateUsed()
 	})
 }
 
@@ -946,59 +769,17 @@ func (u *GasPayingUpsertBulk) UpdateOrderID() *GasPayingUpsertBulk {
 	})
 }
 
-// SetAccountID sets the "account_id" field.
-func (u *GasPayingUpsertBulk) SetAccountID(v uuid.UUID) *GasPayingUpsertBulk {
+// SetPaymentID sets the "payment_id" field.
+func (u *GasPayingUpsertBulk) SetPaymentID(v uuid.UUID) *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
-		s.SetAccountID(v)
+		s.SetPaymentID(v)
 	})
 }
 
-// UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *GasPayingUpsertBulk) UpdateAccountID() *GasPayingUpsertBulk {
+// UpdatePaymentID sets the "payment_id" field to the value that was provided on create.
+func (u *GasPayingUpsertBulk) UpdatePaymentID() *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateAccountID()
-	})
-}
-
-// SetState sets the "state" field.
-func (u *GasPayingUpsertBulk) SetState(v gaspaying.State) *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *GasPayingUpsertBulk) UpdateState() *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetChainTransactionID sets the "chain_transaction_id" field.
-func (u *GasPayingUpsertBulk) SetChainTransactionID(v string) *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetChainTransactionID(v)
-	})
-}
-
-// UpdateChainTransactionID sets the "chain_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsertBulk) UpdateChainTransactionID() *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateChainTransactionID()
-	})
-}
-
-// SetPlatformTransactionID sets the "platform_transaction_id" field.
-func (u *GasPayingUpsertBulk) SetPlatformTransactionID(v uuid.UUID) *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetPlatformTransactionID(v)
-	})
-}
-
-// UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
-func (u *GasPayingUpsertBulk) UpdatePlatformTransactionID() *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdatePlatformTransactionID()
+		s.UpdatePaymentID()
 	})
 }
 
@@ -1013,20 +794,6 @@ func (u *GasPayingUpsertBulk) SetDurationMinutes(v uint32) *GasPayingUpsertBulk 
 func (u *GasPayingUpsertBulk) UpdateDurationMinutes() *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.UpdateDurationMinutes()
-	})
-}
-
-// SetUsed sets the "used" field.
-func (u *GasPayingUpsertBulk) SetUsed(v bool) *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.SetUsed(v)
-	})
-}
-
-// UpdateUsed sets the "used" field to the value that was provided on create.
-func (u *GasPayingUpsertBulk) UpdateUsed() *GasPayingUpsertBulk {
-	return u.Update(func(s *GasPayingUpsert) {
-		s.UpdateUsed()
 	})
 }
 

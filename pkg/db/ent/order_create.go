@@ -75,18 +75,6 @@ func (oc *OrderCreate) SetNillableSpecialReductionAmount(u *uint64) *OrderCreate
 	return oc
 }
 
-// SetState sets the "state" field.
-func (oc *OrderCreate) SetState(o order.State) *OrderCreate {
-	oc.mutation.SetState(o)
-	return oc
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (oc *OrderCreate) SetGoodPayID(u uuid.UUID) *OrderCreate {
-	oc.mutation.SetGoodPayID(u)
-	return oc
-}
-
 // SetStart sets the "start" field.
 func (oc *OrderCreate) SetStart(u uint32) *OrderCreate {
 	oc.mutation.SetStart(u)
@@ -96,52 +84,6 @@ func (oc *OrderCreate) SetStart(u uint32) *OrderCreate {
 // SetEnd sets the "end" field.
 func (oc *OrderCreate) SetEnd(u uint32) *OrderCreate {
 	oc.mutation.SetEnd(u)
-	return oc
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (oc *OrderCreate) SetCompensateMinutes(u uint32) *OrderCreate {
-	oc.mutation.SetCompensateMinutes(u)
-	return oc
-}
-
-// SetNillableCompensateMinutes sets the "compensate_minutes" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableCompensateMinutes(u *uint32) *OrderCreate {
-	if u != nil {
-		oc.SetCompensateMinutes(*u)
-	}
-	return oc
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (oc *OrderCreate) SetCompensateElapsedMinutes(u uint32) *OrderCreate {
-	oc.mutation.SetCompensateElapsedMinutes(u)
-	return oc
-}
-
-// SetNillableCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableCompensateElapsedMinutes(u *uint32) *OrderCreate {
-	if u != nil {
-		oc.SetCompensateElapsedMinutes(*u)
-	}
-	return oc
-}
-
-// SetGasStart sets the "gas_start" field.
-func (oc *OrderCreate) SetGasStart(u uint32) *OrderCreate {
-	oc.mutation.SetGasStart(u)
-	return oc
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (oc *OrderCreate) SetGasEnd(u uint32) *OrderCreate {
-	oc.mutation.SetGasEnd(u)
-	return oc
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (oc *OrderCreate) SetGasPayIds(u []uuid.UUID) *OrderCreate {
-	oc.mutation.SetGasPayIds(u)
 	return oc
 }
 
@@ -278,14 +220,6 @@ func (oc *OrderCreate) defaults() {
 		v := order.DefaultSpecialReductionAmount
 		oc.mutation.SetSpecialReductionAmount(v)
 	}
-	if _, ok := oc.mutation.CompensateMinutes(); !ok {
-		v := order.DefaultCompensateMinutes
-		oc.mutation.SetCompensateMinutes(v)
-	}
-	if _, ok := oc.mutation.CompensateElapsedMinutes(); !ok {
-		v := order.DefaultCompensateElapsedMinutes
-		oc.mutation.SetCompensateElapsedMinutes(v)
-	}
 	if _, ok := oc.mutation.CreateAt(); !ok {
 		v := order.DefaultCreateAt()
 		oc.mutation.SetCreateAt(v)
@@ -324,37 +258,11 @@ func (oc *OrderCreate) check() error {
 	if _, ok := oc.mutation.SpecialReductionAmount(); !ok {
 		return &ValidationError{Name: "special_reduction_amount", err: errors.New(`ent: missing required field "special_reduction_amount"`)}
 	}
-	if _, ok := oc.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "state"`)}
-	}
-	if v, ok := oc.mutation.State(); ok {
-		if err := order.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "state": %w`, err)}
-		}
-	}
-	if _, ok := oc.mutation.GoodPayID(); !ok {
-		return &ValidationError{Name: "good_pay_id", err: errors.New(`ent: missing required field "good_pay_id"`)}
-	}
 	if _, ok := oc.mutation.Start(); !ok {
 		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "start"`)}
 	}
 	if _, ok := oc.mutation.End(); !ok {
 		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "end"`)}
-	}
-	if _, ok := oc.mutation.CompensateMinutes(); !ok {
-		return &ValidationError{Name: "compensate_minutes", err: errors.New(`ent: missing required field "compensate_minutes"`)}
-	}
-	if _, ok := oc.mutation.CompensateElapsedMinutes(); !ok {
-		return &ValidationError{Name: "compensate_elapsed_minutes", err: errors.New(`ent: missing required field "compensate_elapsed_minutes"`)}
-	}
-	if _, ok := oc.mutation.GasStart(); !ok {
-		return &ValidationError{Name: "gas_start", err: errors.New(`ent: missing required field "gas_start"`)}
-	}
-	if _, ok := oc.mutation.GasEnd(); !ok {
-		return &ValidationError{Name: "gas_end", err: errors.New(`ent: missing required field "gas_end"`)}
-	}
-	if _, ok := oc.mutation.GasPayIds(); !ok {
-		return &ValidationError{Name: "gas_pay_ids", err: errors.New(`ent: missing required field "gas_pay_ids"`)}
 	}
 	if _, ok := oc.mutation.CouponID(); !ok {
 		return &ValidationError{Name: "coupon_id", err: errors.New(`ent: missing required field "coupon_id"`)}
@@ -449,22 +357,6 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 		})
 		_node.SpecialReductionAmount = value
 	}
-	if value, ok := oc.mutation.State(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: order.FieldState,
-		})
-		_node.State = value
-	}
-	if value, ok := oc.mutation.GoodPayID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: order.FieldGoodPayID,
-		})
-		_node.GoodPayID = value
-	}
 	if value, ok := oc.mutation.Start(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -480,46 +372,6 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldEnd,
 		})
 		_node.End = value
-	}
-	if value, ok := oc.mutation.CompensateMinutes(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateMinutes,
-		})
-		_node.CompensateMinutes = value
-	}
-	if value, ok := oc.mutation.CompensateElapsedMinutes(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldCompensateElapsedMinutes,
-		})
-		_node.CompensateElapsedMinutes = value
-	}
-	if value, ok := oc.mutation.GasStart(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasStart,
-		})
-		_node.GasStart = value
-	}
-	if value, ok := oc.mutation.GasEnd(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldGasEnd,
-		})
-		_node.GasEnd = value
-	}
-	if value, ok := oc.mutation.GasPayIds(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: order.FieldGasPayIds,
-		})
-		_node.GasPayIds = value
 	}
 	if value, ok := oc.mutation.CouponID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -679,30 +531,6 @@ func (u *OrderUpsert) UpdateSpecialReductionAmount() *OrderUpsert {
 	return u
 }
 
-// SetState sets the "state" field.
-func (u *OrderUpsert) SetState(v order.State) *OrderUpsert {
-	u.Set(order.FieldState, v)
-	return u
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateState() *OrderUpsert {
-	u.SetExcluded(order.FieldState)
-	return u
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (u *OrderUpsert) SetGoodPayID(v uuid.UUID) *OrderUpsert {
-	u.Set(order.FieldGoodPayID, v)
-	return u
-}
-
-// UpdateGoodPayID sets the "good_pay_id" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateGoodPayID() *OrderUpsert {
-	u.SetExcluded(order.FieldGoodPayID)
-	return u
-}
-
 // SetStart sets the "start" field.
 func (u *OrderUpsert) SetStart(v uint32) *OrderUpsert {
 	u.Set(order.FieldStart, v)
@@ -724,66 +552,6 @@ func (u *OrderUpsert) SetEnd(v uint32) *OrderUpsert {
 // UpdateEnd sets the "end" field to the value that was provided on create.
 func (u *OrderUpsert) UpdateEnd() *OrderUpsert {
 	u.SetExcluded(order.FieldEnd)
-	return u
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (u *OrderUpsert) SetCompensateMinutes(v uint32) *OrderUpsert {
-	u.Set(order.FieldCompensateMinutes, v)
-	return u
-}
-
-// UpdateCompensateMinutes sets the "compensate_minutes" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateCompensateMinutes() *OrderUpsert {
-	u.SetExcluded(order.FieldCompensateMinutes)
-	return u
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (u *OrderUpsert) SetCompensateElapsedMinutes(v uint32) *OrderUpsert {
-	u.Set(order.FieldCompensateElapsedMinutes, v)
-	return u
-}
-
-// UpdateCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateCompensateElapsedMinutes() *OrderUpsert {
-	u.SetExcluded(order.FieldCompensateElapsedMinutes)
-	return u
-}
-
-// SetGasStart sets the "gas_start" field.
-func (u *OrderUpsert) SetGasStart(v uint32) *OrderUpsert {
-	u.Set(order.FieldGasStart, v)
-	return u
-}
-
-// UpdateGasStart sets the "gas_start" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateGasStart() *OrderUpsert {
-	u.SetExcluded(order.FieldGasStart)
-	return u
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (u *OrderUpsert) SetGasEnd(v uint32) *OrderUpsert {
-	u.Set(order.FieldGasEnd, v)
-	return u
-}
-
-// UpdateGasEnd sets the "gas_end" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateGasEnd() *OrderUpsert {
-	u.SetExcluded(order.FieldGasEnd)
-	return u
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (u *OrderUpsert) SetGasPayIds(v []uuid.UUID) *OrderUpsert {
-	u.Set(order.FieldGasPayIds, v)
-	return u
-}
-
-// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateGasPayIds() *OrderUpsert {
-	u.SetExcluded(order.FieldGasPayIds)
 	return u
 }
 
@@ -969,34 +737,6 @@ func (u *OrderUpsertOne) UpdateSpecialReductionAmount() *OrderUpsertOne {
 	})
 }
 
-// SetState sets the "state" field.
-func (u *OrderUpsertOne) SetState(v order.State) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateState() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (u *OrderUpsertOne) SetGoodPayID(v uuid.UUID) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGoodPayID(v)
-	})
-}
-
-// UpdateGoodPayID sets the "good_pay_id" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateGoodPayID() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGoodPayID()
-	})
-}
-
 // SetStart sets the "start" field.
 func (u *OrderUpsertOne) SetStart(v uint32) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
@@ -1022,76 +762,6 @@ func (u *OrderUpsertOne) SetEnd(v uint32) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateEnd() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateEnd()
-	})
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (u *OrderUpsertOne) SetCompensateMinutes(v uint32) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetCompensateMinutes(v)
-	})
-}
-
-// UpdateCompensateMinutes sets the "compensate_minutes" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateCompensateMinutes() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCompensateMinutes()
-	})
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (u *OrderUpsertOne) SetCompensateElapsedMinutes(v uint32) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetCompensateElapsedMinutes(v)
-	})
-}
-
-// UpdateCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateCompensateElapsedMinutes() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCompensateElapsedMinutes()
-	})
-}
-
-// SetGasStart sets the "gas_start" field.
-func (u *OrderUpsertOne) SetGasStart(v uint32) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasStart(v)
-	})
-}
-
-// UpdateGasStart sets the "gas_start" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateGasStart() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasStart()
-	})
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (u *OrderUpsertOne) SetGasEnd(v uint32) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasEnd(v)
-	})
-}
-
-// UpdateGasEnd sets the "gas_end" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateGasEnd() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasEnd()
-	})
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (u *OrderUpsertOne) SetGasPayIds(v []uuid.UUID) *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasPayIds(v)
-	})
-}
-
-// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateGasPayIds() *OrderUpsertOne {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasPayIds()
 	})
 }
 
@@ -1451,34 +1121,6 @@ func (u *OrderUpsertBulk) UpdateSpecialReductionAmount() *OrderUpsertBulk {
 	})
 }
 
-// SetState sets the "state" field.
-func (u *OrderUpsertBulk) SetState(v order.State) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetState(v)
-	})
-}
-
-// UpdateState sets the "state" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateState() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateState()
-	})
-}
-
-// SetGoodPayID sets the "good_pay_id" field.
-func (u *OrderUpsertBulk) SetGoodPayID(v uuid.UUID) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGoodPayID(v)
-	})
-}
-
-// UpdateGoodPayID sets the "good_pay_id" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateGoodPayID() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGoodPayID()
-	})
-}
-
 // SetStart sets the "start" field.
 func (u *OrderUpsertBulk) SetStart(v uint32) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
@@ -1504,76 +1146,6 @@ func (u *OrderUpsertBulk) SetEnd(v uint32) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateEnd() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateEnd()
-	})
-}
-
-// SetCompensateMinutes sets the "compensate_minutes" field.
-func (u *OrderUpsertBulk) SetCompensateMinutes(v uint32) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetCompensateMinutes(v)
-	})
-}
-
-// UpdateCompensateMinutes sets the "compensate_minutes" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateCompensateMinutes() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCompensateMinutes()
-	})
-}
-
-// SetCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field.
-func (u *OrderUpsertBulk) SetCompensateElapsedMinutes(v uint32) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetCompensateElapsedMinutes(v)
-	})
-}
-
-// UpdateCompensateElapsedMinutes sets the "compensate_elapsed_minutes" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateCompensateElapsedMinutes() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCompensateElapsedMinutes()
-	})
-}
-
-// SetGasStart sets the "gas_start" field.
-func (u *OrderUpsertBulk) SetGasStart(v uint32) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasStart(v)
-	})
-}
-
-// UpdateGasStart sets the "gas_start" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateGasStart() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasStart()
-	})
-}
-
-// SetGasEnd sets the "gas_end" field.
-func (u *OrderUpsertBulk) SetGasEnd(v uint32) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasEnd(v)
-	})
-}
-
-// UpdateGasEnd sets the "gas_end" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateGasEnd() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasEnd()
-	})
-}
-
-// SetGasPayIds sets the "gas_pay_ids" field.
-func (u *OrderUpsertBulk) SetGasPayIds(v []uuid.UUID) *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.SetGasPayIds(v)
-	})
-}
-
-// UpdateGasPayIds sets the "gas_pay_ids" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateGasPayIds() *OrderUpsertBulk {
-	return u.Update(func(s *OrderUpsert) {
-		s.UpdateGasPayIds()
 	})
 }
 
