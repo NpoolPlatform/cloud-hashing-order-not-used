@@ -277,6 +277,7 @@
 | OrderID | [string](#string) |  |  |
 | PaymentID | [string](#string) |  |  |
 | DurationMinutes | [uint32](#uint32) |  |  |
+| FeeTypeID | [string](#string) |  |  |
 
 
 

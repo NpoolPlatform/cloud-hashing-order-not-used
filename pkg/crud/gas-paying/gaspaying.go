@@ -21,6 +21,9 @@ func validateGasPaying(info *npool.GasPaying) error {
 	if _, err := uuid.Parse(info.GetPaymentID()); err != nil {
 		return xerrors.Errorf("invalid payment id: %v", err)
 	}
+	if _, err := uuid.Parse(info.GetFeeTypeID()); err != nil {
+		return xerrors.Errorf("invalid fee type id: %v", err)
+	}
 	return nil
 }
 
@@ -30,6 +33,7 @@ func dbRowToGasPaying(row *ent.GasPaying) *npool.GasPaying {
 		OrderID:         row.OrderID.String(),
 		DurationMinutes: row.DurationMinutes,
 		PaymentID:       row.PaymentID.String(),
+		FeeTypeID:       row.FeeTypeID.String(),
 	}
 }
 
@@ -43,6 +47,7 @@ func Create(ctx context.Context, in *npool.CreateGasPayingRequest) (*npool.Creat
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
 		SetPaymentID(uuid.MustParse(in.GetInfo().GetPaymentID())).
+		SetFeeTypeID(uuid.MustParse(in.GetInfo().GetFeeTypeID())).
 		SetDurationMinutes(in.GetInfo().GetDurationMinutes()).
 		Save(ctx)
 	if err != nil {

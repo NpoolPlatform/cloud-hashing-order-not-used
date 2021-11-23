@@ -177,6 +177,7 @@ message GasPaying {
     string OrderID = 701;
     string PaymentID = 702;
     uint32 DurationMinutes = 703;
+    string FeeTypeID = 704;
 }
 
 message CreateGasPayingRequest {

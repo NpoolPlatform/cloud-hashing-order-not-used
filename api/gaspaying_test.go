@@ -16,6 +16,7 @@ import (
 func assertGasPaying(t *testing.T, actual, expected *npool.GasPaying) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
 	assert.Equal(t, actual.PaymentID, expected.PaymentID)
+	assert.Equal(t, actual.FeeTypeID, expected.FeeTypeID)
 	assert.Equal(t, actual.DurationMinutes, expected.DurationMinutes)
 }
 
@@ -27,6 +28,7 @@ func TestGasPayingCRUD(t *testing.T) {
 	gasPaying := npool.GasPaying{
 		OrderID:         uuid.New().String(),
 		PaymentID:       uuid.New().String(),
+		FeeTypeID:       uuid.New().String(),
 		DurationMinutes: 24 * 10 * 60,
 	}
 	firstCreateInfo := npool.CreateGasPayingResponse{}
