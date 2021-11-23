@@ -33,6 +33,12 @@ func (gpu *GasPayingUpdate) SetOrderID(u uuid.UUID) *GasPayingUpdate {
 	return gpu
 }
 
+// SetFeeTypeID sets the "fee_type_id" field.
+func (gpu *GasPayingUpdate) SetFeeTypeID(u uuid.UUID) *GasPayingUpdate {
+	gpu.mutation.SetFeeTypeID(u)
+	return gpu
+}
+
 // SetPaymentID sets the "payment_id" field.
 func (gpu *GasPayingUpdate) SetPaymentID(u uuid.UUID) *GasPayingUpdate {
 	gpu.mutation.SetPaymentID(u)
@@ -200,6 +206,13 @@ func (gpu *GasPayingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: gaspaying.FieldOrderID,
 		})
 	}
+	if value, ok := gpu.mutation.FeeTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: gaspaying.FieldFeeTypeID,
+		})
+	}
 	if value, ok := gpu.mutation.PaymentID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -285,6 +298,12 @@ type GasPayingUpdateOne struct {
 // SetOrderID sets the "order_id" field.
 func (gpuo *GasPayingUpdateOne) SetOrderID(u uuid.UUID) *GasPayingUpdateOne {
 	gpuo.mutation.SetOrderID(u)
+	return gpuo
+}
+
+// SetFeeTypeID sets the "fee_type_id" field.
+func (gpuo *GasPayingUpdateOne) SetFeeTypeID(u uuid.UUID) *GasPayingUpdateOne {
+	gpuo.mutation.SetFeeTypeID(u)
 	return gpuo
 }
 
@@ -477,6 +496,13 @@ func (gpuo *GasPayingUpdateOne) sqlSave(ctx context.Context) (_node *GasPaying, 
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: gaspaying.FieldOrderID,
+		})
+	}
+	if value, ok := gpuo.mutation.FeeTypeID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: gaspaying.FieldFeeTypeID,
 		})
 	}
 	if value, ok := gpuo.mutation.PaymentID(); ok {

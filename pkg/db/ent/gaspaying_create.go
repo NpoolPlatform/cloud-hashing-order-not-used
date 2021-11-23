@@ -29,6 +29,12 @@ func (gpc *GasPayingCreate) SetOrderID(u uuid.UUID) *GasPayingCreate {
 	return gpc
 }
 
+// SetFeeTypeID sets the "fee_type_id" field.
+func (gpc *GasPayingCreate) SetFeeTypeID(u uuid.UUID) *GasPayingCreate {
+	gpc.mutation.SetFeeTypeID(u)
+	return gpc
+}
+
 // SetPaymentID sets the "payment_id" field.
 func (gpc *GasPayingCreate) SetPaymentID(u uuid.UUID) *GasPayingCreate {
 	gpc.mutation.SetPaymentID(u)
@@ -183,6 +189,9 @@ func (gpc *GasPayingCreate) check() error {
 	if _, ok := gpc.mutation.OrderID(); !ok {
 		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
 	}
+	if _, ok := gpc.mutation.FeeTypeID(); !ok {
+		return &ValidationError{Name: "fee_type_id", err: errors.New(`ent: missing required field "fee_type_id"`)}
+	}
 	if _, ok := gpc.mutation.PaymentID(); !ok {
 		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "payment_id"`)}
 	}
@@ -238,6 +247,14 @@ func (gpc *GasPayingCreate) createSpec() (*GasPaying, *sqlgraph.CreateSpec) {
 			Column: gaspaying.FieldOrderID,
 		})
 		_node.OrderID = value
+	}
+	if value, ok := gpc.mutation.FeeTypeID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: gaspaying.FieldFeeTypeID,
+		})
+		_node.FeeTypeID = value
 	}
 	if value, ok := gpc.mutation.PaymentID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -342,6 +359,18 @@ func (u *GasPayingUpsert) SetOrderID(v uuid.UUID) *GasPayingUpsert {
 // UpdateOrderID sets the "order_id" field to the value that was provided on create.
 func (u *GasPayingUpsert) UpdateOrderID() *GasPayingUpsert {
 	u.SetExcluded(gaspaying.FieldOrderID)
+	return u
+}
+
+// SetFeeTypeID sets the "fee_type_id" field.
+func (u *GasPayingUpsert) SetFeeTypeID(v uuid.UUID) *GasPayingUpsert {
+	u.Set(gaspaying.FieldFeeTypeID, v)
+	return u
+}
+
+// UpdateFeeTypeID sets the "fee_type_id" field to the value that was provided on create.
+func (u *GasPayingUpsert) UpdateFeeTypeID() *GasPayingUpsert {
+	u.SetExcluded(gaspaying.FieldFeeTypeID)
 	return u
 }
 
@@ -466,6 +495,20 @@ func (u *GasPayingUpsertOne) SetOrderID(v uuid.UUID) *GasPayingUpsertOne {
 func (u *GasPayingUpsertOne) UpdateOrderID() *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.UpdateOrderID()
+	})
+}
+
+// SetFeeTypeID sets the "fee_type_id" field.
+func (u *GasPayingUpsertOne) SetFeeTypeID(v uuid.UUID) *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.SetFeeTypeID(v)
+	})
+}
+
+// UpdateFeeTypeID sets the "fee_type_id" field to the value that was provided on create.
+func (u *GasPayingUpsertOne) UpdateFeeTypeID() *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.UpdateFeeTypeID()
 	})
 }
 
@@ -766,6 +809,20 @@ func (u *GasPayingUpsertBulk) SetOrderID(v uuid.UUID) *GasPayingUpsertBulk {
 func (u *GasPayingUpsertBulk) UpdateOrderID() *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.UpdateOrderID()
+	})
+}
+
+// SetFeeTypeID sets the "fee_type_id" field.
+func (u *GasPayingUpsertBulk) SetFeeTypeID(v uuid.UUID) *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.SetFeeTypeID(v)
+	})
+}
+
+// UpdateFeeTypeID sets the "fee_type_id" field to the value that was provided on create.
+func (u *GasPayingUpsertBulk) UpdateFeeTypeID() *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.UpdateFeeTypeID()
 	})
 }
 

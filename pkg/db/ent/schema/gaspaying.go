@@ -21,6 +21,7 @@ func (GasPaying) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.UUID("order_id", uuid.UUID{}),
+		field.UUID("fee_type_id", uuid.UUID{}),
 		field.UUID("payment_id", uuid.UUID{}),
 		field.Uint32("duration_minutes"),
 		field.Uint32("create_at").

@@ -29,6 +29,7 @@ var (
 	GasPayingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "fee_type_id", Type: field.TypeUUID},
 		{Name: "payment_id", Type: field.TypeUUID},
 		{Name: "duration_minutes", Type: field.TypeUint32},
 		{Name: "create_at", Type: field.TypeUint32},

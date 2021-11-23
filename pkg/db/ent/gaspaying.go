@@ -18,6 +18,8 @@ type GasPaying struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
 	OrderID uuid.UUID `json:"order_id,omitempty"`
+	// FeeTypeID holds the value of the "fee_type_id" field.
+	FeeTypeID uuid.UUID `json:"fee_type_id,omitempty"`
 	// PaymentID holds the value of the "payment_id" field.
 	PaymentID uuid.UUID `json:"payment_id,omitempty"`
 	// DurationMinutes holds the value of the "duration_minutes" field.
@@ -37,7 +39,7 @@ func (*GasPaying) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case gaspaying.FieldDurationMinutes, gaspaying.FieldCreateAt, gaspaying.FieldUpdateAt, gaspaying.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case gaspaying.FieldID, gaspaying.FieldOrderID, gaspaying.FieldPaymentID:
+		case gaspaying.FieldID, gaspaying.FieldOrderID, gaspaying.FieldFeeTypeID, gaspaying.FieldPaymentID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type GasPaying", columns[i])
@@ -65,6 +67,12 @@ func (gp *GasPaying) assignValues(columns []string, values []interface{}) error 
 				return fmt.Errorf("unexpected type %T for field order_id", values[i])
 			} else if value != nil {
 				gp.OrderID = *value
+			}
+		case gaspaying.FieldFeeTypeID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field fee_type_id", values[i])
+			} else if value != nil {
+				gp.FeeTypeID = *value
 			}
 		case gaspaying.FieldPaymentID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -126,6 +134,8 @@ func (gp *GasPaying) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", gp.ID))
 	builder.WriteString(", order_id=")
 	builder.WriteString(fmt.Sprintf("%v", gp.OrderID))
+	builder.WriteString(", fee_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", gp.FeeTypeID))
 	builder.WriteString(", payment_id=")
 	builder.WriteString(fmt.Sprintf("%v", gp.PaymentID))
 	builder.WriteString(", duration_minutes=")

@@ -98,6 +98,13 @@ func OrderID(v uuid.UUID) predicate.GasPaying {
 	})
 }
 
+// FeeTypeID applies equality check predicate on the "fee_type_id" field. It's identical to FeeTypeIDEQ.
+func FeeTypeID(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFeeTypeID), v))
+	})
+}
+
 // PaymentID applies equality check predicate on the "payment_id" field. It's identical to PaymentIDEQ.
 func PaymentID(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
@@ -206,6 +213,82 @@ func OrderIDLT(v uuid.UUID) predicate.GasPaying {
 func OrderIDLTE(v uuid.UUID) predicate.GasPaying {
 	return predicate.GasPaying(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldOrderID), v))
+	})
+}
+
+// FeeTypeIDEQ applies the EQ predicate on the "fee_type_id" field.
+func FeeTypeIDEQ(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFeeTypeID), v))
+	})
+}
+
+// FeeTypeIDNEQ applies the NEQ predicate on the "fee_type_id" field.
+func FeeTypeIDNEQ(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFeeTypeID), v))
+	})
+}
+
+// FeeTypeIDIn applies the In predicate on the "fee_type_id" field.
+func FeeTypeIDIn(vs ...uuid.UUID) predicate.GasPaying {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GasPaying(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldFeeTypeID), v...))
+	})
+}
+
+// FeeTypeIDNotIn applies the NotIn predicate on the "fee_type_id" field.
+func FeeTypeIDNotIn(vs ...uuid.UUID) predicate.GasPaying {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.GasPaying(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldFeeTypeID), v...))
+	})
+}
+
+// FeeTypeIDGT applies the GT predicate on the "fee_type_id" field.
+func FeeTypeIDGT(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFeeTypeID), v))
+	})
+}
+
+// FeeTypeIDGTE applies the GTE predicate on the "fee_type_id" field.
+func FeeTypeIDGTE(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFeeTypeID), v))
+	})
+}
+
+// FeeTypeIDLT applies the LT predicate on the "fee_type_id" field.
+func FeeTypeIDLT(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFeeTypeID), v))
+	})
+}
+
+// FeeTypeIDLTE applies the LTE predicate on the "fee_type_id" field.
+func FeeTypeIDLTE(v uuid.UUID) predicate.GasPaying {
+	return predicate.GasPaying(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFeeTypeID), v))
 	})
 }
 

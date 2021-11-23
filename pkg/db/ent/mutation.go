@@ -833,6 +833,7 @@ type GasPayingMutation struct {
 	typ                 string
 	id                  *uuid.UUID
 	order_id            *uuid.UUID
+	fee_type_id         *uuid.UUID
 	payment_id          *uuid.UUID
 	duration_minutes    *uint32
 	addduration_minutes *uint32
@@ -967,6 +968,42 @@ func (m *GasPayingMutation) OldOrderID(ctx context.Context) (v uuid.UUID, err er
 // ResetOrderID resets all changes to the "order_id" field.
 func (m *GasPayingMutation) ResetOrderID() {
 	m.order_id = nil
+}
+
+// SetFeeTypeID sets the "fee_type_id" field.
+func (m *GasPayingMutation) SetFeeTypeID(u uuid.UUID) {
+	m.fee_type_id = &u
+}
+
+// FeeTypeID returns the value of the "fee_type_id" field in the mutation.
+func (m *GasPayingMutation) FeeTypeID() (r uuid.UUID, exists bool) {
+	v := m.fee_type_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFeeTypeID returns the old "fee_type_id" field's value of the GasPaying entity.
+// If the GasPaying object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GasPayingMutation) OldFeeTypeID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldFeeTypeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldFeeTypeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFeeTypeID: %w", err)
+	}
+	return oldValue.FeeTypeID, nil
+}
+
+// ResetFeeTypeID resets all changes to the "fee_type_id" field.
+func (m *GasPayingMutation) ResetFeeTypeID() {
+	m.fee_type_id = nil
 }
 
 // SetPaymentID sets the "payment_id" field.
@@ -1248,9 +1285,12 @@ func (m *GasPayingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *GasPayingMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.order_id != nil {
 		fields = append(fields, gaspaying.FieldOrderID)
+	}
+	if m.fee_type_id != nil {
+		fields = append(fields, gaspaying.FieldFeeTypeID)
 	}
 	if m.payment_id != nil {
 		fields = append(fields, gaspaying.FieldPaymentID)
@@ -1277,6 +1317,8 @@ func (m *GasPayingMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case gaspaying.FieldOrderID:
 		return m.OrderID()
+	case gaspaying.FieldFeeTypeID:
+		return m.FeeTypeID()
 	case gaspaying.FieldPaymentID:
 		return m.PaymentID()
 	case gaspaying.FieldDurationMinutes:
@@ -1298,6 +1340,8 @@ func (m *GasPayingMutation) OldField(ctx context.Context, name string) (ent.Valu
 	switch name {
 	case gaspaying.FieldOrderID:
 		return m.OldOrderID(ctx)
+	case gaspaying.FieldFeeTypeID:
+		return m.OldFeeTypeID(ctx)
 	case gaspaying.FieldPaymentID:
 		return m.OldPaymentID(ctx)
 	case gaspaying.FieldDurationMinutes:
@@ -1323,6 +1367,13 @@ func (m *GasPayingMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOrderID(v)
+		return nil
+	case gaspaying.FieldFeeTypeID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFeeTypeID(v)
 		return nil
 	case gaspaying.FieldPaymentID:
 		v, ok := value.(uuid.UUID)
@@ -1461,6 +1512,9 @@ func (m *GasPayingMutation) ResetField(name string) error {
 	switch name {
 	case gaspaying.FieldOrderID:
 		m.ResetOrderID()
+		return nil
+	case gaspaying.FieldFeeTypeID:
+		m.ResetFeeTypeID()
 		return nil
 	case gaspaying.FieldPaymentID:
 		m.ResetPaymentID()

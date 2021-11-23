@@ -13,6 +13,8 @@ const (
 	FieldID = "id"
 	// FieldOrderID holds the string denoting the order_id field in the database.
 	FieldOrderID = "order_id"
+	// FieldFeeTypeID holds the string denoting the fee_type_id field in the database.
+	FieldFeeTypeID = "fee_type_id"
 	// FieldPaymentID holds the string denoting the payment_id field in the database.
 	FieldPaymentID = "payment_id"
 	// FieldDurationMinutes holds the string denoting the duration_minutes field in the database.
@@ -31,6 +33,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldOrderID,
+	FieldFeeTypeID,
 	FieldPaymentID,
 	FieldDurationMinutes,
 	FieldCreateAt,

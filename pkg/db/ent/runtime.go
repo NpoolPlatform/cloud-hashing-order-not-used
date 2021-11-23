@@ -40,17 +40,17 @@ func init() {
 	gaspayingFields := schema.GasPaying{}.Fields()
 	_ = gaspayingFields
 	// gaspayingDescCreateAt is the schema descriptor for create_at field.
-	gaspayingDescCreateAt := gaspayingFields[4].Descriptor()
+	gaspayingDescCreateAt := gaspayingFields[5].Descriptor()
 	// gaspaying.DefaultCreateAt holds the default value on creation for the create_at field.
 	gaspaying.DefaultCreateAt = gaspayingDescCreateAt.Default.(func() uint32)
 	// gaspayingDescUpdateAt is the schema descriptor for update_at field.
-	gaspayingDescUpdateAt := gaspayingFields[5].Descriptor()
+	gaspayingDescUpdateAt := gaspayingFields[6].Descriptor()
 	// gaspaying.DefaultUpdateAt holds the default value on creation for the update_at field.
 	gaspaying.DefaultUpdateAt = gaspayingDescUpdateAt.Default.(func() uint32)
 	// gaspaying.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	gaspaying.UpdateDefaultUpdateAt = gaspayingDescUpdateAt.UpdateDefault.(func() uint32)
 	// gaspayingDescDeleteAt is the schema descriptor for delete_at field.
-	gaspayingDescDeleteAt := gaspayingFields[6].Descriptor()
+	gaspayingDescDeleteAt := gaspayingFields[7].Descriptor()
 	// gaspaying.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	gaspaying.DefaultDeleteAt = gaspayingDescDeleteAt.Default.(func() uint32)
 	// gaspayingDescID is the schema descriptor for id field.
