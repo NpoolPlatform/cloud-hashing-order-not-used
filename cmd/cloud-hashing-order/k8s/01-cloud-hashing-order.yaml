@@ -46,8 +46,14 @@ metadata:
   namespace: kube-system
 spec:
   ports:
-  - name: api
+  - name: http
     port: 50040
     targetPort: 50040
+  - name: grpc
+    port: 50041
+    targetPort: 50041
+  - name: healthz
+    port: 50042
+    targetPort: 50042
   selector:
     app: cloud-hashing-order
