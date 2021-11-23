@@ -41,6 +41,12 @@ func (cc *CompensateCreate) SetEnd(u uint32) *CompensateCreate {
 	return cc
 }
 
+// SetMessage sets the "message" field.
+func (cc *CompensateCreate) SetMessage(s string) *CompensateCreate {
+	cc.mutation.SetMessage(s)
+	return cc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (cc *CompensateCreate) SetCreateAt(u uint32) *CompensateCreate {
 	cc.mutation.SetCreateAt(u)
@@ -189,6 +195,9 @@ func (cc *CompensateCreate) check() error {
 	if _, ok := cc.mutation.End(); !ok {
 		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "end"`)}
 	}
+	if _, ok := cc.mutation.Message(); !ok {
+		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "message"`)}
+	}
 	if _, ok := cc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
 	}
@@ -254,6 +263,14 @@ func (cc *CompensateCreate) createSpec() (*Compensate, *sqlgraph.CreateSpec) {
 			Column: compensate.FieldEnd,
 		})
 		_node.End = value
+	}
+	if value, ok := cc.mutation.Message(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: compensate.FieldMessage,
+		})
+		_node.Message = value
 	}
 	if value, ok := cc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -366,6 +383,18 @@ func (u *CompensateUpsert) SetEnd(v uint32) *CompensateUpsert {
 // UpdateEnd sets the "end" field to the value that was provided on create.
 func (u *CompensateUpsert) UpdateEnd() *CompensateUpsert {
 	u.SetExcluded(compensate.FieldEnd)
+	return u
+}
+
+// SetMessage sets the "message" field.
+func (u *CompensateUpsert) SetMessage(v string) *CompensateUpsert {
+	u.Set(compensate.FieldMessage, v)
+	return u
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *CompensateUpsert) UpdateMessage() *CompensateUpsert {
+	u.SetExcluded(compensate.FieldMessage)
 	return u
 }
 
@@ -494,6 +523,20 @@ func (u *CompensateUpsertOne) SetEnd(v uint32) *CompensateUpsertOne {
 func (u *CompensateUpsertOne) UpdateEnd() *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
 		s.UpdateEnd()
+	})
+}
+
+// SetMessage sets the "message" field.
+func (u *CompensateUpsertOne) SetMessage(v string) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.SetMessage(v)
+	})
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *CompensateUpsertOne) UpdateMessage() *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.UpdateMessage()
 	})
 }
 
@@ -794,6 +837,20 @@ func (u *CompensateUpsertBulk) SetEnd(v uint32) *CompensateUpsertBulk {
 func (u *CompensateUpsertBulk) UpdateEnd() *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
 		s.UpdateEnd()
+	})
+}
+
+// SetMessage sets the "message" field.
+func (u *CompensateUpsertBulk) SetMessage(v string) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.SetMessage(v)
+	})
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *CompensateUpsertBulk) UpdateMessage() *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.UpdateMessage()
 	})
 }
 

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/canceledorder"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/compensate"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
@@ -29,576 +28,13 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCanceledOrder = "CanceledOrder"
-	TypeCompensate    = "Compensate"
-	TypeGasPaying     = "GasPaying"
-	TypeGoodPaying    = "GoodPaying"
-	TypeOrder         = "Order"
-	TypeOutOfGas      = "OutOfGas"
-	TypePayment       = "Payment"
+	TypeCompensate = "Compensate"
+	TypeGasPaying  = "GasPaying"
+	TypeGoodPaying = "GoodPaying"
+	TypeOrder      = "Order"
+	TypeOutOfGas   = "OutOfGas"
+	TypePayment    = "Payment"
 )
-
-// CanceledOrderMutation represents an operation that mutates the CanceledOrder nodes in the graph.
-type CanceledOrderMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	order_id      *uuid.UUID
-	create_at     *uint32
-	addcreate_at  *uint32
-	update_at     *uint32
-	addupdate_at  *uint32
-	delete_at     *uint32
-	adddelete_at  *uint32
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*CanceledOrder, error)
-	predicates    []predicate.CanceledOrder
-}
-
-var _ ent.Mutation = (*CanceledOrderMutation)(nil)
-
-// canceledorderOption allows management of the mutation configuration using functional options.
-type canceledorderOption func(*CanceledOrderMutation)
-
-// newCanceledOrderMutation creates new mutation for the CanceledOrder entity.
-func newCanceledOrderMutation(c config, op Op, opts ...canceledorderOption) *CanceledOrderMutation {
-	m := &CanceledOrderMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeCanceledOrder,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withCanceledOrderID sets the ID field of the mutation.
-func withCanceledOrderID(id uuid.UUID) canceledorderOption {
-	return func(m *CanceledOrderMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *CanceledOrder
-		)
-		m.oldValue = func(ctx context.Context) (*CanceledOrder, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().CanceledOrder.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withCanceledOrder sets the old CanceledOrder of the mutation.
-func withCanceledOrder(node *CanceledOrder) canceledorderOption {
-	return func(m *CanceledOrderMutation) {
-		m.oldValue = func(context.Context) (*CanceledOrder, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m CanceledOrderMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m CanceledOrderMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of CanceledOrder entities.
-func (m *CanceledOrderMutation) SetID(id uuid.UUID) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *CanceledOrderMutation) ID() (id uuid.UUID, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetOrderID sets the "order_id" field.
-func (m *CanceledOrderMutation) SetOrderID(u uuid.UUID) {
-	m.order_id = &u
-}
-
-// OrderID returns the value of the "order_id" field in the mutation.
-func (m *CanceledOrderMutation) OrderID() (r uuid.UUID, exists bool) {
-	v := m.order_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOrderID returns the old "order_id" field's value of the CanceledOrder entity.
-// If the CanceledOrder object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CanceledOrderMutation) OldOrderID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldOrderID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldOrderID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOrderID: %w", err)
-	}
-	return oldValue.OrderID, nil
-}
-
-// ResetOrderID resets all changes to the "order_id" field.
-func (m *CanceledOrderMutation) ResetOrderID() {
-	m.order_id = nil
-}
-
-// SetCreateAt sets the "create_at" field.
-func (m *CanceledOrderMutation) SetCreateAt(u uint32) {
-	m.create_at = &u
-	m.addcreate_at = nil
-}
-
-// CreateAt returns the value of the "create_at" field in the mutation.
-func (m *CanceledOrderMutation) CreateAt() (r uint32, exists bool) {
-	v := m.create_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateAt returns the old "create_at" field's value of the CanceledOrder entity.
-// If the CanceledOrder object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CanceledOrderMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldCreateAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldCreateAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
-	}
-	return oldValue.CreateAt, nil
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (m *CanceledOrderMutation) AddCreateAt(u uint32) {
-	if m.addcreate_at != nil {
-		*m.addcreate_at += u
-	} else {
-		m.addcreate_at = &u
-	}
-}
-
-// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
-func (m *CanceledOrderMutation) AddedCreateAt() (r uint32, exists bool) {
-	v := m.addcreate_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCreateAt resets all changes to the "create_at" field.
-func (m *CanceledOrderMutation) ResetCreateAt() {
-	m.create_at = nil
-	m.addcreate_at = nil
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (m *CanceledOrderMutation) SetUpdateAt(u uint32) {
-	m.update_at = &u
-	m.addupdate_at = nil
-}
-
-// UpdateAt returns the value of the "update_at" field in the mutation.
-func (m *CanceledOrderMutation) UpdateAt() (r uint32, exists bool) {
-	v := m.update_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateAt returns the old "update_at" field's value of the CanceledOrder entity.
-// If the CanceledOrder object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CanceledOrderMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldUpdateAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldUpdateAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
-	}
-	return oldValue.UpdateAt, nil
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (m *CanceledOrderMutation) AddUpdateAt(u uint32) {
-	if m.addupdate_at != nil {
-		*m.addupdate_at += u
-	} else {
-		m.addupdate_at = &u
-	}
-}
-
-// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
-func (m *CanceledOrderMutation) AddedUpdateAt() (r uint32, exists bool) {
-	v := m.addupdate_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetUpdateAt resets all changes to the "update_at" field.
-func (m *CanceledOrderMutation) ResetUpdateAt() {
-	m.update_at = nil
-	m.addupdate_at = nil
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (m *CanceledOrderMutation) SetDeleteAt(u uint32) {
-	m.delete_at = &u
-	m.adddelete_at = nil
-}
-
-// DeleteAt returns the value of the "delete_at" field in the mutation.
-func (m *CanceledOrderMutation) DeleteAt() (r uint32, exists bool) {
-	v := m.delete_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDeleteAt returns the old "delete_at" field's value of the CanceledOrder entity.
-// If the CanceledOrder object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CanceledOrderMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDeleteAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDeleteAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDeleteAt: %w", err)
-	}
-	return oldValue.DeleteAt, nil
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (m *CanceledOrderMutation) AddDeleteAt(u uint32) {
-	if m.adddelete_at != nil {
-		*m.adddelete_at += u
-	} else {
-		m.adddelete_at = &u
-	}
-}
-
-// AddedDeleteAt returns the value that was added to the "delete_at" field in this mutation.
-func (m *CanceledOrderMutation) AddedDeleteAt() (r uint32, exists bool) {
-	v := m.adddelete_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetDeleteAt resets all changes to the "delete_at" field.
-func (m *CanceledOrderMutation) ResetDeleteAt() {
-	m.delete_at = nil
-	m.adddelete_at = nil
-}
-
-// Where appends a list predicates to the CanceledOrderMutation builder.
-func (m *CanceledOrderMutation) Where(ps ...predicate.CanceledOrder) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// Op returns the operation name.
-func (m *CanceledOrderMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (CanceledOrder).
-func (m *CanceledOrderMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *CanceledOrderMutation) Fields() []string {
-	fields := make([]string, 0, 4)
-	if m.order_id != nil {
-		fields = append(fields, canceledorder.FieldOrderID)
-	}
-	if m.create_at != nil {
-		fields = append(fields, canceledorder.FieldCreateAt)
-	}
-	if m.update_at != nil {
-		fields = append(fields, canceledorder.FieldUpdateAt)
-	}
-	if m.delete_at != nil {
-		fields = append(fields, canceledorder.FieldDeleteAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *CanceledOrderMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case canceledorder.FieldOrderID:
-		return m.OrderID()
-	case canceledorder.FieldCreateAt:
-		return m.CreateAt()
-	case canceledorder.FieldUpdateAt:
-		return m.UpdateAt()
-	case canceledorder.FieldDeleteAt:
-		return m.DeleteAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *CanceledOrderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case canceledorder.FieldOrderID:
-		return m.OldOrderID(ctx)
-	case canceledorder.FieldCreateAt:
-		return m.OldCreateAt(ctx)
-	case canceledorder.FieldUpdateAt:
-		return m.OldUpdateAt(ctx)
-	case canceledorder.FieldDeleteAt:
-		return m.OldDeleteAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown CanceledOrder field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *CanceledOrderMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case canceledorder.FieldOrderID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOrderID(v)
-		return nil
-	case canceledorder.FieldCreateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateAt(v)
-		return nil
-	case canceledorder.FieldUpdateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateAt(v)
-		return nil
-	case canceledorder.FieldDeleteAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDeleteAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown CanceledOrder field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *CanceledOrderMutation) AddedFields() []string {
-	var fields []string
-	if m.addcreate_at != nil {
-		fields = append(fields, canceledorder.FieldCreateAt)
-	}
-	if m.addupdate_at != nil {
-		fields = append(fields, canceledorder.FieldUpdateAt)
-	}
-	if m.adddelete_at != nil {
-		fields = append(fields, canceledorder.FieldDeleteAt)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *CanceledOrderMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case canceledorder.FieldCreateAt:
-		return m.AddedCreateAt()
-	case canceledorder.FieldUpdateAt:
-		return m.AddedUpdateAt()
-	case canceledorder.FieldDeleteAt:
-		return m.AddedDeleteAt()
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *CanceledOrderMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case canceledorder.FieldCreateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreateAt(v)
-		return nil
-	case canceledorder.FieldUpdateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdateAt(v)
-		return nil
-	case canceledorder.FieldDeleteAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDeleteAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown CanceledOrder numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *CanceledOrderMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *CanceledOrderMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *CanceledOrderMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown CanceledOrder nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *CanceledOrderMutation) ResetField(name string) error {
-	switch name {
-	case canceledorder.FieldOrderID:
-		m.ResetOrderID()
-		return nil
-	case canceledorder.FieldCreateAt:
-		m.ResetCreateAt()
-		return nil
-	case canceledorder.FieldUpdateAt:
-		m.ResetUpdateAt()
-		return nil
-	case canceledorder.FieldDeleteAt:
-		m.ResetDeleteAt()
-		return nil
-	}
-	return fmt.Errorf("unknown CanceledOrder field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *CanceledOrderMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *CanceledOrderMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *CanceledOrderMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *CanceledOrderMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *CanceledOrderMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *CanceledOrderMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *CanceledOrderMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown CanceledOrder unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *CanceledOrderMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown CanceledOrder edge %s", name)
-}
 
 // CompensateMutation represents an operation that mutates the Compensate nodes in the graph.
 type CompensateMutation struct {
@@ -611,6 +47,7 @@ type CompensateMutation struct {
 	addstart      *uint32
 	end           *uint32
 	addend        *uint32
+	message       *string
 	create_at     *uint32
 	addcreate_at  *uint32
 	update_at     *uint32
@@ -856,6 +293,42 @@ func (m *CompensateMutation) ResetEnd() {
 	m.addend = nil
 }
 
+// SetMessage sets the "message" field.
+func (m *CompensateMutation) SetMessage(s string) {
+	m.message = &s
+}
+
+// Message returns the value of the "message" field in the mutation.
+func (m *CompensateMutation) Message() (r string, exists bool) {
+	v := m.message
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMessage returns the old "message" field's value of the Compensate entity.
+// If the Compensate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CompensateMutation) OldMessage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldMessage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldMessage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMessage: %w", err)
+	}
+	return oldValue.Message, nil
+}
+
+// ResetMessage resets all changes to the "message" field.
+func (m *CompensateMutation) ResetMessage() {
+	m.message = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *CompensateMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -1043,7 +516,7 @@ func (m *CompensateMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CompensateMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.order_id != nil {
 		fields = append(fields, compensate.FieldOrderID)
 	}
@@ -1052,6 +525,9 @@ func (m *CompensateMutation) Fields() []string {
 	}
 	if m.end != nil {
 		fields = append(fields, compensate.FieldEnd)
+	}
+	if m.message != nil {
+		fields = append(fields, compensate.FieldMessage)
 	}
 	if m.create_at != nil {
 		fields = append(fields, compensate.FieldCreateAt)
@@ -1076,6 +552,8 @@ func (m *CompensateMutation) Field(name string) (ent.Value, bool) {
 		return m.Start()
 	case compensate.FieldEnd:
 		return m.End()
+	case compensate.FieldMessage:
+		return m.Message()
 	case compensate.FieldCreateAt:
 		return m.CreateAt()
 	case compensate.FieldUpdateAt:
@@ -1097,6 +575,8 @@ func (m *CompensateMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldStart(ctx)
 	case compensate.FieldEnd:
 		return m.OldEnd(ctx)
+	case compensate.FieldMessage:
+		return m.OldMessage(ctx)
 	case compensate.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case compensate.FieldUpdateAt:
@@ -1132,6 +612,13 @@ func (m *CompensateMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEnd(v)
+		return nil
+	case compensate.FieldMessage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMessage(v)
 		return nil
 	case compensate.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -1274,6 +761,9 @@ func (m *CompensateMutation) ResetField(name string) error {
 		return nil
 	case compensate.FieldEnd:
 		m.ResetEnd()
+		return nil
+	case compensate.FieldMessage:
+		m.ResetMessage()
 		return nil
 	case compensate.FieldCreateAt:
 		m.ResetCreateAt()

@@ -26,10 +26,8 @@ func init() {
 
 func assertGasPaying(t *testing.T, actual, expected *npool.GasPaying) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
-	assert.Equal(t, actual.AccountID, expected.AccountID)
-	assert.Equal(t, actual.State, expected.State)
+	assert.Equal(t, actual.PaymentID, expected.PaymentID)
 	assert.Equal(t, actual.DurationMinutes, expected.DurationMinutes)
-	assert.Equal(t, actual.Used, expected.Used)
 }
 
 func TestCRUD(t *testing.T) {
@@ -39,43 +37,23 @@ func TestCRUD(t *testing.T) {
 
 	gasPaying := npool.GasPaying{
 		OrderID:         uuid.New().String(),
-		AccountID:       uuid.New().String(),
+		PaymentID:       uuid.New().String(),
 		DurationMinutes: 24 * 10 * 60,
 	}
 	resp, err := Create(context.Background(), &npool.CreateGasPayingRequest{
 		Info: &gasPaying,
 	})
-	gasPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{}.String())
-		assert.Equal(t, resp.Info.ChainTransactionID, "")
-		assert.Equal(t, resp.Info.PlatformTransactionID, uuid.UUID{}.String())
 		assertGasPaying(t, resp.Info, &gasPaying)
 	}
 
-	gasPaying.State = "done"
-	gasPaying.Used = true
-	gasPaying.ChainTransactionID = "MOCKTRANSACTIONID"
-	gasPaying.PlatformTransactionID = uuid.New().String()
 	gasPaying.ID = resp.Info.ID
 
-	resp1, err := Update(context.Background(), &npool.UpdateGasPayingRequest{
-		Info: &gasPaying,
+	resp1, err := GetByOrder(context.Background(), &npool.GetGasPayingsByOrderRequest{
+		OrderID: gasPaying.OrderID,
 	})
 	if assert.Nil(t, err) {
-		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp1.Info.ChainTransactionID, gasPaying.ChainTransactionID)
-		assert.Equal(t, resp1.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
-		assertGasPaying(t, resp1.Info, &gasPaying)
-	}
-
-	resp2, err := Get(context.Background(), &npool.GetGasPayingRequest{
-		ID: resp1.Info.ID,
-	})
-	if assert.Nil(t, err) {
-		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp2.Info.ChainTransactionID, gasPaying.ChainTransactionID)
-		assert.Equal(t, resp2.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
-		assertGasPaying(t, resp2.Info, &gasPaying)
+		assert.Equal(t, len(resp1.Infos), 1)
 	}
 }

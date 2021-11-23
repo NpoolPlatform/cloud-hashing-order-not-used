@@ -59,6 +59,12 @@ func (cu *CompensateUpdate) AddEnd(u uint32) *CompensateUpdate {
 	return cu
 }
 
+// SetMessage sets the "message" field.
+func (cu *CompensateUpdate) SetMessage(s string) *CompensateUpdate {
+	cu.mutation.SetMessage(s)
+	return cu
+}
+
 // SetCreateAt sets the "create_at" field.
 func (cu *CompensateUpdate) SetCreateAt(u uint32) *CompensateUpdate {
 	cu.mutation.ResetCreateAt()
@@ -235,6 +241,13 @@ func (cu *CompensateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: compensate.FieldEnd,
 		})
 	}
+	if value, ok := cu.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: compensate.FieldMessage,
+		})
+	}
 	if value, ok := cu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -325,6 +338,12 @@ func (cuo *CompensateUpdateOne) SetEnd(u uint32) *CompensateUpdateOne {
 // AddEnd adds u to the "end" field.
 func (cuo *CompensateUpdateOne) AddEnd(u uint32) *CompensateUpdateOne {
 	cuo.mutation.AddEnd(u)
+	return cuo
+}
+
+// SetMessage sets the "message" field.
+func (cuo *CompensateUpdateOne) SetMessage(s string) *CompensateUpdateOne {
+	cuo.mutation.SetMessage(s)
 	return cuo
 }
 
@@ -526,6 +545,13 @@ func (cuo *CompensateUpdateOne) sqlSave(ctx context.Context) (_node *Compensate,
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: compensate.FieldEnd,
+		})
+	}
+	if value, ok := cuo.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: compensate.FieldMessage,
 		})
 	}
 	if value, ok := cuo.mutation.CreateAt(); ok {

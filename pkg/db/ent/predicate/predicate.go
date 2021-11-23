@@ -6,9 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// CanceledOrder is the predicate function for canceledorder builders.
-type CanceledOrder func(*sql.Selector)
-
 // Compensate is the predicate function for compensate builders.
 type Compensate func(*sql.Selector)
 

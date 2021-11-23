@@ -23,11 +23,11 @@ func (s *Server) CreateGoodPaying(ctx context.Context, in *npool.CreateGoodPayin
 	return resp, nil
 }
 
-func (s *Server) GetGoodPaying(ctx context.Context, in *npool.GetGoodPayingRequest) (*npool.GetGoodPayingResponse, error) {
-	resp, err := goodpaying.Get(ctx, in)
+func (s *Server) GetGoodPayingByOrder(ctx context.Context, in *npool.GetGoodPayingByOrderRequest) (*npool.GetGoodPayingByOrderResponse, error) {
+	resp, err := goodpaying.GetByOrder(ctx, in)
 	if err != nil {
-		logger.Sugar().Errorw("create good paying error: %w", err)
-		return &npool.GetGoodPayingResponse{}, status.Error(codes.Internal, "internal server error")
+		logger.Sugar().Errorw("create good paying by order error: %w", err)
+		return &npool.GetGoodPayingByOrderResponse{}, status.Error(codes.Internal, "internal server error")
 	}
 	return resp, nil
 }

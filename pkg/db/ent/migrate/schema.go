@@ -8,26 +8,13 @@ import (
 )
 
 var (
-	// CanceledOrdersColumns holds the columns for the "canceled_orders" table.
-	CanceledOrdersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "order_id", Type: field.TypeUUID},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
-	}
-	// CanceledOrdersTable holds the schema information for the "canceled_orders" table.
-	CanceledOrdersTable = &schema.Table{
-		Name:       "canceled_orders",
-		Columns:    CanceledOrdersColumns,
-		PrimaryKey: []*schema.Column{CanceledOrdersColumns[0]},
-	}
 	// CompensatesColumns holds the columns for the "compensates" table.
 	CompensatesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "order_id", Type: field.TypeUUID},
 		{Name: "start", Type: field.TypeUint32},
 		{Name: "end", Type: field.TypeUint32},
+		{Name: "message", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
@@ -57,7 +44,7 @@ var (
 	// GoodPayingsColumns holds the columns for the "good_payings" table.
 	GoodPayingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "order_id", Type: field.TypeUUID, Unique: true},
 		{Name: "payment_id", Type: field.TypeUUID},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
@@ -110,7 +97,7 @@ var (
 	// PaymentsColumns holds the columns for the "payments" table.
 	PaymentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "order_id", Type: field.TypeUUID},
+		{Name: "order_id", Type: field.TypeUUID, Unique: true},
 		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "amount", Type: field.TypeUint64},
 		{Name: "coin_info_id", Type: field.TypeUUID},
@@ -129,7 +116,6 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		CanceledOrdersTable,
 		CompensatesTable,
 		GasPayingsTable,
 		GoodPayingsTable,

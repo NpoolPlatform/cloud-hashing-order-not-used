@@ -11,9 +11,12 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/test-init" //nolint
 
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/compensate"  //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/order"       //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/out-of-gas"  //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/payment"     //nolint
 
 	"github.com/google/uuid"
 
@@ -29,31 +32,37 @@ func init() {
 	}
 }
 
-func assertOrderDetail(t *testing.T, actual *npool.OrderDetail, orderInfo *npool.Order, goodPaying *npool.GoodPaying, _gasPayings []*npool.GasPaying) { //nolint
+func assertOrderDetail(
+	t *testing.T,
+	actual *npool.OrderDetail,
+	orderInfo *npool.Order,
+	goodPaying *npool.GoodPaying,
+	gasPayings []*npool.GasPaying,
+	compensates []*npool.Compensate,
+	outOfGases []*npool.OutOfGas,
+	myPayment *npool.Payment) { //nolint
 	assert.Equal(t, actual.GoodID, orderInfo.GoodID)
+	assert.Equal(t, actual.AppID, orderInfo.AppID)
+	assert.Equal(t, actual.UserID, orderInfo.UserID)
 	assert.Equal(t, actual.Units, orderInfo.Units)
 	assert.Equal(t, actual.Discount, orderInfo.Discount)
 	assert.Equal(t, actual.SpecialReductionAmount, orderInfo.SpecialReductionAmount)
-	assert.Equal(t, actual.UserID, orderInfo.UserID)
-	assert.Equal(t, actual.AppID, orderInfo.AppID)
 
 	assert.Equal(t, actual.GoodPaying, goodPaying)
 
 	if goodPaying != nil && actual.GoodPaying != nil {
 		assert.Equal(t, actual.GoodPaying.ID, goodPaying.ID)
 		assert.Equal(t, actual.GoodPaying.OrderID, goodPaying.OrderID)
-		assert.Equal(t, actual.GoodPaying.AccountID, goodPaying.AccountID)
-		assert.Equal(t, actual.GoodPaying.State, goodPaying.State)
-		assert.Equal(t, actual.GoodPaying.ChainTransactionID, goodPaying.ChainTransactionID)
-		assert.Equal(t, actual.GoodPaying.PlatformTransactionID, goodPaying.PlatformTransactionID)
+		assert.Equal(t, actual.GoodPaying.PaymentID, goodPaying.PaymentID)
 	}
+
+	assert.EqualValues(t, actual.GasPayings, gasPayings)
+	assert.EqualValues(t, actual.Compensates, compensates)
+	assert.EqualValues(t, actual.OutOfGases, outOfGases)
+	assert.Equal(t, actual.Payment, myPayment)
 
 	assert.Equal(t, actual.Start, orderInfo.Start)
 	assert.Equal(t, actual.End, orderInfo.End)
-	assert.Equal(t, actual.CompensateMinutes, orderInfo.CompensateMinutes)
-	assert.Equal(t, actual.CompensateElapsedMinutes, orderInfo.CompensateElapsedMinutes)
-	assert.Equal(t, actual.GasStart, orderInfo.GasStart)
-	assert.Equal(t, actual.GasEnd, orderInfo.GasEnd)
 	assert.Equal(t, actual.CouponID, orderInfo.CouponID)
 }
 
@@ -69,30 +78,35 @@ func TestGetDetail(t *testing.T) {
 	goodID := uuid.New().String()
 
 	myOrder := npool.Order{
-		GoodID:                   goodID,
-		Units:                    10,
-		Discount:                 10,
-		SpecialReductionAmount:   20,
-		UserID:                   userID,
-		AppID:                    appID,
-		GoodPayID:                uuid.UUID{}.String(),
-		Start:                    second,
-		End:                      second + 20,
-		CompensateMinutes:        1000,
-		CompensateElapsedMinutes: 100,
-		GasStart:                 second,
-		GasEnd:                   second + 10,
-		GasPayIDs:                []string{},
-		CouponID:                 uuid.New().String(),
+		GoodID:                 goodID,
+		AppID:                  appID,
+		UserID:                 userID,
+		Units:                  10,
+		Discount:               10,
+		SpecialReductionAmount: 20,
+		Start:                  second,
+		End:                    second + 20,
+		CouponID:               uuid.New().String(),
 	}
 	orderResp, err := order.Create(context.Background(), &npool.CreateOrderRequest{
 		Info: &myOrder,
 	})
 	assert.Nil(t, err)
 
+	myPayment := npool.Payment{
+		OrderID:    orderResp.Info.ID,
+		AccountID:  uuid.New().String(),
+		Amount:     1490.6,
+		CoinInfoID: uuid.New().String(),
+	}
+	paymentResp, err := payment.Create(context.Background(), &npool.CreatePaymentRequest{
+		Info: &myPayment,
+	})
+	assert.Nil(t, err)
+
 	goodPaying := npool.GoodPaying{
 		OrderID:   orderResp.Info.ID,
-		AccountID: uuid.New().String(),
+		PaymentID: paymentResp.Info.ID,
 	}
 	goodPayingResp, err := goodpaying.Create(context.Background(), &npool.CreateGoodPayingRequest{
 		Info: &goodPaying,
@@ -101,7 +115,7 @@ func TestGetDetail(t *testing.T) {
 
 	gasPaying1 := npool.GasPaying{
 		OrderID:         orderResp.Info.ID,
-		AccountID:       uuid.New().String(),
+		PaymentID:       paymentResp.Info.ID,
 		DurationMinutes: 24 * 10 * 60,
 	}
 	gasPayingResp1, err := gaspaying.Create(context.Background(), &npool.CreateGasPayingRequest{
@@ -112,7 +126,7 @@ func TestGetDetail(t *testing.T) {
 
 	gasPaying2 := npool.GasPaying{
 		OrderID:         orderResp.Info.ID,
-		AccountID:       uuid.New().String(),
+		PaymentID:       paymentResp.Info.ID,
 		DurationMinutes: 24 * 10 * 60,
 	}
 	gasPayingResp2, err := gaspaying.Create(context.Background(), &npool.CreateGasPayingRequest{
@@ -121,32 +135,69 @@ func TestGetDetail(t *testing.T) {
 	assert.Nil(t, err)
 	gasPaying2.ID = gasPayingResp2.Info.ID
 
+	compensate1 := npool.Compensate{
+		OrderID: orderResp.Info.ID,
+		Start:   uint32(time.Now().Unix()),
+		End:     uint32(time.Now().Unix()),
+	}
+	compensateResp1, err := compensate.Create(context.Background(), &npool.CreateCompensateRequest{
+		Info: &compensate1,
+	})
+	assert.Nil(t, err)
+
+	compensate2 := npool.Compensate{
+		OrderID: orderResp.Info.ID,
+		Start:   uint32(time.Now().Unix()) + 20,
+		End:     uint32(time.Now().Unix()) + 29,
+	}
+	compensateResp2, err := compensate.Create(context.Background(), &npool.CreateCompensateRequest{
+		Info: &compensate2,
+	})
+	assert.Nil(t, err)
+
+	outOfGas1 := npool.OutOfGas{
+		OrderID: orderResp.Info.ID,
+		Start:   uint32(time.Now().Unix()) + 20,
+		End:     uint32(time.Now().Unix()) + 29,
+	}
+	outOfGasResp1, err := outofgas.Create(context.Background(), &npool.CreateOutOfGasRequest{
+		Info: &outOfGas1,
+	})
+	assert.Nil(t, err)
+
+	outOfGas2 := npool.OutOfGas{
+		OrderID: orderResp.Info.ID,
+		Start:   uint32(time.Now().Unix()) + 20,
+		End:     uint32(time.Now().Unix()) + 29,
+	}
+	outOfGasResp2, err := outofgas.Create(context.Background(), &npool.CreateOutOfGasRequest{
+		Info: &outOfGas2,
+	})
+	assert.Nil(t, err)
+
 	orderDetail, err := Get(context.Background(), &npool.GetOrderDetailRequest{
 		ID: orderResp.Info.ID,
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, orderDetail.Detail.ID, orderResp.Info.ID)
-		assertOrderDetail(t, orderDetail.Detail, &myOrder, nil,
-			[]*npool.GasPaying{})
-	}
-
-	myOrder.GasPayIDs = []string{gasPayingResp1.Info.ID, gasPayingResp2.Info.ID}
-	myOrder.GoodPayID = goodPayingResp.Info.ID
-	myOrder.ID = orderResp.Info.ID
-	myOrder.State = "paying"
-
-	orderResp1, err := order.Update(context.Background(), &npool.UpdateOrderRequest{
-		Info: &myOrder,
-	})
-	assert.Nil(t, err)
-
-	orderDetail, err = Get(context.Background(), &npool.GetOrderDetailRequest{
-		ID: orderResp.Info.ID,
-	})
-	if assert.Nil(t, err) {
-		assert.Equal(t, orderDetail.Detail.ID, orderResp1.Info.ID)
-		assertOrderDetail(t, orderDetail.Detail, &myOrder, goodPayingResp.Info,
-			[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+		assertOrderDetail(
+			t,
+			orderDetail.Detail,
+			&myOrder,
+			goodPayingResp.Info,
+			[]*npool.GasPaying{
+				gasPayingResp1.Info,
+				gasPayingResp2.Info,
+			},
+			[]*npool.Compensate{
+				compensateResp1.Info,
+				compensateResp2.Info,
+			},
+			[]*npool.OutOfGas{
+				outOfGasResp1.Info,
+				outOfGasResp2.Info,
+			},
+			paymentResp.Info)
 	}
 
 	orderDetails, err := GetByAppUser(context.Background(), &npool.GetOrdersDetailByAppUserRequest{
@@ -155,9 +206,25 @@ func TestGetDetail(t *testing.T) {
 	})
 	if assert.Nil(t, err) {
 		if assert.Equal(t, len(orderDetails.Details), 1) {
-			assert.Equal(t, orderDetails.Details[0].ID, orderResp1.Info.ID)
-			assertOrderDetail(t, orderDetails.Details[0], &myOrder, goodPayingResp.Info,
-				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+			assert.Equal(t, orderDetails.Details[0].ID, orderResp.Info.ID)
+			assertOrderDetail(
+				t,
+				orderDetail.Detail,
+				&myOrder,
+				goodPayingResp.Info,
+				[]*npool.GasPaying{
+					gasPayingResp1.Info,
+					gasPayingResp2.Info,
+				},
+				[]*npool.Compensate{
+					compensateResp1.Info,
+					compensateResp2.Info,
+				},
+				[]*npool.OutOfGas{
+					outOfGasResp1.Info,
+					outOfGasResp2.Info,
+				},
+				paymentResp.Info)
 		}
 	}
 
@@ -166,9 +233,25 @@ func TestGetDetail(t *testing.T) {
 	})
 	if assert.Nil(t, err) {
 		if assert.Equal(t, len(orderDetails1.Details), 1) {
-			assert.Equal(t, orderDetails1.Details[0].ID, orderResp1.Info.ID)
-			assertOrderDetail(t, orderDetails1.Details[0], &myOrder, goodPayingResp.Info,
-				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+			assert.Equal(t, orderDetails1.Details[0].ID, orderResp.Info.ID)
+			assertOrderDetail(
+				t,
+				orderDetail.Detail,
+				&myOrder,
+				goodPayingResp.Info,
+				[]*npool.GasPaying{
+					gasPayingResp1.Info,
+					gasPayingResp2.Info,
+				},
+				[]*npool.Compensate{
+					compensateResp1.Info,
+					compensateResp2.Info,
+				},
+				[]*npool.OutOfGas{
+					outOfGasResp1.Info,
+					outOfGasResp2.Info,
+				},
+				paymentResp.Info)
 		}
 	}
 
@@ -177,9 +260,25 @@ func TestGetDetail(t *testing.T) {
 	})
 	if assert.Nil(t, err) {
 		if assert.Equal(t, len(orderDetails2.Details), 1) {
-			assert.Equal(t, orderDetails2.Details[0].ID, orderResp1.Info.ID)
-			assertOrderDetail(t, orderDetails2.Details[0], &myOrder, goodPayingResp.Info,
-				[]*npool.GasPaying{gasPayingResp1.Info, gasPayingResp2.Info})
+			assert.Equal(t, orderDetails2.Details[0].ID, orderResp.Info.ID)
+			assertOrderDetail(
+				t,
+				orderDetail.Detail,
+				&myOrder,
+				goodPayingResp.Info,
+				[]*npool.GasPaying{
+					gasPayingResp1.Info,
+					gasPayingResp2.Info,
+				},
+				[]*npool.Compensate{
+					compensateResp1.Info,
+					compensateResp2.Info,
+				},
+				[]*npool.OutOfGas{
+					outOfGasResp1.Info,
+					outOfGasResp2.Info,
+				},
+				paymentResp.Info)
 		}
 	}
 }

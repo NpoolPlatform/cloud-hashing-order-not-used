@@ -18,17 +18,16 @@ func validateCompensate(info *npool.Compensate) error {
 	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetPaymentID()); err != nil {
-		return xerrors.Errorf("invalid payment id: %v", err)
-	}
 	return nil
 }
 
 func dbRowToCompensate(row *ent.Compensate) *npool.Compensate {
 	return &npool.Compensate{
-		ID:        row.ID.String(),
-		OrderID:   row.OrderID.String(),
-		PaymentID: row.PaymentID.String(),
+		ID:      row.ID.String(),
+		OrderID: row.OrderID.String(),
+		Start:   row.Start,
+		End:     row.End,
+		Message: row.Message,
 	}
 }
 
@@ -41,7 +40,9 @@ func Create(ctx context.Context, in *npool.CreateCompensateRequest) (*npool.Crea
 		Compensate.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
-		SetPaymentID(uuid.MustParse(in.GetInfo().GetPaymentID())).
+		SetStart(in.GetInfo().GetStart()).
+		SetEnd(in.GetInfo().GetEnd()).
+		SetMessage(in.GetInfo().GetMessage()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create compensate: %v", err)
@@ -52,10 +53,10 @@ func Create(ctx context.Context, in *npool.CreateCompensateRequest) (*npool.Crea
 	}, nil
 }
 
-func Get(ctx context.Context, in *npool.GetCompensateRequest) (*npool.GetCompensateResponse, error) {
-	id, err := uuid.Parse(in.GetID())
+func GetByOrder(ctx context.Context, in *npool.GetCompensatesByOrderRequest) (*npool.GetCompensatesByOrderResponse, error) {
+	orderID, err := uuid.Parse(in.GetOrderID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
+		return nil, xerrors.Errorf("invalid order id: %v", err)
 	}
 
 	infos, err := db.Client().
@@ -63,18 +64,20 @@ func Get(ctx context.Context, in *npool.GetCompensateRequest) (*npool.GetCompens
 		Query().
 		Where(
 			compensate.And(
-				compensate.ID(id),
+				compensate.OrderID(orderID),
 			),
 		).
 		All(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail query compensate: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty compensate")
+
+	compensates := []*npool.Compensate{}
+	for _, info := range infos {
+		compensates = append(compensates, dbRowToCompensate(info))
 	}
 
-	return &npool.GetCompensateResponse{
-		Info: dbRowToCompensate(infos[0]),
+	return &npool.GetCompensatesByOrderResponse{
+		Infos: compensates,
 	}, nil
 }

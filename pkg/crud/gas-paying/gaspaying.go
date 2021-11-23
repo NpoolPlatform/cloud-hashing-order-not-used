@@ -54,8 +54,8 @@ func Create(ctx context.Context, in *npool.CreateGasPayingRequest) (*npool.Creat
 	}, nil
 }
 
-func Get(ctx context.Context, in *npool.GetGasPayingRequest) (*npool.GetGasPayingResponse, error) {
-	id, err := uuid.Parse(in.GetID())
+func GetByOrder(ctx context.Context, in *npool.GetGasPayingsByOrderRequest) (*npool.GetGasPayingsByOrderResponse, error) {
+	orderID, err := uuid.Parse(in.GetOrderID())
 	if err != nil {
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
@@ -65,7 +65,7 @@ func Get(ctx context.Context, in *npool.GetGasPayingRequest) (*npool.GetGasPayin
 		Query().
 		Where(
 			gaspaying.And(
-				gaspaying.ID(id),
+				gaspaying.OrderID(orderID),
 			),
 		).
 		All(ctx)
@@ -76,7 +76,12 @@ func Get(ctx context.Context, in *npool.GetGasPayingRequest) (*npool.GetGasPayin
 		return nil, xerrors.Errorf("empty gas paying")
 	}
 
-	return &npool.GetGasPayingResponse{
-		Info: dbRowToGasPaying(infos[0]),
+	payings := []*npool.GasPaying{}
+	for _, info := range infos {
+		payings = append(payings, dbRowToGasPaying(info))
+	}
+
+	return &npool.GetGasPayingsByOrderResponse{
+		Infos: payings,
 	}, nil
 }

@@ -9,19 +9,6 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 )
 
-// The CanceledOrderFunc type is an adapter to allow the use of ordinary
-// function as CanceledOrder mutator.
-type CanceledOrderFunc func(context.Context, *ent.CanceledOrderMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f CanceledOrderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.CanceledOrderMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CanceledOrderMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The CompensateFunc type is an adapter to allow the use of ordinary
 // function as Compensate mutator.
 type CompensateFunc func(context.Context, *ent.CompensateMutation) (ent.Value, error)

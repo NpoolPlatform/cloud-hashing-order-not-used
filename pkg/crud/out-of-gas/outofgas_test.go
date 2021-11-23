@@ -1,4 +1,4 @@
-package goodpaying
+package outofgas
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/test-init" //nolint
@@ -24,10 +25,10 @@ func init() {
 	}
 }
 
-func assertGoodPaying(t *testing.T, actual, expected *npool.GoodPaying) {
+func assertOutOfGas(t *testing.T, actual, expected *npool.OutOfGas) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
-	assert.Equal(t, actual.AccountID, expected.AccountID)
-	assert.Equal(t, actual.State, expected.State)
+	assert.Equal(t, actual.Start, expected.Start)
+	assert.Equal(t, actual.End, expected.End)
 }
 
 func TestCRUD(t *testing.T) {
@@ -35,43 +36,23 @@ func TestCRUD(t *testing.T) {
 		return
 	}
 
-	goodPaying := npool.GoodPaying{
-		OrderID:   uuid.New().String(),
-		AccountID: uuid.New().String(),
+	outOfGas := npool.OutOfGas{
+		OrderID: uuid.New().String(),
+		Start:   uint32(time.Now().Unix()),
+		End:     uint32(time.Now().Unix()),
 	}
-	resp, err := Create(context.Background(), &npool.CreateGoodPayingRequest{
-		Info: &goodPaying,
+	resp, err := Create(context.Background(), &npool.CreateOutOfGasRequest{
+		Info: &outOfGas,
 	})
-	goodPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{}.String())
-		assert.Equal(t, resp.Info.ChainTransactionID, "")
-		assert.Equal(t, resp.Info.PlatformTransactionID, uuid.UUID{}.String())
-		assertGoodPaying(t, resp.Info, &goodPaying)
+		assertOutOfGas(t, resp.Info, &outOfGas)
 	}
 
-	goodPaying.State = "done"
-	goodPaying.ChainTransactionID = "MOCKTRANSACTIONID"
-	goodPaying.PlatformTransactionID = uuid.New().String()
-	goodPaying.ID = resp.Info.ID
-
-	resp1, err := Update(context.Background(), &npool.UpdateGoodPayingRequest{
-		Info: &goodPaying,
+	resp1, err := GetByOrder(context.Background(), &npool.GetOutOfGasesByOrderRequest{
+		OrderID: outOfGas.OrderID,
 	})
 	if assert.Nil(t, err) {
-		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp1.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-		assert.Equal(t, resp1.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
-		assertGoodPaying(t, resp1.Info, &goodPaying)
-	}
-
-	resp2, err := Get(context.Background(), &npool.GetGoodPayingRequest{
-		ID: resp1.Info.ID,
-	})
-	if assert.Nil(t, err) {
-		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp2.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-		assert.Equal(t, resp2.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
-		assertGoodPaying(t, resp2.Info, &goodPaying)
+		assert.Equal(t, len(resp1.Infos), 1)
 	}
 }

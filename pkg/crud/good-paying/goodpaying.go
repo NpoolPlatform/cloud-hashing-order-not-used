@@ -52,10 +52,10 @@ func Create(ctx context.Context, in *npool.CreateGoodPayingRequest) (*npool.Crea
 	}, nil
 }
 
-func Get(ctx context.Context, in *npool.GetGoodPayingRequest) (*npool.GetGoodPayingResponse, error) {
-	id, err := uuid.Parse(in.GetID())
+func GetByOrder(ctx context.Context, in *npool.GetGoodPayingByOrderRequest) (*npool.GetGoodPayingByOrderResponse, error) {
+	orderID, err := uuid.Parse(in.GetOrderID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
+		return nil, xerrors.Errorf("invalid order id: %v", err)
 	}
 
 	infos, err := db.Client().
@@ -63,7 +63,7 @@ func Get(ctx context.Context, in *npool.GetGoodPayingRequest) (*npool.GetGoodPay
 		Query().
 		Where(
 			goodpaying.And(
-				goodpaying.ID(id),
+				goodpaying.OrderID(orderID),
 			),
 		).
 		All(ctx)
@@ -74,7 +74,7 @@ func Get(ctx context.Context, in *npool.GetGoodPayingRequest) (*npool.GetGoodPay
 		return nil, xerrors.Errorf("empty good paying")
 	}
 
-	return &npool.GetGoodPayingResponse{
+	return &npool.GetGoodPayingByOrderResponse{
 		Info: dbRowToGoodPaying(infos[0]),
 	}, nil
 }

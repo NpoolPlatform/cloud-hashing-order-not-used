@@ -36,8 +36,9 @@ func TestCRUD(t *testing.T) {
 	}
 
 	payment := npool.Payment{
-		OrderID:   uuid.New().String(),
-		AccountID: uuid.New().String(),
+		OrderID:    uuid.New().String(),
+		AccountID:  uuid.New().String(),
+		CoinInfoID: uuid.New().String(),
 	}
 	resp, err := Create(context.Background(), &npool.CreatePaymentRequest{
 		Info: &payment,
@@ -65,8 +66,8 @@ func TestCRUD(t *testing.T) {
 		assertPayment(t, resp1.Info, &payment)
 	}
 
-	resp2, err := Get(context.Background(), &npool.GetPaymentRequest{
-		ID: resp1.Info.ID,
+	resp2, err := GetByOrder(context.Background(), &npool.GetPaymentByOrderRequest{
+		OrderID: payment.OrderID,
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, resp2.Info.ID, resp.Info.ID)

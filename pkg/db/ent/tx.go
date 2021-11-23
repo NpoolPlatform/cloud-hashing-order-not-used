@@ -12,8 +12,6 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// CanceledOrder is the client for interacting with the CanceledOrder builders.
-	CanceledOrder *CanceledOrderClient
 	// Compensate is the client for interacting with the Compensate builders.
 	Compensate *CompensateClient
 	// GasPaying is the client for interacting with the GasPaying builders.
@@ -161,7 +159,6 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.CanceledOrder = NewCanceledOrderClient(tx.config)
 	tx.Compensate = NewCompensateClient(tx.config)
 	tx.GasPaying = NewGasPayingClient(tx.config)
 	tx.GoodPaying = NewGoodPayingClient(tx.config)
@@ -177,7 +174,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: CanceledOrder.QueryXXX(), the query will be executed
+// applies a query, for example: Compensate.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

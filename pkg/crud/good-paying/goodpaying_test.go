@@ -26,8 +26,7 @@ func init() {
 
 func assertGoodPaying(t *testing.T, actual, expected *npool.GoodPaying) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
-	assert.Equal(t, actual.AccountID, expected.AccountID)
-	assert.Equal(t, actual.State, expected.State)
+	assert.Equal(t, actual.PaymentID, expected.PaymentID)
 }
 
 func TestCRUD(t *testing.T) {
@@ -37,41 +36,23 @@ func TestCRUD(t *testing.T) {
 
 	goodPaying := npool.GoodPaying{
 		OrderID:   uuid.New().String(),
-		AccountID: uuid.New().String(),
+		PaymentID: uuid.New().String(),
 	}
 	resp, err := Create(context.Background(), &npool.CreateGoodPayingRequest{
 		Info: &goodPaying,
 	})
-	goodPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{}.String())
-		assert.Equal(t, resp.Info.ChainTransactionID, "")
-		assert.Equal(t, resp.Info.PlatformTransactionID, uuid.UUID{}.String())
 		assertGoodPaying(t, resp.Info, &goodPaying)
 	}
 
-	goodPaying.State = "done"
-	goodPaying.ChainTransactionID = "MOCKTRANSACTIONID"
-	goodPaying.PlatformTransactionID = uuid.New().String()
 	goodPaying.ID = resp.Info.ID
 
-	resp1, err := Update(context.Background(), &npool.UpdateGoodPayingRequest{
-		Info: &goodPaying,
+	resp1, err := GetByOrder(context.Background(), &npool.GetGoodPayingByOrderRequest{
+		OrderID: goodPaying.OrderID,
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp1.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-		assert.Equal(t, resp1.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
 		assertGoodPaying(t, resp1.Info, &goodPaying)
-	}
-
-	resp2, err := Get(context.Background(), &npool.GetGoodPayingRequest{
-		ID: resp1.Info.ID,
-	})
-	if assert.Nil(t, err) {
-		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
-		assert.Equal(t, resp2.Info.ChainTransactionID, goodPaying.ChainTransactionID)
-		assert.Equal(t, resp2.Info.PlatformTransactionID, goodPaying.PlatformTransactionID)
-		assertGoodPaying(t, resp2.Info, &goodPaying)
 	}
 }

@@ -15,10 +15,8 @@ import (
 
 func assertGasPaying(t *testing.T, actual, expected *npool.GasPaying) {
 	assert.Equal(t, actual.OrderID, expected.OrderID)
-	assert.Equal(t, actual.AccountID, expected.AccountID)
-	assert.Equal(t, actual.State, expected.State)
+	assert.Equal(t, actual.PaymentID, expected.PaymentID)
 	assert.Equal(t, actual.DurationMinutes, expected.DurationMinutes)
-	assert.Equal(t, actual.Used, expected.Used)
 }
 
 func TestGasPayingCRUD(t *testing.T) {
@@ -28,7 +26,7 @@ func TestGasPayingCRUD(t *testing.T) {
 
 	gasPaying := npool.GasPaying{
 		OrderID:         uuid.New().String(),
-		AccountID:       uuid.New().String(),
+		PaymentID:       uuid.New().String(),
 		DurationMinutes: 24 * 10 * 60,
 	}
 	firstCreateInfo := npool.CreateGasPayingResponse{}
@@ -41,57 +39,29 @@ func TestGasPayingCRUD(t *testing.T) {
 			Info: &gasPaying,
 		}).
 		Post("http://localhost:50040/v1/create/gas/paying")
-	gasPaying.State = "wait"
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
 		err := json.Unmarshal(resp.Body(), &firstCreateInfo)
 		if assert.Nil(t, err) {
 			assert.NotEqual(t, firstCreateInfo.Info.ID, uuid.UUID{}.String())
-			assert.Equal(t, firstCreateInfo.Info.ChainTransactionID, "")
-			assert.Equal(t, firstCreateInfo.Info.PlatformTransactionID, uuid.UUID{}.String())
 			assertGasPaying(t, firstCreateInfo.Info, &gasPaying)
 		}
 	}
 
-	gasPaying.State = "done"
-	gasPaying.Used = true
-	gasPaying.ChainTransactionID = "MOCKTRANSACTIONID"
-	gasPaying.PlatformTransactionID = uuid.New().String()
 	gasPaying.ID = firstCreateInfo.Info.ID
 
 	resp, err = cli.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(npool.UpdateGasPayingRequest{
-			Info: &gasPaying,
+		SetBody(npool.GetGasPayingsByOrderRequest{
+			OrderID: gasPaying.OrderID,
 		}).
-		Post("http://localhost:50040/v1/update/gas/paying")
+		Post("http://localhost:50040/v1/get/gas/payings/by/order")
 	if assert.Nil(t, err) {
 		assert.Equal(t, 200, resp.StatusCode())
-		info := npool.UpdateGasPayingResponse{}
+		info := npool.GetGasPayingsByOrderResponse{}
 		err := json.Unmarshal(resp.Body(), &info)
 		if assert.Nil(t, err) {
-			assert.Equal(t, info.Info.ID, firstCreateInfo.Info.ID)
-			assert.Equal(t, info.Info.ChainTransactionID, gasPaying.ChainTransactionID)
-			assert.Equal(t, info.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
-			assertGasPaying(t, info.Info, &gasPaying)
-		}
-	}
-
-	resp, err = cli.R().
-		SetHeader("Content-Type", "application/json").
-		SetBody(npool.GetGasPayingRequest{
-			ID: gasPaying.ID,
-		}).
-		Post("http://localhost:50040/v1/get/gas/paying")
-	if assert.Nil(t, err) {
-		assert.Equal(t, 200, resp.StatusCode())
-		info := npool.GetGasPayingResponse{}
-		err := json.Unmarshal(resp.Body(), &info)
-		if assert.Nil(t, err) {
-			assert.Equal(t, info.Info.ID, firstCreateInfo.Info.ID)
-			assert.Equal(t, info.Info.ChainTransactionID, gasPaying.ChainTransactionID)
-			assert.Equal(t, info.Info.PlatformTransactionID, gasPaying.PlatformTransactionID)
-			assertGasPaying(t, info.Info, &gasPaying)
+			assert.Equal(t, len(info.Infos), 1)
 		}
 	}
 }

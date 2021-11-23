@@ -20,7 +20,8 @@ func (GoodPaying) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("order_id", uuid.UUID{}),
+		field.UUID("order_id", uuid.UUID{}).
+			Unique(),
 		field.UUID("payment_id", uuid.UUID{}),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {

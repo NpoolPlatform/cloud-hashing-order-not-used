@@ -5,37 +5,85 @@ import (
 
 	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
 
-	_ "github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint
-	_ "github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/compensate"  //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/order"
-
-	_ "github.com/google/uuid"
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/out-of-gas" //nolint
+	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/payment"    //nolint
 
 	"golang.org/x/xerrors"
 )
 
-func constructOrderDetail(info *npool.Order, goodPaying *npool.GoodPaying, gasPayings []*npool.GasPaying) *npool.OrderDetail {
+func constructOrderDetail(
+	info *npool.Order,
+	goodPaying *npool.GoodPaying,
+	gasPayings []*npool.GasPaying,
+	compensates []*npool.Compensate,
+	outOfGases []*npool.OutOfGas,
+	goodPayment *npool.Payment) *npool.OrderDetail {
 	return &npool.OrderDetail{
-		ID:                       info.ID,
-		GoodID:                   info.GoodID,
-		Units:                    info.Units,
-		Discount:                 info.Discount,
-		SpecialReductionAmount:   info.SpecialReductionAmount,
-		UserID:                   info.UserID,
-		AppID:                    info.AppID,
-		State:                    info.State,
-		GoodPaying:               goodPaying,
-		Start:                    info.Start,
-		End:                      info.End,
-		CompensateMinutes:        info.CompensateMinutes,
-		CompensateElapsedMinutes: info.CompensateElapsedMinutes,
-		CouponID:                 info.CouponID,
+		ID:                     info.ID,
+		GoodID:                 info.GoodID,
+		AppID:                  info.AppID,
+		UserID:                 info.UserID,
+		Units:                  info.Units,
+		Discount:               info.Discount,
+		SpecialReductionAmount: info.SpecialReductionAmount,
+		GoodPaying:             goodPaying,
+		GasPayings:             gasPayings,
+		Compensates:            compensates,
+		OutOfGases:             outOfGases,
+		Payment:                goodPayment,
+		Start:                  info.Start,
+		End:                    info.End,
+		CouponID:               info.CouponID,
 	}
 }
 
 func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail, error) {
-	var goodPayingInfo *npool.GoodPaying
-	return constructOrderDetail(info, goodPayingInfo, nil), nil
+	goodPayment, err := payment.GetByOrder(ctx, &npool.GetPaymentByOrderRequest{
+		OrderID: info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("cannot find payment for order: %v", err)
+	}
+
+	goodPaying, err := goodpaying.GetByOrder(ctx, &npool.GetGoodPayingByOrderRequest{
+		OrderID: info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("cannot find good paying for order: %v", err)
+	}
+
+	gasPayings, err := gaspaying.GetByOrder(ctx, &npool.GetGasPayingsByOrderRequest{
+		OrderID: info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("cannot find gas paying for order: %v", err)
+	}
+
+	compensates, err := compensate.GetByOrder(ctx, &npool.GetCompensatesByOrderRequest{
+		OrderID: info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail to get compensates for order: %v", err)
+	}
+
+	outOfGases, err := outofgas.GetByOrder(ctx, &npool.GetOutOfGasesByOrderRequest{
+		OrderID: info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail to get out of gas for order: %v", err)
+	}
+
+	return constructOrderDetail(
+		info,
+		goodPaying.Info,
+		gasPayings.Infos,
+		compensates.Infos,
+		outOfGases.Infos,
+		goodPayment.Info), nil
 }
 
 func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderDetailResponse, error) {

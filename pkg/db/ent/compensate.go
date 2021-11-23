@@ -22,6 +22,8 @@ type Compensate struct {
 	Start uint32 `json:"start,omitempty"`
 	// End holds the value of the "end" field.
 	End uint32 `json:"end,omitempty"`
+	// Message holds the value of the "message" field.
+	Message string `json:"message,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -37,6 +39,8 @@ func (*Compensate) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case compensate.FieldStart, compensate.FieldEnd, compensate.FieldCreateAt, compensate.FieldUpdateAt, compensate.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
+		case compensate.FieldMessage:
+			values[i] = new(sql.NullString)
 		case compensate.FieldID, compensate.FieldOrderID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -77,6 +81,12 @@ func (c *Compensate) assignValues(columns []string, values []interface{}) error 
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
 				c.End = uint32(value.Int64)
+			}
+		case compensate.FieldMessage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field message", values[i])
+			} else if value.Valid {
+				c.Message = value.String
 			}
 		case compensate.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -130,6 +140,8 @@ func (c *Compensate) String() string {
 	builder.WriteString(fmt.Sprintf("%v", c.Start))
 	builder.WriteString(", end=")
 	builder.WriteString(fmt.Sprintf("%v", c.End))
+	builder.WriteString(", message=")
+	builder.WriteString(c.Message)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", c.CreateAt))
 	builder.WriteString(", update_at=")

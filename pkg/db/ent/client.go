@@ -10,7 +10,6 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/migrate"
 	"github.com/google/uuid"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/canceledorder"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/compensate"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
@@ -27,8 +26,6 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// CanceledOrder is the client for interacting with the CanceledOrder builders.
-	CanceledOrder *CanceledOrderClient
 	// Compensate is the client for interacting with the Compensate builders.
 	Compensate *CompensateClient
 	// GasPaying is the client for interacting with the GasPaying builders.
@@ -54,7 +51,6 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.CanceledOrder = NewCanceledOrderClient(c.config)
 	c.Compensate = NewCompensateClient(c.config)
 	c.GasPaying = NewGasPayingClient(c.config)
 	c.GoodPaying = NewGoodPayingClient(c.config)
@@ -92,15 +88,14 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		CanceledOrder: NewCanceledOrderClient(cfg),
-		Compensate:    NewCompensateClient(cfg),
-		GasPaying:     NewGasPayingClient(cfg),
-		GoodPaying:    NewGoodPayingClient(cfg),
-		Order:         NewOrderClient(cfg),
-		OutOfGas:      NewOutOfGasClient(cfg),
-		Payment:       NewPaymentClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		Compensate: NewCompensateClient(cfg),
+		GasPaying:  NewGasPayingClient(cfg),
+		GoodPaying: NewGoodPayingClient(cfg),
+		Order:      NewOrderClient(cfg),
+		OutOfGas:   NewOutOfGasClient(cfg),
+		Payment:    NewPaymentClient(cfg),
 	}, nil
 }
 
@@ -118,21 +113,20 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		config:        cfg,
-		CanceledOrder: NewCanceledOrderClient(cfg),
-		Compensate:    NewCompensateClient(cfg),
-		GasPaying:     NewGasPayingClient(cfg),
-		GoodPaying:    NewGoodPayingClient(cfg),
-		Order:         NewOrderClient(cfg),
-		OutOfGas:      NewOutOfGasClient(cfg),
-		Payment:       NewPaymentClient(cfg),
+		config:     cfg,
+		Compensate: NewCompensateClient(cfg),
+		GasPaying:  NewGasPayingClient(cfg),
+		GoodPaying: NewGoodPayingClient(cfg),
+		Order:      NewOrderClient(cfg),
+		OutOfGas:   NewOutOfGasClient(cfg),
+		Payment:    NewPaymentClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		CanceledOrder.
+//		Compensate.
 //		Query().
 //		Count(ctx)
 //
@@ -155,103 +149,12 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.CanceledOrder.Use(hooks...)
 	c.Compensate.Use(hooks...)
 	c.GasPaying.Use(hooks...)
 	c.GoodPaying.Use(hooks...)
 	c.Order.Use(hooks...)
 	c.OutOfGas.Use(hooks...)
 	c.Payment.Use(hooks...)
-}
-
-// CanceledOrderClient is a client for the CanceledOrder schema.
-type CanceledOrderClient struct {
-	config
-}
-
-// NewCanceledOrderClient returns a client for the CanceledOrder from the given config.
-func NewCanceledOrderClient(c config) *CanceledOrderClient {
-	return &CanceledOrderClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `canceledorder.Hooks(f(g(h())))`.
-func (c *CanceledOrderClient) Use(hooks ...Hook) {
-	c.hooks.CanceledOrder = append(c.hooks.CanceledOrder, hooks...)
-}
-
-// Create returns a create builder for CanceledOrder.
-func (c *CanceledOrderClient) Create() *CanceledOrderCreate {
-	mutation := newCanceledOrderMutation(c.config, OpCreate)
-	return &CanceledOrderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of CanceledOrder entities.
-func (c *CanceledOrderClient) CreateBulk(builders ...*CanceledOrderCreate) *CanceledOrderCreateBulk {
-	return &CanceledOrderCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for CanceledOrder.
-func (c *CanceledOrderClient) Update() *CanceledOrderUpdate {
-	mutation := newCanceledOrderMutation(c.config, OpUpdate)
-	return &CanceledOrderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *CanceledOrderClient) UpdateOne(co *CanceledOrder) *CanceledOrderUpdateOne {
-	mutation := newCanceledOrderMutation(c.config, OpUpdateOne, withCanceledOrder(co))
-	return &CanceledOrderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *CanceledOrderClient) UpdateOneID(id uuid.UUID) *CanceledOrderUpdateOne {
-	mutation := newCanceledOrderMutation(c.config, OpUpdateOne, withCanceledOrderID(id))
-	return &CanceledOrderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for CanceledOrder.
-func (c *CanceledOrderClient) Delete() *CanceledOrderDelete {
-	mutation := newCanceledOrderMutation(c.config, OpDelete)
-	return &CanceledOrderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *CanceledOrderClient) DeleteOne(co *CanceledOrder) *CanceledOrderDeleteOne {
-	return c.DeleteOneID(co.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *CanceledOrderClient) DeleteOneID(id uuid.UUID) *CanceledOrderDeleteOne {
-	builder := c.Delete().Where(canceledorder.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &CanceledOrderDeleteOne{builder}
-}
-
-// Query returns a query builder for CanceledOrder.
-func (c *CanceledOrderClient) Query() *CanceledOrderQuery {
-	return &CanceledOrderQuery{
-		config: c.config,
-	}
-}
-
-// Get returns a CanceledOrder entity by its id.
-func (c *CanceledOrderClient) Get(ctx context.Context, id uuid.UUID) (*CanceledOrder, error) {
-	return c.Query().Where(canceledorder.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *CanceledOrderClient) GetX(ctx context.Context, id uuid.UUID) *CanceledOrder {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *CanceledOrderClient) Hooks() []Hook {
-	return c.hooks.CanceledOrder
 }
 
 // CompensateClient is a client for the Compensate schema.

@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/canceledorder"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/compensate"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/gaspaying"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/goodpaying"
@@ -18,40 +17,20 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	canceledorderFields := schema.CanceledOrder{}.Fields()
-	_ = canceledorderFields
-	// canceledorderDescCreateAt is the schema descriptor for create_at field.
-	canceledorderDescCreateAt := canceledorderFields[2].Descriptor()
-	// canceledorder.DefaultCreateAt holds the default value on creation for the create_at field.
-	canceledorder.DefaultCreateAt = canceledorderDescCreateAt.Default.(func() uint32)
-	// canceledorderDescUpdateAt is the schema descriptor for update_at field.
-	canceledorderDescUpdateAt := canceledorderFields[3].Descriptor()
-	// canceledorder.DefaultUpdateAt holds the default value on creation for the update_at field.
-	canceledorder.DefaultUpdateAt = canceledorderDescUpdateAt.Default.(func() uint32)
-	// canceledorder.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	canceledorder.UpdateDefaultUpdateAt = canceledorderDescUpdateAt.UpdateDefault.(func() uint32)
-	// canceledorderDescDeleteAt is the schema descriptor for delete_at field.
-	canceledorderDescDeleteAt := canceledorderFields[4].Descriptor()
-	// canceledorder.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	canceledorder.DefaultDeleteAt = canceledorderDescDeleteAt.Default.(func() uint32)
-	// canceledorderDescID is the schema descriptor for id field.
-	canceledorderDescID := canceledorderFields[0].Descriptor()
-	// canceledorder.DefaultID holds the default value on creation for the id field.
-	canceledorder.DefaultID = canceledorderDescID.Default.(func() uuid.UUID)
 	compensateFields := schema.Compensate{}.Fields()
 	_ = compensateFields
 	// compensateDescCreateAt is the schema descriptor for create_at field.
-	compensateDescCreateAt := compensateFields[4].Descriptor()
+	compensateDescCreateAt := compensateFields[5].Descriptor()
 	// compensate.DefaultCreateAt holds the default value on creation for the create_at field.
 	compensate.DefaultCreateAt = compensateDescCreateAt.Default.(func() uint32)
 	// compensateDescUpdateAt is the schema descriptor for update_at field.
-	compensateDescUpdateAt := compensateFields[5].Descriptor()
+	compensateDescUpdateAt := compensateFields[6].Descriptor()
 	// compensate.DefaultUpdateAt holds the default value on creation for the update_at field.
 	compensate.DefaultUpdateAt = compensateDescUpdateAt.Default.(func() uint32)
 	// compensate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	compensate.UpdateDefaultUpdateAt = compensateDescUpdateAt.UpdateDefault.(func() uint32)
 	// compensateDescDeleteAt is the schema descriptor for delete_at field.
-	compensateDescDeleteAt := compensateFields[6].Descriptor()
+	compensateDescDeleteAt := compensateFields[7].Descriptor()
 	// compensate.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	compensate.DefaultDeleteAt = compensateDescDeleteAt.Default.(func() uint32)
 	// compensateDescID is the schema descriptor for id field.

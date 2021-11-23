@@ -17,6 +17,8 @@ const (
 	FieldStart = "start"
 	// FieldEnd holds the string denoting the end field in the database.
 	FieldEnd = "end"
+	// FieldMessage holds the string denoting the message field in the database.
+	FieldMessage = "message"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -33,6 +35,7 @@ var Columns = []string{
 	FieldOrderID,
 	FieldStart,
 	FieldEnd,
+	FieldMessage,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,

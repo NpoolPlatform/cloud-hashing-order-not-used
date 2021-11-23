@@ -9,6 +9,8 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/payment"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/price"
+
 	"github.com/google/uuid" //nolint
 
 	"golang.org/x/xerrors" //nolint
@@ -18,17 +20,28 @@ func validatePayment(info *npool.Payment) error {
 	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetPaymentID()); err != nil {
-		return xerrors.Errorf("invalid payment id: %v", err)
+	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
+		return xerrors.Errorf("invalid order id: %v", err)
+	}
+	if _, err := uuid.Parse(info.GetAccountID()); err != nil {
+		return xerrors.Errorf("invalid order id: %v", err)
+	}
+	if _, err := uuid.Parse(info.GetCoinInfoID()); err != nil {
+		return xerrors.Errorf("invalid order id: %v", err)
 	}
 	return nil
 }
 
 func dbRowToPayment(row *ent.Payment) *npool.Payment {
 	return &npool.Payment{
-		ID:        row.ID.String(),
-		OrderID:   row.OrderID.String(),
-		PaymentID: row.PaymentID.String(),
+		ID:                    row.ID.String(),
+		OrderID:               row.OrderID.String(),
+		AccountID:             row.AccountID.String(),
+		Amount:                price.DBPriceToVisualPrice(row.Amount),
+		CoinInfoID:            row.CoinInfoID.String(),
+		State:                 string(row.State),
+		ChainTransactionID:    row.ChainTransactionID,
+		PlatformTransactionID: row.PlatformTransactionID.String(),
 	}
 }
 
@@ -37,11 +50,18 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
+	myPtid := uuid.UUID{}
+
 	info, err := db.Client().
 		Payment.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
-		SetPaymentID(uuid.MustParse(in.GetInfo().GetPaymentID())).
+		SetAccountID(uuid.MustParse(in.GetInfo().GetAccountID())).
+		SetAmount(price.VisualPriceToDBPrice(in.GetInfo().GetAmount())).
+		SetCoinInfoID(uuid.MustParse(in.GetInfo().GetCoinInfoID())).
+		SetState("wait").
+		SetChainTransactionID("").
+		SetPlatformTransactionID(myPtid).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create good paying: %v", err)
@@ -52,8 +72,39 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 	}, nil
 }
 
-func Get(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentResponse, error) {
-	id, err := uuid.Parse(in.GetID())
+func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdatePaymentResponse, error) {
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid payment id: %v", err)
+	}
+
+	ptid, err := uuid.Parse(in.GetInfo().GetPlatformTransactionID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid payment platform transaction id: %v", err)
+	}
+
+	if err := validatePayment(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	info, err := db.Client().
+		Payment.
+		UpdateOneID(id).
+		SetState(payment.State(in.GetInfo().GetState())).
+		SetChainTransactionID(in.GetInfo().GetChainTransactionID()).
+		SetPlatformTransactionID(ptid).
+		Save(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail update payment: %v", err)
+	}
+
+	return &npool.UpdatePaymentResponse{
+		Info: dbRowToPayment(info),
+	}, nil
+}
+
+func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool.GetPaymentByOrderResponse, error) {
+	orderID, err := uuid.Parse(in.GetOrderID())
 	if err != nil {
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
@@ -63,7 +114,7 @@ func Get(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentRes
 		Query().
 		Where(
 			payment.And(
-				payment.ID(id),
+				payment.OrderID(orderID),
 			),
 		).
 		All(ctx)
@@ -74,7 +125,7 @@ func Get(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentRes
 		return nil, xerrors.Errorf("empty good paying")
 	}
 
-	return &npool.GetPaymentResponse{
+	return &npool.GetPaymentByOrderResponse{
 		Info: dbRowToPayment(infos[0]),
 	}, nil
 }
