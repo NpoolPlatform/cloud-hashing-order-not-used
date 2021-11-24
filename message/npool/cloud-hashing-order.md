@@ -775,6 +775,7 @@
 | ID | [string](#string) |  |  |
 | OrderID | [string](#string) |  |  |
 | AccountID | [string](#string) |  |  |
+| StartAmount | [double](#double) |  |  |
 | Amount | [double](#double) |  |  |
 | CoinInfoID | [string](#string) |  |  |
 | State | [string](#string) |  |  |

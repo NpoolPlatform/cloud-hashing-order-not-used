@@ -301,11 +301,12 @@ message Payment {
     string ID = 110;
     string OrderID = 111;
     string AccountID = 112;
-    double Amount = 113;
-    string CoinInfoID = 114;
-    string State = 115;
-    string ChainTransactionID = 116;
-    string PlatformTransactionID = 117;
+    double StartAmount = 113;
+    double Amount = 114;
+    string CoinInfoID = 115;
+    string State = 116;
+    string ChainTransactionID = 117;
+    string PlatformTransactionID = 118;
 }
 
 message CreatePaymentRequest {

@@ -20,6 +20,8 @@ type Payment struct {
 	OrderID uuid.UUID `json:"order_id,omitempty"`
 	// AccountID holds the value of the "account_id" field.
 	AccountID uuid.UUID `json:"account_id,omitempty"`
+	// StartAmount holds the value of the "start_amount" field.
+	StartAmount uint64 `json:"start_amount,omitempty"`
 	// Amount holds the value of the "amount" field.
 	Amount uint64 `json:"amount,omitempty"`
 	// CoinInfoID holds the value of the "coin_info_id" field.
@@ -43,7 +45,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case payment.FieldAmount, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
+		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
 		case payment.FieldState, payment.FieldChainTransactionID:
 			values[i] = new(sql.NullString)
@@ -81,6 +83,12 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value != nil {
 				pa.AccountID = *value
+			}
+		case payment.FieldStartAmount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field start_amount", values[i])
+			} else if value.Valid {
+				pa.StartAmount = uint64(value.Int64)
 			}
 		case payment.FieldAmount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -162,6 +170,8 @@ func (pa *Payment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", pa.OrderID))
 	builder.WriteString(", account_id=")
 	builder.WriteString(fmt.Sprintf("%v", pa.AccountID))
+	builder.WriteString(", start_amount=")
+	builder.WriteString(fmt.Sprintf("%v", pa.StartAmount))
 	builder.WriteString(", amount=")
 	builder.WriteString(fmt.Sprintf("%v", pa.Amount))
 	builder.WriteString(", coin_info_id=")

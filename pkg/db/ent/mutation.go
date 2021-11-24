@@ -4102,6 +4102,8 @@ type PaymentMutation struct {
 	id                      *uuid.UUID
 	order_id                *uuid.UUID
 	account_id              *uuid.UUID
+	start_amount            *uint64
+	addstart_amount         *uint64
 	amount                  *uint64
 	addamount               *uint64
 	coin_info_id            *uuid.UUID
@@ -4275,6 +4277,62 @@ func (m *PaymentMutation) OldAccountID(ctx context.Context) (v uuid.UUID, err er
 // ResetAccountID resets all changes to the "account_id" field.
 func (m *PaymentMutation) ResetAccountID() {
 	m.account_id = nil
+}
+
+// SetStartAmount sets the "start_amount" field.
+func (m *PaymentMutation) SetStartAmount(u uint64) {
+	m.start_amount = &u
+	m.addstart_amount = nil
+}
+
+// StartAmount returns the value of the "start_amount" field in the mutation.
+func (m *PaymentMutation) StartAmount() (r uint64, exists bool) {
+	v := m.start_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartAmount returns the old "start_amount" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStartAmount(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldStartAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldStartAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartAmount: %w", err)
+	}
+	return oldValue.StartAmount, nil
+}
+
+// AddStartAmount adds u to the "start_amount" field.
+func (m *PaymentMutation) AddStartAmount(u uint64) {
+	if m.addstart_amount != nil {
+		*m.addstart_amount += u
+	} else {
+		m.addstart_amount = &u
+	}
+}
+
+// AddedStartAmount returns the value that was added to the "start_amount" field in this mutation.
+func (m *PaymentMutation) AddedStartAmount() (r uint64, exists bool) {
+	v := m.addstart_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStartAmount resets all changes to the "start_amount" field.
+func (m *PaymentMutation) ResetStartAmount() {
+	m.start_amount = nil
+	m.addstart_amount = nil
 }
 
 // SetAmount sets the "amount" field.
@@ -4664,12 +4722,15 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.order_id != nil {
 		fields = append(fields, payment.FieldOrderID)
 	}
 	if m.account_id != nil {
 		fields = append(fields, payment.FieldAccountID)
+	}
+	if m.start_amount != nil {
+		fields = append(fields, payment.FieldStartAmount)
 	}
 	if m.amount != nil {
 		fields = append(fields, payment.FieldAmount)
@@ -4707,6 +4768,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.OrderID()
 	case payment.FieldAccountID:
 		return m.AccountID()
+	case payment.FieldStartAmount:
+		return m.StartAmount()
 	case payment.FieldAmount:
 		return m.Amount()
 	case payment.FieldCoinInfoID:
@@ -4736,6 +4799,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldOrderID(ctx)
 	case payment.FieldAccountID:
 		return m.OldAccountID(ctx)
+	case payment.FieldStartAmount:
+		return m.OldStartAmount(ctx)
 	case payment.FieldAmount:
 		return m.OldAmount(ctx)
 	case payment.FieldCoinInfoID:
@@ -4774,6 +4839,13 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAccountID(v)
+		return nil
+	case payment.FieldStartAmount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartAmount(v)
 		return nil
 	case payment.FieldAmount:
 		v, ok := value.(uint64)
@@ -4839,6 +4911,9 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *PaymentMutation) AddedFields() []string {
 	var fields []string
+	if m.addstart_amount != nil {
+		fields = append(fields, payment.FieldStartAmount)
+	}
 	if m.addamount != nil {
 		fields = append(fields, payment.FieldAmount)
 	}
@@ -4859,6 +4934,8 @@ func (m *PaymentMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *PaymentMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case payment.FieldStartAmount:
+		return m.AddedStartAmount()
 	case payment.FieldAmount:
 		return m.AddedAmount()
 	case payment.FieldCreateAt:
@@ -4876,6 +4953,13 @@ func (m *PaymentMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PaymentMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case payment.FieldStartAmount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStartAmount(v)
+		return nil
 	case payment.FieldAmount:
 		v, ok := value.(uint64)
 		if !ok {
@@ -4936,6 +5020,9 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldAccountID:
 		m.ResetAccountID()
+		return nil
+	case payment.FieldStartAmount:
+		m.ResetStartAmount()
 		return nil
 	case payment.FieldAmount:
 		m.ResetAmount()

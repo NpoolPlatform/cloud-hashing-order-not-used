@@ -35,6 +35,12 @@ func (pc *PaymentCreate) SetAccountID(u uuid.UUID) *PaymentCreate {
 	return pc
 }
 
+// SetStartAmount sets the "start_amount" field.
+func (pc *PaymentCreate) SetStartAmount(u uint64) *PaymentCreate {
+	pc.mutation.SetStartAmount(u)
+	return pc
+}
+
 // SetAmount sets the "amount" field.
 func (pc *PaymentCreate) SetAmount(u uint64) *PaymentCreate {
 	pc.mutation.SetAmount(u)
@@ -210,6 +216,9 @@ func (pc *PaymentCreate) check() error {
 	if _, ok := pc.mutation.AccountID(); !ok {
 		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "account_id"`)}
 	}
+	if _, ok := pc.mutation.StartAmount(); !ok {
+		return &ValidationError{Name: "start_amount", err: errors.New(`ent: missing required field "start_amount"`)}
+	}
 	if _, ok := pc.mutation.Amount(); !ok {
 		return &ValidationError{Name: "amount", err: errors.New(`ent: missing required field "amount"`)}
 	}
@@ -287,6 +296,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldAccountID,
 		})
 		_node.AccountID = value
+	}
+	if value, ok := pc.mutation.StartAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldStartAmount,
+		})
+		_node.StartAmount = value
 	}
 	if value, ok := pc.mutation.Amount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -427,6 +444,18 @@ func (u *PaymentUpsert) SetAccountID(v uuid.UUID) *PaymentUpsert {
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateAccountID() *PaymentUpsert {
 	u.SetExcluded(payment.FieldAccountID)
+	return u
+}
+
+// SetStartAmount sets the "start_amount" field.
+func (u *PaymentUpsert) SetStartAmount(v uint64) *PaymentUpsert {
+	u.Set(payment.FieldStartAmount, v)
+	return u
+}
+
+// UpdateStartAmount sets the "start_amount" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateStartAmount() *PaymentUpsert {
+	u.SetExcluded(payment.FieldStartAmount)
 	return u
 }
 
@@ -601,6 +630,20 @@ func (u *PaymentUpsertOne) SetAccountID(v uuid.UUID) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateAccountID() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAccountID()
+	})
+}
+
+// SetStartAmount sets the "start_amount" field.
+func (u *PaymentUpsertOne) SetStartAmount(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetStartAmount(v)
+	})
+}
+
+// UpdateStartAmount sets the "start_amount" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateStartAmount() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateStartAmount()
 	})
 }
 
@@ -957,6 +1000,20 @@ func (u *PaymentUpsertBulk) SetAccountID(v uuid.UUID) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateAccountID() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAccountID()
+	})
+}
+
+// SetStartAmount sets the "start_amount" field.
+func (u *PaymentUpsertBulk) SetStartAmount(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetStartAmount(v)
+	})
+}
+
+// UpdateStartAmount sets the "start_amount" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateStartAmount() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateStartAmount()
 	})
 }
 

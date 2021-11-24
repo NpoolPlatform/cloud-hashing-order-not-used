@@ -23,6 +23,7 @@ func (Payment) Fields() []ent.Field {
 		field.UUID("order_id", uuid.UUID{}).
 			Unique(),
 		field.UUID("account_id", uuid.UUID{}),
+		field.Uint64("start_amount"),
 		field.Uint64("amount"),
 		field.UUID("coin_info_id", uuid.UUID{}),
 		field.Enum("state").

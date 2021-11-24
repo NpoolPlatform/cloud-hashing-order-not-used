@@ -9,6 +9,14 @@ import (
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/service-name" //nolint
 
+	mysqlconst "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
+	rabbitmqconst "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/const"
+	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
+
+	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
+	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"      //nolint
+	tradingconst "github.com/NpoolPlatform/sphinx-service/pkg/message/const"        //nolint
+
 	cli "github.com/urfave/cli/v2"
 )
 
@@ -21,7 +29,20 @@ func main() {
 
 	description := fmt.Sprintf("my %v service cli\nFor help on any individual command run <%v COMMAND -h>\n",
 		serviceName, serviceName)
-	err := app.Init(serviceName, description, "", "", "./", nil, commands)
+	err := app.Init(
+		serviceName,
+		description,
+		"",
+		"",
+		"./",
+		nil,
+		commands,
+		mysqlconst.MysqlServiceName,
+		rabbitmqconst.RabbitMQServiceName,
+		redisconst.RedisServiceName,
+		coininfoconst.ServiceName,
+		tradingconst.ServiceName,
+		billingconst.ServiceName)
 	if err != nil {
 		logger.Sugar().Errorf("fail to create %v: %v", serviceName, err)
 		return

@@ -39,6 +39,19 @@ func (pu *PaymentUpdate) SetAccountID(u uuid.UUID) *PaymentUpdate {
 	return pu
 }
 
+// SetStartAmount sets the "start_amount" field.
+func (pu *PaymentUpdate) SetStartAmount(u uint64) *PaymentUpdate {
+	pu.mutation.ResetStartAmount()
+	pu.mutation.SetStartAmount(u)
+	return pu
+}
+
+// AddStartAmount adds u to the "start_amount" field.
+func (pu *PaymentUpdate) AddStartAmount(u uint64) *PaymentUpdate {
+	pu.mutation.AddStartAmount(u)
+	return pu
+}
+
 // SetAmount sets the "amount" field.
 func (pu *PaymentUpdate) SetAmount(u uint64) *PaymentUpdate {
 	pu.mutation.ResetAmount()
@@ -247,6 +260,20 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldAccountID,
 		})
 	}
+	if value, ok := pu.mutation.StartAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldStartAmount,
+		})
+	}
+	if value, ok := pu.mutation.AddedStartAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldStartAmount,
+		})
+	}
 	if value, ok := pu.mutation.Amount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint64,
@@ -359,6 +386,19 @@ func (puo *PaymentUpdateOne) SetOrderID(u uuid.UUID) *PaymentUpdateOne {
 // SetAccountID sets the "account_id" field.
 func (puo *PaymentUpdateOne) SetAccountID(u uuid.UUID) *PaymentUpdateOne {
 	puo.mutation.SetAccountID(u)
+	return puo
+}
+
+// SetStartAmount sets the "start_amount" field.
+func (puo *PaymentUpdateOne) SetStartAmount(u uint64) *PaymentUpdateOne {
+	puo.mutation.ResetStartAmount()
+	puo.mutation.SetStartAmount(u)
+	return puo
+}
+
+// AddStartAmount adds u to the "start_amount" field.
+func (puo *PaymentUpdateOne) AddStartAmount(u uint64) *PaymentUpdateOne {
+	puo.mutation.AddStartAmount(u)
 	return puo
 }
 
@@ -592,6 +632,20 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: payment.FieldAccountID,
+		})
+	}
+	if value, ok := puo.mutation.StartAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldStartAmount,
+		})
+	}
+	if value, ok := puo.mutation.AddedStartAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldStartAmount,
 		})
 	}
 	if value, ok := puo.mutation.Amount(); ok {

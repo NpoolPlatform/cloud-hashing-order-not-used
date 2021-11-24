@@ -34,6 +34,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		ID:                    row.ID.String(),
 		OrderID:               row.OrderID.String(),
 		AccountID:             row.AccountID.String(),
+		StartAmount:           price.DBPriceToVisualPrice(row.StartAmount),
 		Amount:                price.DBPriceToVisualPrice(row.Amount),
 		CoinInfoID:            row.CoinInfoID.String(),
 		State:                 string(row.State),
@@ -54,6 +55,7 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
 		SetAccountID(uuid.MustParse(in.GetInfo().GetAccountID())).
+		SetStartAmount(price.VisualPriceToDBPrice(in.GetInfo().GetStartAmount())).
 		SetAmount(price.VisualPriceToDBPrice(in.GetInfo().GetAmount())).
 		SetCoinInfoID(uuid.MustParse(in.GetInfo().GetCoinInfoID())).
 		SetState("wait").
