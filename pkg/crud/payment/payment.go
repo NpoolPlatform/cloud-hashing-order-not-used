@@ -126,3 +126,29 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 		Info: dbRowToPayment(infos[0]),
 	}, nil
 }
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+func GetByState(ctx context.Context, state string) ([]*npool.Payment, error) {
+	payState := payment.State(state)
+
+	infos, err := db.Client().
+		Payment.
+		Query().
+		Where(
+			payment.And(
+				payment.StateEQ(payState),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query payment by state: %v", err)
+	}
+
+	payments := []*npool.Payment{}
+	for _, info := range infos {
+		payments = append(payments, dbRowToPayment(info))
+	}
+
+	return payments, nil
+}
