@@ -28,7 +28,7 @@ func watchPaymentState(ctx context.Context) {
 		})
 		if err != nil {
 			logger.Sugar().Errorf("fail to get coin info: %v", err)
-			return
+			continue
 		}
 
 		account, err := grpc2.GetBillingAccount(ctx, &billingpb.GetCoinAccountRequest{
@@ -36,7 +36,7 @@ func watchPaymentState(ctx context.Context) {
 		})
 		if err != nil {
 			logger.Sugar().Errorf("fail to get payment account: %v", err)
-			return
+			continue
 		}
 
 		balance, err := grpc2.GetWalletBalance(ctx, &tradingpb.GetWalletBalanceRequest{
@@ -47,7 +47,7 @@ func watchPaymentState(ctx context.Context) {
 		})
 		if err != nil {
 			logger.Sugar().Errorf("fail to get wallet balance: %v", err)
-			return
+			continue
 		}
 
 		if balance.AmountFloat64-pay.StartAmount > pay.Amount {
@@ -57,7 +57,7 @@ func watchPaymentState(ctx context.Context) {
 			})
 			if err != nil {
 				logger.Sugar().Errorf("fail to update payment state: %v", err)
-				return
+				continue
 			}
 			logger.Sugar().Infof("payment %v done", pay.ID)
 		}
