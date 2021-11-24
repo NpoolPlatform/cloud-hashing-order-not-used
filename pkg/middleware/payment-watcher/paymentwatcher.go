@@ -67,7 +67,7 @@ func watchPaymentState(ctx context.Context) {
 }
 
 func Watch(ctx context.Context) {
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(30 * time.Second)
 
 	for { //nolint
 		select {
