@@ -50,6 +50,8 @@ func watchPaymentState(ctx context.Context) {
 			continue
 		}
 
+		logger.Sugar().Infof("payment %v checking", pay.ID)
+
 		if balance.AmountFloat64-pay.StartAmount > pay.Amount {
 			pay.State = "done"
 			_, err := payment.Update(ctx, &npool.UpdatePaymentRequest{
