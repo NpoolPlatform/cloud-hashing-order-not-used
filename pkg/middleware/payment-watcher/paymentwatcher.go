@@ -27,7 +27,7 @@ func watchPaymentState(ctx context.Context) {
 			ID: pay.CoinInfoID,
 		})
 		if err != nil {
-			logger.Sugar().Errorf("fail to get coin info: %v", err)
+			logger.Sugar().Errorf("fail to get coin %v info: %v", pay.CoinInfoID, err)
 			continue
 		}
 
