@@ -20,9 +20,6 @@ func validatePayment(info *npool.Payment) error {
 	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
-		return xerrors.Errorf("invalid order id: %v", err)
-	}
 	if _, err := uuid.Parse(info.GetAccountID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
