@@ -26,9 +26,6 @@ func validateOrder(info *npool.Order) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		return xerrors.Errorf("invalid app id: %v", err)
 	}
-	if _, err := uuid.Parse(info.GetCouponID()); err != nil {
-		return xerrors.Errorf("invalid coupon id: %v", err)
-	}
 	return nil
 }
 
@@ -52,6 +49,11 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
+	couponID, err := uuid.Parse(in.GetInfo().GetCouponID())
+	if err != nil {
+		couponID = uuid.UUID{}
+	}
+
 	info, err := db.Client().
 		Order.
 		Create().
@@ -63,7 +65,7 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetStart(in.GetInfo().GetStart()).
 		SetEnd(in.GetInfo().GetEnd()).
-		SetCouponID(uuid.MustParse(in.GetInfo().GetCouponID())).
+		SetCouponID(couponID).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create order: %v", err)
