@@ -50,7 +50,8 @@ func watchPaymentState(ctx context.Context) {
 			continue
 		}
 
-		logger.Sugar().Infof("payment %v checking", pay.ID)
+		logger.Sugar().Infof("payment %v checking coin %v balance %v start amount %v pay amount %v",
+			pay.ID, coinInfo.Info.Name, balance.AmountFloat64, pay.StartAmount, pay.Amount)
 
 		if balance.AmountFloat64-pay.StartAmount > pay.Amount {
 			pay.State = "done"
