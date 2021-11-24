@@ -77,9 +77,6 @@ func GetByOrder(ctx context.Context, in *npool.GetGasPayingsByOrderRequest) (*np
 	if err != nil {
 		return nil, xerrors.Errorf("fail query gas paying: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty gas paying")
-	}
 
 	payings := []*npool.GasPaying{}
 	for _, info := range infos {
