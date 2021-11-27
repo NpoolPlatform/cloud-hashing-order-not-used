@@ -13,7 +13,7 @@ metadata:
 spec:
   rules:
     - host: api.npool.top
-      http:
+      http: &http_rules
         paths:
           - path: /api/cloud-hashing-order
             backend:
