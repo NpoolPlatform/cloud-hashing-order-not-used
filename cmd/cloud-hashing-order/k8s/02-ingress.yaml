@@ -4,11 +4,11 @@ metadata:
   name: cloud-hashing-order-npool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: cloud-hashing-order-npool
-    k8s.kuboard.cn/workload: cloud-hashing-order-npool
+    k8s.kuboard.cn/displayName: cloud-hashing-order
+    k8s.kuboard.cn/workload: cloud-hashing-order
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd,kube-system-common-headers@kubernetescrd
 
 spec:
   rules:
@@ -19,30 +19,12 @@ spec:
             backend:
               serviceName: cloud-hashing-order
               servicePort: 50040
-
----
-
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: cloud-hashing-order-xpool-top-ingress
-  namespace: kube-system
-  annotations:
-    k8s.kuboard.cn/displayName: cloud-hashing-order-xpool
-    k8s.kuboard.cn/workload: cloud-hashing-order-xpool
-    kubernetes.io/ingress.class: "traefik-internet"
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd
-
-spec:
-  rules:
     - host: api.xpool.top
-      http:
-        paths:
-          - path: /api/cloud-hashing-order
-            backend:
-              serviceName: cloud-hashing-order
-              servicePort: 50040
+      http: *http_rules
+    - host: www.npool.top
+      http: *http_rules
+    - host: www.xpool.top
+      http: *http_rules
 
 ---
 
