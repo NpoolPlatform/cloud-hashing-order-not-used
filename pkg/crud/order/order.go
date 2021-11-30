@@ -127,9 +127,6 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*np
 	if err != nil {
 		return nil, xerrors.Errorf("fail query order: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty order")
-	}
 
 	orders := []*npool.Order{}
 	for _, info := range infos {
@@ -159,9 +156,6 @@ func GetByApp(ctx context.Context, in *npool.GetOrdersByAppRequest) (*npool.GetO
 	if err != nil {
 		return nil, xerrors.Errorf("fail query order: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty order")
-	}
 
 	orders := []*npool.Order{}
 	for _, info := range infos {
@@ -190,9 +184,6 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.Ge
 		All(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail query order: %v", err)
-	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty order")
 	}
 
 	orders := []*npool.Order{}
