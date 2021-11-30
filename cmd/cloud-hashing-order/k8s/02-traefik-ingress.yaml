@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: cloud-hashing-order-ingress
+  name: cloud-hashing-order-traefik-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: cloud-hashing-order
-    k8s.kuboard.cn/workload: cloud-hashing-order
+    k8s.kuboard.cn/displayName: cloud-hashing-order-traefik
+    k8s.kuboard.cn/workload: cloud-hashing-order-traefik
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-cloud-hashing-order-prefix@kubernetescrd,kube-system-common-headers@kubernetescrd
@@ -15,7 +15,7 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/cloud-hashing-order
+          - path: /api/cloud-hashing-order/version
             backend:
               serviceName: cloud-hashing-order
               servicePort: 50040
