@@ -24,10 +24,8 @@ func (Order) Fields() []ent.Field {
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
 		field.Uint32("units"),
-		field.Uint32("discount").
-			Default(0),
-		field.Uint64("special_reduction_amount").
-			Default(0),
+		field.UUID("discount_coupon_id", uuid.UUID{}),
+		field.UUID("user_special_reduction_id", uuid.UUID{}),
 		field.Uint32("start"),
 		field.Uint32("end"),
 		field.UUID("coupon_id", uuid.UUID{}),

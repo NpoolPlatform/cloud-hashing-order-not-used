@@ -79,14 +79,6 @@ func init() {
 	goodpaying.DefaultID = goodpayingDescID.Default.(func() uuid.UUID)
 	orderFields := schema.Order{}.Fields()
 	_ = orderFields
-	// orderDescDiscount is the schema descriptor for discount field.
-	orderDescDiscount := orderFields[5].Descriptor()
-	// order.DefaultDiscount holds the default value on creation for the discount field.
-	order.DefaultDiscount = orderDescDiscount.Default.(uint32)
-	// orderDescSpecialReductionAmount is the schema descriptor for special_reduction_amount field.
-	orderDescSpecialReductionAmount := orderFields[6].Descriptor()
-	// order.DefaultSpecialReductionAmount holds the default value on creation for the special_reduction_amount field.
-	order.DefaultSpecialReductionAmount = orderDescSpecialReductionAmount.Default.(uint64)
 	// orderDescCreateAt is the schema descriptor for create_at field.
 	orderDescCreateAt := orderFields[10].Descriptor()
 	// order.DefaultCreateAt holds the default value on creation for the create_at field.

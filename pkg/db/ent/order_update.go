@@ -58,45 +58,15 @@ func (ou *OrderUpdate) AddUnits(u uint32) *OrderUpdate {
 	return ou
 }
 
-// SetDiscount sets the "discount" field.
-func (ou *OrderUpdate) SetDiscount(u uint32) *OrderUpdate {
-	ou.mutation.ResetDiscount()
-	ou.mutation.SetDiscount(u)
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (ou *OrderUpdate) SetDiscountCouponID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetDiscountCouponID(u)
 	return ou
 }
 
-// SetNillableDiscount sets the "discount" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableDiscount(u *uint32) *OrderUpdate {
-	if u != nil {
-		ou.SetDiscount(*u)
-	}
-	return ou
-}
-
-// AddDiscount adds u to the "discount" field.
-func (ou *OrderUpdate) AddDiscount(u uint32) *OrderUpdate {
-	ou.mutation.AddDiscount(u)
-	return ou
-}
-
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (ou *OrderUpdate) SetSpecialReductionAmount(u uint64) *OrderUpdate {
-	ou.mutation.ResetSpecialReductionAmount()
-	ou.mutation.SetSpecialReductionAmount(u)
-	return ou
-}
-
-// SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableSpecialReductionAmount(u *uint64) *OrderUpdate {
-	if u != nil {
-		ou.SetSpecialReductionAmount(*u)
-	}
-	return ou
-}
-
-// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (ou *OrderUpdate) AddSpecialReductionAmount(u uint64) *OrderUpdate {
-	ou.mutation.AddSpecialReductionAmount(u)
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (ou *OrderUpdate) SetUserSpecialReductionID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetUserSpecialReductionID(u)
 	return ou
 }
 
@@ -308,32 +278,18 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUnits,
 		})
 	}
-	if value, ok := ou.mutation.Discount(); ok {
+	if value, ok := ou.mutation.DiscountCouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldDiscount,
+			Column: order.FieldDiscountCouponID,
 		})
 	}
-	if value, ok := ou.mutation.AddedDiscount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldDiscount,
-		})
-	}
-	if value, ok := ou.mutation.SpecialReductionAmount(); ok {
+	if value, ok := ou.mutation.UserSpecialReductionID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint64,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldSpecialReductionAmount,
-		})
-	}
-	if value, ok := ou.mutation.AddedSpecialReductionAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint64,
-			Value:  value,
-			Column: order.FieldSpecialReductionAmount,
+			Column: order.FieldUserSpecialReductionID,
 		})
 	}
 	if value, ok := ou.mutation.Start(); ok {
@@ -463,45 +419,15 @@ func (ouo *OrderUpdateOne) AddUnits(u uint32) *OrderUpdateOne {
 	return ouo
 }
 
-// SetDiscount sets the "discount" field.
-func (ouo *OrderUpdateOne) SetDiscount(u uint32) *OrderUpdateOne {
-	ouo.mutation.ResetDiscount()
-	ouo.mutation.SetDiscount(u)
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (ouo *OrderUpdateOne) SetDiscountCouponID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetDiscountCouponID(u)
 	return ouo
 }
 
-// SetNillableDiscount sets the "discount" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableDiscount(u *uint32) *OrderUpdateOne {
-	if u != nil {
-		ouo.SetDiscount(*u)
-	}
-	return ouo
-}
-
-// AddDiscount adds u to the "discount" field.
-func (ouo *OrderUpdateOne) AddDiscount(u uint32) *OrderUpdateOne {
-	ouo.mutation.AddDiscount(u)
-	return ouo
-}
-
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (ouo *OrderUpdateOne) SetSpecialReductionAmount(u uint64) *OrderUpdateOne {
-	ouo.mutation.ResetSpecialReductionAmount()
-	ouo.mutation.SetSpecialReductionAmount(u)
-	return ouo
-}
-
-// SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableSpecialReductionAmount(u *uint64) *OrderUpdateOne {
-	if u != nil {
-		ouo.SetSpecialReductionAmount(*u)
-	}
-	return ouo
-}
-
-// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (ouo *OrderUpdateOne) AddSpecialReductionAmount(u uint64) *OrderUpdateOne {
-	ouo.mutation.AddSpecialReductionAmount(u)
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (ouo *OrderUpdateOne) SetUserSpecialReductionID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetUserSpecialReductionID(u)
 	return ouo
 }
 
@@ -737,32 +663,18 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Column: order.FieldUnits,
 		})
 	}
-	if value, ok := ouo.mutation.Discount(); ok {
+	if value, ok := ouo.mutation.DiscountCouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldDiscount,
+			Column: order.FieldDiscountCouponID,
 		})
 	}
-	if value, ok := ouo.mutation.AddedDiscount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: order.FieldDiscount,
-		})
-	}
-	if value, ok := ouo.mutation.SpecialReductionAmount(); ok {
+	if value, ok := ouo.mutation.UserSpecialReductionID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint64,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldSpecialReductionAmount,
-		})
-	}
-	if value, ok := ouo.mutation.AddedSpecialReductionAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint64,
-			Value:  value,
-			Column: order.FieldSpecialReductionAmount,
+			Column: order.FieldUserSpecialReductionID,
 		})
 	}
 	if value, ok := ouo.mutation.Start(); ok {

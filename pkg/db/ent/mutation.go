@@ -2202,33 +2202,31 @@ func (m *GoodPayingMutation) ResetEdge(name string) error {
 // OrderMutation represents an operation that mutates the Order nodes in the graph.
 type OrderMutation struct {
 	config
-	op                          Op
-	typ                         string
-	id                          *uuid.UUID
-	good_id                     *uuid.UUID
-	app_id                      *uuid.UUID
-	user_id                     *uuid.UUID
-	units                       *uint32
-	addunits                    *uint32
-	discount                    *uint32
-	adddiscount                 *uint32
-	special_reduction_amount    *uint64
-	addspecial_reduction_amount *uint64
-	start                       *uint32
-	addstart                    *uint32
-	end                         *uint32
-	addend                      *uint32
-	coupon_id                   *uuid.UUID
-	create_at                   *uint32
-	addcreate_at                *uint32
-	update_at                   *uint32
-	addupdate_at                *uint32
-	delete_at                   *uint32
-	adddelete_at                *uint32
-	clearedFields               map[string]struct{}
-	done                        bool
-	oldValue                    func(context.Context) (*Order, error)
-	predicates                  []predicate.Order
+	op                        Op
+	typ                       string
+	id                        *uuid.UUID
+	good_id                   *uuid.UUID
+	app_id                    *uuid.UUID
+	user_id                   *uuid.UUID
+	units                     *uint32
+	addunits                  *uint32
+	discount_coupon_id        *uuid.UUID
+	user_special_reduction_id *uuid.UUID
+	start                     *uint32
+	addstart                  *uint32
+	end                       *uint32
+	addend                    *uint32
+	coupon_id                 *uuid.UUID
+	create_at                 *uint32
+	addcreate_at              *uint32
+	update_at                 *uint32
+	addupdate_at              *uint32
+	delete_at                 *uint32
+	adddelete_at              *uint32
+	clearedFields             map[string]struct{}
+	done                      bool
+	oldValue                  func(context.Context) (*Order, error)
+	predicates                []predicate.Order
 }
 
 var _ ent.Mutation = (*OrderMutation)(nil)
@@ -2480,116 +2478,76 @@ func (m *OrderMutation) ResetUnits() {
 	m.addunits = nil
 }
 
-// SetDiscount sets the "discount" field.
-func (m *OrderMutation) SetDiscount(u uint32) {
-	m.discount = &u
-	m.adddiscount = nil
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (m *OrderMutation) SetDiscountCouponID(u uuid.UUID) {
+	m.discount_coupon_id = &u
 }
 
-// Discount returns the value of the "discount" field in the mutation.
-func (m *OrderMutation) Discount() (r uint32, exists bool) {
-	v := m.discount
+// DiscountCouponID returns the value of the "discount_coupon_id" field in the mutation.
+func (m *OrderMutation) DiscountCouponID() (r uuid.UUID, exists bool) {
+	v := m.discount_coupon_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDiscount returns the old "discount" field's value of the Order entity.
+// OldDiscountCouponID returns the old "discount_coupon_id" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldDiscount(ctx context.Context) (v uint32, err error) {
+func (m *OrderMutation) OldDiscountCouponID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDiscount is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldDiscountCouponID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDiscount requires an ID field in the mutation")
+		return v, fmt.Errorf("OldDiscountCouponID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDiscount: %w", err)
+		return v, fmt.Errorf("querying old value for OldDiscountCouponID: %w", err)
 	}
-	return oldValue.Discount, nil
+	return oldValue.DiscountCouponID, nil
 }
 
-// AddDiscount adds u to the "discount" field.
-func (m *OrderMutation) AddDiscount(u uint32) {
-	if m.adddiscount != nil {
-		*m.adddiscount += u
-	} else {
-		m.adddiscount = &u
-	}
+// ResetDiscountCouponID resets all changes to the "discount_coupon_id" field.
+func (m *OrderMutation) ResetDiscountCouponID() {
+	m.discount_coupon_id = nil
 }
 
-// AddedDiscount returns the value that was added to the "discount" field in this mutation.
-func (m *OrderMutation) AddedDiscount() (r uint32, exists bool) {
-	v := m.adddiscount
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (m *OrderMutation) SetUserSpecialReductionID(u uuid.UUID) {
+	m.user_special_reduction_id = &u
+}
+
+// UserSpecialReductionID returns the value of the "user_special_reduction_id" field in the mutation.
+func (m *OrderMutation) UserSpecialReductionID() (r uuid.UUID, exists bool) {
+	v := m.user_special_reduction_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetDiscount resets all changes to the "discount" field.
-func (m *OrderMutation) ResetDiscount() {
-	m.discount = nil
-	m.adddiscount = nil
-}
-
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (m *OrderMutation) SetSpecialReductionAmount(u uint64) {
-	m.special_reduction_amount = &u
-	m.addspecial_reduction_amount = nil
-}
-
-// SpecialReductionAmount returns the value of the "special_reduction_amount" field in the mutation.
-func (m *OrderMutation) SpecialReductionAmount() (r uint64, exists bool) {
-	v := m.special_reduction_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSpecialReductionAmount returns the old "special_reduction_amount" field's value of the Order entity.
+// OldUserSpecialReductionID returns the old "user_special_reduction_id" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldSpecialReductionAmount(ctx context.Context) (v uint64, err error) {
+func (m *OrderMutation) OldUserSpecialReductionID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldSpecialReductionAmount is only allowed on UpdateOne operations")
+		return v, fmt.Errorf("OldUserSpecialReductionID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldSpecialReductionAmount requires an ID field in the mutation")
+		return v, fmt.Errorf("OldUserSpecialReductionID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSpecialReductionAmount: %w", err)
+		return v, fmt.Errorf("querying old value for OldUserSpecialReductionID: %w", err)
 	}
-	return oldValue.SpecialReductionAmount, nil
+	return oldValue.UserSpecialReductionID, nil
 }
 
-// AddSpecialReductionAmount adds u to the "special_reduction_amount" field.
-func (m *OrderMutation) AddSpecialReductionAmount(u uint64) {
-	if m.addspecial_reduction_amount != nil {
-		*m.addspecial_reduction_amount += u
-	} else {
-		m.addspecial_reduction_amount = &u
-	}
-}
-
-// AddedSpecialReductionAmount returns the value that was added to the "special_reduction_amount" field in this mutation.
-func (m *OrderMutation) AddedSpecialReductionAmount() (r uint64, exists bool) {
-	v := m.addspecial_reduction_amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetSpecialReductionAmount resets all changes to the "special_reduction_amount" field.
-func (m *OrderMutation) ResetSpecialReductionAmount() {
-	m.special_reduction_amount = nil
-	m.addspecial_reduction_amount = nil
+// ResetUserSpecialReductionID resets all changes to the "user_special_reduction_id" field.
+func (m *OrderMutation) ResetUserSpecialReductionID() {
+	m.user_special_reduction_id = nil
 }
 
 // SetStart sets the "start" field.
@@ -2940,11 +2898,11 @@ func (m *OrderMutation) Fields() []string {
 	if m.units != nil {
 		fields = append(fields, order.FieldUnits)
 	}
-	if m.discount != nil {
-		fields = append(fields, order.FieldDiscount)
+	if m.discount_coupon_id != nil {
+		fields = append(fields, order.FieldDiscountCouponID)
 	}
-	if m.special_reduction_amount != nil {
-		fields = append(fields, order.FieldSpecialReductionAmount)
+	if m.user_special_reduction_id != nil {
+		fields = append(fields, order.FieldUserSpecialReductionID)
 	}
 	if m.start != nil {
 		fields = append(fields, order.FieldStart)
@@ -2980,10 +2938,10 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case order.FieldUnits:
 		return m.Units()
-	case order.FieldDiscount:
-		return m.Discount()
-	case order.FieldSpecialReductionAmount:
-		return m.SpecialReductionAmount()
+	case order.FieldDiscountCouponID:
+		return m.DiscountCouponID()
+	case order.FieldUserSpecialReductionID:
+		return m.UserSpecialReductionID()
 	case order.FieldStart:
 		return m.Start()
 	case order.FieldEnd:
@@ -3013,10 +2971,10 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldUserID(ctx)
 	case order.FieldUnits:
 		return m.OldUnits(ctx)
-	case order.FieldDiscount:
-		return m.OldDiscount(ctx)
-	case order.FieldSpecialReductionAmount:
-		return m.OldSpecialReductionAmount(ctx)
+	case order.FieldDiscountCouponID:
+		return m.OldDiscountCouponID(ctx)
+	case order.FieldUserSpecialReductionID:
+		return m.OldUserSpecialReductionID(ctx)
 	case order.FieldStart:
 		return m.OldStart(ctx)
 	case order.FieldEnd:
@@ -3066,19 +3024,19 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUnits(v)
 		return nil
-	case order.FieldDiscount:
-		v, ok := value.(uint32)
+	case order.FieldDiscountCouponID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDiscount(v)
+		m.SetDiscountCouponID(v)
 		return nil
-	case order.FieldSpecialReductionAmount:
-		v, ok := value.(uint64)
+	case order.FieldUserSpecialReductionID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSpecialReductionAmount(v)
+		m.SetUserSpecialReductionID(v)
 		return nil
 	case order.FieldStart:
 		v, ok := value.(uint32)
@@ -3133,12 +3091,6 @@ func (m *OrderMutation) AddedFields() []string {
 	if m.addunits != nil {
 		fields = append(fields, order.FieldUnits)
 	}
-	if m.adddiscount != nil {
-		fields = append(fields, order.FieldDiscount)
-	}
-	if m.addspecial_reduction_amount != nil {
-		fields = append(fields, order.FieldSpecialReductionAmount)
-	}
 	if m.addstart != nil {
 		fields = append(fields, order.FieldStart)
 	}
@@ -3164,10 +3116,6 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case order.FieldUnits:
 		return m.AddedUnits()
-	case order.FieldDiscount:
-		return m.AddedDiscount()
-	case order.FieldSpecialReductionAmount:
-		return m.AddedSpecialReductionAmount()
 	case order.FieldStart:
 		return m.AddedStart()
 	case order.FieldEnd:
@@ -3193,20 +3141,6 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUnits(v)
-		return nil
-	case order.FieldDiscount:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDiscount(v)
-		return nil
-	case order.FieldSpecialReductionAmount:
-		v, ok := value.(uint64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddSpecialReductionAmount(v)
 		return nil
 	case order.FieldStart:
 		v, ok := value.(uint32)
@@ -3282,11 +3216,11 @@ func (m *OrderMutation) ResetField(name string) error {
 	case order.FieldUnits:
 		m.ResetUnits()
 		return nil
-	case order.FieldDiscount:
-		m.ResetDiscount()
+	case order.FieldDiscountCouponID:
+		m.ResetDiscountCouponID()
 		return nil
-	case order.FieldSpecialReductionAmount:
-		m.ResetSpecialReductionAmount()
+	case order.FieldUserSpecialReductionID:
+		m.ResetUserSpecialReductionID()
 		return nil
 	case order.FieldStart:
 		m.ResetStart()

@@ -9,8 +9,6 @@ import (
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
 
-	"github.com/NpoolPlatform/go-service-framework/pkg/price"
-
 	"github.com/google/uuid"
 
 	"golang.org/x/xerrors"
@@ -34,8 +32,8 @@ func dbRowToOrder(row *ent.Order) *npool.Order {
 		ID:                     row.ID.String(),
 		GoodID:                 row.GoodID.String(),
 		Units:                  row.Units,
-		Discount:               row.Discount,
-		SpecialReductionAmount: price.DBPriceToVisualPrice(row.SpecialReductionAmount),
+		DiscountCouponID:       row.DiscountCouponID.String(),
+		UserSpecialReductionID: row.UserSpecialReductionID.String(),
 		UserID:                 row.UserID.String(),
 		AppID:                  row.AppID.String(),
 		Start:                  row.Start,
@@ -54,13 +52,23 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		couponID = uuid.UUID{}
 	}
 
+	discountCouponID, err := uuid.Parse(in.GetInfo().GetDiscountCouponID())
+	if err != nil {
+		discountCouponID = uuid.UUID{}
+	}
+
+	userSpecialReductionID, err := uuid.Parse(in.GetInfo().GetUserSpecialReductionID())
+	if err != nil {
+		userSpecialReductionID = uuid.UUID{}
+	}
+
 	info, err := db.Client().
 		Order.
 		Create().
 		SetGoodID(uuid.MustParse(in.GetInfo().GetGoodID())).
 		SetUnits(in.GetInfo().GetUnits()).
-		SetDiscount(in.GetInfo().GetDiscount()).
-		SetSpecialReductionAmount(price.VisualPriceToDBPrice(in.GetInfo().GetSpecialReductionAmount())).
+		SetDiscountCouponID(discountCouponID).
+		SetUserSpecialReductionID(userSpecialReductionID).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetStart(in.GetInfo().GetStart()).

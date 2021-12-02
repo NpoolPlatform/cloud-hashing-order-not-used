@@ -19,10 +19,10 @@ const (
 	FieldUserID = "user_id"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
-	// FieldDiscount holds the string denoting the discount field in the database.
-	FieldDiscount = "discount"
-	// FieldSpecialReductionAmount holds the string denoting the special_reduction_amount field in the database.
-	FieldSpecialReductionAmount = "special_reduction_amount"
+	// FieldDiscountCouponID holds the string denoting the discount_coupon_id field in the database.
+	FieldDiscountCouponID = "discount_coupon_id"
+	// FieldUserSpecialReductionID holds the string denoting the user_special_reduction_id field in the database.
+	FieldUserSpecialReductionID = "user_special_reduction_id"
 	// FieldStart holds the string denoting the start field in the database.
 	FieldStart = "start"
 	// FieldEnd holds the string denoting the end field in the database.
@@ -46,8 +46,8 @@ var Columns = []string{
 	FieldAppID,
 	FieldUserID,
 	FieldUnits,
-	FieldDiscount,
-	FieldSpecialReductionAmount,
+	FieldDiscountCouponID,
+	FieldUserSpecialReductionID,
 	FieldStart,
 	FieldEnd,
 	FieldCouponID,
@@ -67,10 +67,6 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultDiscount holds the default value on creation for the "discount" field.
-	DefaultDiscount uint32
-	// DefaultSpecialReductionAmount holds the default value on creation for the "special_reduction_amount" field.
-	DefaultSpecialReductionAmount uint64
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.

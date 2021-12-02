@@ -47,8 +47,8 @@ func assertOrderDetail( //nolint
 	assert.Equal(t, actual.AppID, orderInfo.AppID)
 	assert.Equal(t, actual.UserID, orderInfo.UserID)
 	assert.Equal(t, actual.Units, orderInfo.Units)
-	assert.Equal(t, actual.Discount, orderInfo.Discount)
-	assert.Equal(t, actual.SpecialReductionAmount, orderInfo.SpecialReductionAmount)
+	assert.Equal(t, actual.DiscountCouponID, orderInfo.DiscountCouponID)
+	assert.Equal(t, actual.UserSpecialReductionID, orderInfo.UserSpecialReductionID)
 
 	assert.Equal(t, actual.GoodPaying, goodPaying)
 
@@ -84,8 +84,8 @@ func TestGetDetail(t *testing.T) {
 		AppID:                  appID,
 		UserID:                 userID,
 		Units:                  10,
-		Discount:               10,
-		SpecialReductionAmount: 20,
+		DiscountCouponID:       uuid.New().String(),
+		UserSpecialReductionID: uuid.New().String(),
 		Start:                  second,
 		End:                    second + 20,
 		CouponID:               uuid.New().String(),

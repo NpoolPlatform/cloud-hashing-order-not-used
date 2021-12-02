@@ -1265,7 +1265,7 @@ func RegisterCloudHashingOrderHandlerFromEndpoint(ctx context.Context, mux *runt
 
 // RegisterCloudHashingOrderHandler registers the http handlers for service CloudHashingOrder to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterCloudHashingOrderHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+func RegisterCloudHashingOrderHandler(ctx context.Context, mux *runtime.ServeMux, conn grpc.ClientConnInterface) error {
 	return RegisterCloudHashingOrderHandlerClient(ctx, mux, NewCloudHashingOrderClient(conn))
 }
 

@@ -30,8 +30,8 @@ func assertOrder(t *testing.T, actual, expected *npool.Order) {
 	assert.Equal(t, actual.AppID, expected.AppID)
 	assert.Equal(t, actual.UserID, expected.UserID)
 	assert.Equal(t, actual.Units, expected.Units)
-	assert.Equal(t, actual.Discount, expected.Discount)
-	assert.Equal(t, actual.SpecialReductionAmount, expected.SpecialReductionAmount)
+	assert.Equal(t, actual.DiscountCouponID, expected.DiscountCouponID)
+	assert.Equal(t, actual.UserSpecialReductionID, expected.UserSpecialReductionID)
 	assert.Equal(t, actual.Start, expected.Start)
 	assert.Equal(t, actual.End, expected.End)
 	assert.Equal(t, actual.CouponID, expected.CouponID)
@@ -49,8 +49,8 @@ func TestCRUD(t *testing.T) {
 		AppID:                  uuid.New().String(),
 		UserID:                 uuid.New().String(),
 		Units:                  10,
-		Discount:               10,
-		SpecialReductionAmount: 20,
+		DiscountCouponID:       uuid.New().String(),
+		UserSpecialReductionID: uuid.New().String(),
 		Start:                  second,
 		End:                    second + 20,
 		CouponID:               uuid.New().String(),

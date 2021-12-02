@@ -47,31 +47,15 @@ func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	return oc
 }
 
-// SetDiscount sets the "discount" field.
-func (oc *OrderCreate) SetDiscount(u uint32) *OrderCreate {
-	oc.mutation.SetDiscount(u)
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (oc *OrderCreate) SetDiscountCouponID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetDiscountCouponID(u)
 	return oc
 }
 
-// SetNillableDiscount sets the "discount" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableDiscount(u *uint32) *OrderCreate {
-	if u != nil {
-		oc.SetDiscount(*u)
-	}
-	return oc
-}
-
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (oc *OrderCreate) SetSpecialReductionAmount(u uint64) *OrderCreate {
-	oc.mutation.SetSpecialReductionAmount(u)
-	return oc
-}
-
-// SetNillableSpecialReductionAmount sets the "special_reduction_amount" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableSpecialReductionAmount(u *uint64) *OrderCreate {
-	if u != nil {
-		oc.SetSpecialReductionAmount(*u)
-	}
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (oc *OrderCreate) SetUserSpecialReductionID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetUserSpecialReductionID(u)
 	return oc
 }
 
@@ -212,14 +196,6 @@ func (oc *OrderCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (oc *OrderCreate) defaults() {
-	if _, ok := oc.mutation.Discount(); !ok {
-		v := order.DefaultDiscount
-		oc.mutation.SetDiscount(v)
-	}
-	if _, ok := oc.mutation.SpecialReductionAmount(); !ok {
-		v := order.DefaultSpecialReductionAmount
-		oc.mutation.SetSpecialReductionAmount(v)
-	}
 	if _, ok := oc.mutation.CreateAt(); !ok {
 		v := order.DefaultCreateAt()
 		oc.mutation.SetCreateAt(v)
@@ -252,11 +228,11 @@ func (oc *OrderCreate) check() error {
 	if _, ok := oc.mutation.Units(); !ok {
 		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "units"`)}
 	}
-	if _, ok := oc.mutation.Discount(); !ok {
-		return &ValidationError{Name: "discount", err: errors.New(`ent: missing required field "discount"`)}
+	if _, ok := oc.mutation.DiscountCouponID(); !ok {
+		return &ValidationError{Name: "discount_coupon_id", err: errors.New(`ent: missing required field "discount_coupon_id"`)}
 	}
-	if _, ok := oc.mutation.SpecialReductionAmount(); !ok {
-		return &ValidationError{Name: "special_reduction_amount", err: errors.New(`ent: missing required field "special_reduction_amount"`)}
+	if _, ok := oc.mutation.UserSpecialReductionID(); !ok {
+		return &ValidationError{Name: "user_special_reduction_id", err: errors.New(`ent: missing required field "user_special_reduction_id"`)}
 	}
 	if _, ok := oc.mutation.Start(); !ok {
 		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "start"`)}
@@ -341,21 +317,21 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 		})
 		_node.Units = value
 	}
-	if value, ok := oc.mutation.Discount(); ok {
+	if value, ok := oc.mutation.DiscountCouponID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldDiscount,
+			Column: order.FieldDiscountCouponID,
 		})
-		_node.Discount = value
+		_node.DiscountCouponID = value
 	}
-	if value, ok := oc.mutation.SpecialReductionAmount(); ok {
+	if value, ok := oc.mutation.UserSpecialReductionID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint64,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldSpecialReductionAmount,
+			Column: order.FieldUserSpecialReductionID,
 		})
-		_node.SpecialReductionAmount = value
+		_node.UserSpecialReductionID = value
 	}
 	if value, ok := oc.mutation.Start(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -507,27 +483,27 @@ func (u *OrderUpsert) UpdateUnits() *OrderUpsert {
 	return u
 }
 
-// SetDiscount sets the "discount" field.
-func (u *OrderUpsert) SetDiscount(v uint32) *OrderUpsert {
-	u.Set(order.FieldDiscount, v)
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsert) SetDiscountCouponID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldDiscountCouponID, v)
 	return u
 }
 
-// UpdateDiscount sets the "discount" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateDiscount() *OrderUpsert {
-	u.SetExcluded(order.FieldDiscount)
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateDiscountCouponID() *OrderUpsert {
+	u.SetExcluded(order.FieldDiscountCouponID)
 	return u
 }
 
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsert) SetSpecialReductionAmount(v uint64) *OrderUpsert {
-	u.Set(order.FieldSpecialReductionAmount, v)
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsert) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldUserSpecialReductionID, v)
 	return u
 }
 
-// UpdateSpecialReductionAmount sets the "special_reduction_amount" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateSpecialReductionAmount() *OrderUpsert {
-	u.SetExcluded(order.FieldSpecialReductionAmount)
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUserSpecialReductionID() *OrderUpsert {
+	u.SetExcluded(order.FieldUserSpecialReductionID)
 	return u
 }
 
@@ -709,31 +685,31 @@ func (u *OrderUpsertOne) UpdateUnits() *OrderUpsertOne {
 	})
 }
 
-// SetDiscount sets the "discount" field.
-func (u *OrderUpsertOne) SetDiscount(v uint32) *OrderUpsertOne {
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsertOne) SetDiscountCouponID(v uuid.UUID) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetDiscount(v)
+		s.SetDiscountCouponID(v)
 	})
 }
 
-// UpdateDiscount sets the "discount" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateDiscount() *OrderUpsertOne {
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateDiscountCouponID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateDiscount()
+		s.UpdateDiscountCouponID()
 	})
 }
 
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsertOne) SetSpecialReductionAmount(v uint64) *OrderUpsertOne {
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsertOne) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetSpecialReductionAmount(v)
+		s.SetUserSpecialReductionID(v)
 	})
 }
 
-// UpdateSpecialReductionAmount sets the "special_reduction_amount" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateSpecialReductionAmount() *OrderUpsertOne {
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUserSpecialReductionID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateSpecialReductionAmount()
+		s.UpdateUserSpecialReductionID()
 	})
 }
 
@@ -1093,31 +1069,31 @@ func (u *OrderUpsertBulk) UpdateUnits() *OrderUpsertBulk {
 	})
 }
 
-// SetDiscount sets the "discount" field.
-func (u *OrderUpsertBulk) SetDiscount(v uint32) *OrderUpsertBulk {
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsertBulk) SetDiscountCouponID(v uuid.UUID) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetDiscount(v)
+		s.SetDiscountCouponID(v)
 	})
 }
 
-// UpdateDiscount sets the "discount" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateDiscount() *OrderUpsertBulk {
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateDiscountCouponID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateDiscount()
+		s.UpdateDiscountCouponID()
 	})
 }
 
-// SetSpecialReductionAmount sets the "special_reduction_amount" field.
-func (u *OrderUpsertBulk) SetSpecialReductionAmount(v uint64) *OrderUpsertBulk {
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsertBulk) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetSpecialReductionAmount(v)
+		s.SetUserSpecialReductionID(v)
 	})
 }
 
-// UpdateSpecialReductionAmount sets the "special_reduction_amount" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateSpecialReductionAmount() *OrderUpsertBulk {
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUserSpecialReductionID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateSpecialReductionAmount()
+		s.UpdateUserSpecialReductionID()
 	})
 }
 

@@ -24,10 +24,10 @@ type Order struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// Units holds the value of the "units" field.
 	Units uint32 `json:"units,omitempty"`
-	// Discount holds the value of the "discount" field.
-	Discount uint32 `json:"discount,omitempty"`
-	// SpecialReductionAmount holds the value of the "special_reduction_amount" field.
-	SpecialReductionAmount uint64 `json:"special_reduction_amount,omitempty"`
+	// DiscountCouponID holds the value of the "discount_coupon_id" field.
+	DiscountCouponID uuid.UUID `json:"discount_coupon_id,omitempty"`
+	// UserSpecialReductionID holds the value of the "user_special_reduction_id" field.
+	UserSpecialReductionID uuid.UUID `json:"user_special_reduction_id,omitempty"`
 	// Start holds the value of the "start" field.
 	Start uint32 `json:"start,omitempty"`
 	// End holds the value of the "end" field.
@@ -47,9 +47,9 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldUnits, order.FieldDiscount, order.FieldSpecialReductionAmount, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
+		case order.FieldUnits, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldCouponID:
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
@@ -96,17 +96,17 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				o.Units = uint32(value.Int64)
 			}
-		case order.FieldDiscount:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field discount", values[i])
-			} else if value.Valid {
-				o.Discount = uint32(value.Int64)
+		case order.FieldDiscountCouponID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field discount_coupon_id", values[i])
+			} else if value != nil {
+				o.DiscountCouponID = *value
 			}
-		case order.FieldSpecialReductionAmount:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field special_reduction_amount", values[i])
-			} else if value.Valid {
-				o.SpecialReductionAmount = uint64(value.Int64)
+		case order.FieldUserSpecialReductionID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field user_special_reduction_id", values[i])
+			} else if value != nil {
+				o.UserSpecialReductionID = *value
 			}
 		case order.FieldStart:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -180,10 +180,10 @@ func (o *Order) String() string {
 	builder.WriteString(fmt.Sprintf("%v", o.UserID))
 	builder.WriteString(", units=")
 	builder.WriteString(fmt.Sprintf("%v", o.Units))
-	builder.WriteString(", discount=")
-	builder.WriteString(fmt.Sprintf("%v", o.Discount))
-	builder.WriteString(", special_reduction_amount=")
-	builder.WriteString(fmt.Sprintf("%v", o.SpecialReductionAmount))
+	builder.WriteString(", discount_coupon_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.DiscountCouponID))
+	builder.WriteString(", user_special_reduction_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.UserSpecialReductionID))
 	builder.WriteString(", start=")
 	builder.WriteString(fmt.Sprintf("%v", o.Start))
 	builder.WriteString(", end=")
