@@ -96,9 +96,6 @@ pipeline {
           devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}'`
           servicename="cloud-hashing-order"
 
-          PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
-          kubectl -n kube-system exec mysql-0 -- mysql -h 127.0.0.1 -uroot -p$PASSWORD -P3306 -e "create database if not exists orders;"
-
           kubectl exec --namespace kube-system $devboxpod -- make -C /tmp/$servicename after-test || true
           kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename || true
           kubectl cp ./ kube-system/$devboxpod:/tmp/$servicename
@@ -148,6 +145,7 @@ pipeline {
                 ;;
               production)
                 patch=$(( $patch + 1 ))
+                git reset --hard
                 git checkout $tag
                 ;;
             esac
@@ -233,6 +231,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           revlist=`git rev-list --tags --max-count=1`
           tag=`git describe --tags $revlist`
+          git reset --hard
           git checkout $tag
           images=`docker images | grep entropypool | grep cloud-hashing-order | grep $tag | awk '{ print $3 }'`
           for image in $images; do
@@ -280,6 +279,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           revlist=`git rev-list --tags --max-count=1`
           tag=`git describe --tags $revlist`
+          git reset --hard
           git checkout $tag
           sed -i "s/cloud-hashing-order:latest/cloud-hashing-order:$tag/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
           TAG=$tag make deploy-to-k8s-cluster
@@ -301,6 +301,7 @@ pipeline {
           patch=`echo $tag | awk -F '.' '{ print $3 }'`
           patch=$(( $patch - $patch % 2 ))
           tag=$major.$minor.$patch
+          git reset --hard
           git checkout $tag
           sed -i "s/cloud-hashing-order:latest/cloud-hashing-order:$tag/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
           TAG=$tag make deploy-to-k8s-cluster
