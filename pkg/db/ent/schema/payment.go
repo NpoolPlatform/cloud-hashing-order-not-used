@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 
+	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 	"github.com/google/uuid"
 )
 
@@ -27,7 +28,12 @@ func (Payment) Fields() []ent.Field {
 		field.Uint64("amount"),
 		field.UUID("coin_info_id", uuid.UUID{}),
 		field.Enum("state").
-			Values("wait", "done", "canceled", "timeout"),
+			Values(
+				constant.PaymentStateWait,
+				constant.PaymentStateDone,
+				constant.PaymentStateCanceled,
+				constant.PaymentStateTimeout,
+			),
 		field.String("chain_transaction_id"),
 		field.UUID("platform_transaction_id", uuid.UUID{}),
 		field.Uint32("create_at").
