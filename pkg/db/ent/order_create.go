@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db/ent/order"
@@ -18,6 +20,7 @@ type OrderCreate struct {
 	config
 	mutation *OrderMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetGoodID sets the "good_id" field.
@@ -277,6 +280,7 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.OnConflict = oc.conflict
 	if id, ok := oc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
@@ -380,10 +384,462 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Order.Create().
+//		SetGoodID(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.OrderUpsert) {
+//			SetGoodID(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (oc *OrderCreate) OnConflict(opts ...sql.ConflictOption) *OrderUpsertOne {
+	oc.conflict = opts
+	return &OrderUpsertOne{
+		create: oc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Order.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (oc *OrderCreate) OnConflictColumns(columns ...string) *OrderUpsertOne {
+	oc.conflict = append(oc.conflict, sql.ConflictColumns(columns...))
+	return &OrderUpsertOne{
+		create: oc,
+	}
+}
+
+type (
+	// OrderUpsertOne is the builder for "upsert"-ing
+	//  one Order node.
+	OrderUpsertOne struct {
+		create *OrderCreate
+	}
+
+	// OrderUpsert is the "OnConflict" setter.
+	OrderUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetGoodID sets the "good_id" field.
+func (u *OrderUpsert) SetGoodID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldGoodID, v)
+	return u
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateGoodID() *OrderUpsert {
+	u.SetExcluded(order.FieldGoodID)
+	return u
+}
+
+// SetAppID sets the "app_id" field.
+func (u *OrderUpsert) SetAppID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateAppID() *OrderUpsert {
+	u.SetExcluded(order.FieldAppID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *OrderUpsert) SetUserID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUserID() *OrderUpsert {
+	u.SetExcluded(order.FieldUserID)
+	return u
+}
+
+// SetUnits sets the "units" field.
+func (u *OrderUpsert) SetUnits(v uint32) *OrderUpsert {
+	u.Set(order.FieldUnits, v)
+	return u
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUnits() *OrderUpsert {
+	u.SetExcluded(order.FieldUnits)
+	return u
+}
+
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsert) SetDiscountCouponID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldDiscountCouponID, v)
+	return u
+}
+
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateDiscountCouponID() *OrderUpsert {
+	u.SetExcluded(order.FieldDiscountCouponID)
+	return u
+}
+
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsert) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldUserSpecialReductionID, v)
+	return u
+}
+
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUserSpecialReductionID() *OrderUpsert {
+	u.SetExcluded(order.FieldUserSpecialReductionID)
+	return u
+}
+
+// SetStart sets the "start" field.
+func (u *OrderUpsert) SetStart(v uint32) *OrderUpsert {
+	u.Set(order.FieldStart, v)
+	return u
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateStart() *OrderUpsert {
+	u.SetExcluded(order.FieldStart)
+	return u
+}
+
+// SetEnd sets the "end" field.
+func (u *OrderUpsert) SetEnd(v uint32) *OrderUpsert {
+	u.Set(order.FieldEnd, v)
+	return u
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateEnd() *OrderUpsert {
+	u.SetExcluded(order.FieldEnd)
+	return u
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (u *OrderUpsert) SetCouponID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldCouponID, v)
+	return u
+}
+
+// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateCouponID() *OrderUpsert {
+	u.SetExcluded(order.FieldCouponID)
+	return u
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *OrderUpsert) SetCreateAt(v uint32) *OrderUpsert {
+	u.Set(order.FieldCreateAt, v)
+	return u
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateCreateAt() *OrderUpsert {
+	u.SetExcluded(order.FieldCreateAt)
+	return u
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *OrderUpsert) SetUpdateAt(v uint32) *OrderUpsert {
+	u.Set(order.FieldUpdateAt, v)
+	return u
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUpdateAt() *OrderUpsert {
+	u.SetExcluded(order.FieldUpdateAt)
+	return u
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (u *OrderUpsert) SetDeleteAt(v uint32) *OrderUpsert {
+	u.Set(order.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateDeleteAt() *OrderUpsert {
+	u.SetExcluded(order.FieldDeleteAt)
+	return u
+}
+
+// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Order.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(order.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *OrderUpsertOne) UpdateNewValues() *OrderUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(order.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//  client.Order.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
+func (u *OrderUpsertOne) Ignore() *OrderUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *OrderUpsertOne) DoNothing() *OrderUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the OrderCreate.OnConflict
+// documentation for more info.
+func (u *OrderUpsertOne) Update(set func(*OrderUpsert)) *OrderUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&OrderUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *OrderUpsertOne) SetGoodID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateGoodID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateGoodID()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *OrderUpsertOne) SetAppID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateAppID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *OrderUpsertOne) SetUserID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUserID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// SetUnits sets the "units" field.
+func (u *OrderUpsertOne) SetUnits(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUnits(v)
+	})
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUnits() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUnits()
+	})
+}
+
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsertOne) SetDiscountCouponID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetDiscountCouponID(v)
+	})
+}
+
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateDiscountCouponID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateDiscountCouponID()
+	})
+}
+
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsertOne) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUserSpecialReductionID(v)
+	})
+}
+
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUserSpecialReductionID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUserSpecialReductionID()
+	})
+}
+
+// SetStart sets the "start" field.
+func (u *OrderUpsertOne) SetStart(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetStart(v)
+	})
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateStart() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateStart()
+	})
+}
+
+// SetEnd sets the "end" field.
+func (u *OrderUpsertOne) SetEnd(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetEnd(v)
+	})
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateEnd() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateEnd()
+	})
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (u *OrderUpsertOne) SetCouponID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponID(v)
+	})
+}
+
+// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateCouponID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponID()
+	})
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *OrderUpsertOne) SetCreateAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCreateAt(v)
+	})
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateCreateAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCreateAt()
+	})
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *OrderUpsertOne) SetUpdateAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUpdateAt(v)
+	})
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUpdateAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUpdateAt()
+	})
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (u *OrderUpsertOne) SetDeleteAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetDeleteAt(v)
+	})
+}
+
+// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateDeleteAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateDeleteAt()
+	})
+}
+
+// Exec executes the query.
+func (u *OrderUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for OrderCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *OrderUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *OrderUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: OrderUpsertOne.ID is not supported by MySQL driver. Use OrderUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *OrderUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // OrderCreateBulk is the builder for creating many Order entities in bulk.
 type OrderCreateBulk struct {
 	config
 	builders []*OrderCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Order entities in the database.
@@ -410,6 +866,7 @@ func (ocb *OrderCreateBulk) Save(ctx context.Context) ([]*Order, error) {
 					_, err = mutators[i+1].Mutate(root, ocb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = ocb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, ocb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -456,6 +913,290 @@ func (ocb *OrderCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (ocb *OrderCreateBulk) ExecX(ctx context.Context) {
 	if err := ocb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Order.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.OrderUpsert) {
+//			SetGoodID(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (ocb *OrderCreateBulk) OnConflict(opts ...sql.ConflictOption) *OrderUpsertBulk {
+	ocb.conflict = opts
+	return &OrderUpsertBulk{
+		create: ocb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Order.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (ocb *OrderCreateBulk) OnConflictColumns(columns ...string) *OrderUpsertBulk {
+	ocb.conflict = append(ocb.conflict, sql.ConflictColumns(columns...))
+	return &OrderUpsertBulk{
+		create: ocb,
+	}
+}
+
+// OrderUpsertBulk is the builder for "upsert"-ing
+// a bulk of Order nodes.
+type OrderUpsertBulk struct {
+	create *OrderCreateBulk
+}
+
+// UpdateNewValues updates the fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Order.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(order.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *OrderUpsertBulk) UpdateNewValues() *OrderUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(order.FieldID)
+				return
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Order.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+//
+func (u *OrderUpsertBulk) Ignore() *OrderUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *OrderUpsertBulk) DoNothing() *OrderUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the OrderCreateBulk.OnConflict
+// documentation for more info.
+func (u *OrderUpsertBulk) Update(set func(*OrderUpsert)) *OrderUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&OrderUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *OrderUpsertBulk) SetGoodID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateGoodID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateGoodID()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *OrderUpsertBulk) SetAppID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateAppID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *OrderUpsertBulk) SetUserID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUserID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// SetUnits sets the "units" field.
+func (u *OrderUpsertBulk) SetUnits(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUnits(v)
+	})
+}
+
+// UpdateUnits sets the "units" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUnits() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUnits()
+	})
+}
+
+// SetDiscountCouponID sets the "discount_coupon_id" field.
+func (u *OrderUpsertBulk) SetDiscountCouponID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetDiscountCouponID(v)
+	})
+}
+
+// UpdateDiscountCouponID sets the "discount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateDiscountCouponID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateDiscountCouponID()
+	})
+}
+
+// SetUserSpecialReductionID sets the "user_special_reduction_id" field.
+func (u *OrderUpsertBulk) SetUserSpecialReductionID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUserSpecialReductionID(v)
+	})
+}
+
+// UpdateUserSpecialReductionID sets the "user_special_reduction_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUserSpecialReductionID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUserSpecialReductionID()
+	})
+}
+
+// SetStart sets the "start" field.
+func (u *OrderUpsertBulk) SetStart(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetStart(v)
+	})
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateStart() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateStart()
+	})
+}
+
+// SetEnd sets the "end" field.
+func (u *OrderUpsertBulk) SetEnd(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetEnd(v)
+	})
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateEnd() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateEnd()
+	})
+}
+
+// SetCouponID sets the "coupon_id" field.
+func (u *OrderUpsertBulk) SetCouponID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponID(v)
+	})
+}
+
+// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateCouponID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponID()
+	})
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *OrderUpsertBulk) SetCreateAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCreateAt(v)
+	})
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateCreateAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCreateAt()
+	})
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *OrderUpsertBulk) SetUpdateAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUpdateAt(v)
+	})
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUpdateAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUpdateAt()
+	})
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (u *OrderUpsertBulk) SetDeleteAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetDeleteAt(v)
+	})
+}
+
+// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateDeleteAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateDeleteAt()
+	})
+}
+
+// Exec executes the query.
+func (u *OrderUpsertBulk) Exec(ctx context.Context) error {
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the OrderCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for OrderCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *OrderUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
