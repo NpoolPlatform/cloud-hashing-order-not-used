@@ -19,7 +19,7 @@ func (s *Server) CreateOrder(ctx context.Context, in *npool.CreateOrderRequest) 
 	resp, err := order.Create(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("create order error: %w", err)
-		return &npool.CreateOrderResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.CreateOrderResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -28,7 +28,7 @@ func (s *Server) GetOrder(ctx context.Context, in *npool.GetOrderRequest) (*npoo
 	resp, err := order.Get(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get order error: %w", err)
-		return &npool.GetOrderResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrderResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -37,7 +37,7 @@ func (s *Server) GetOrdersByAppUser(ctx context.Context, in *npool.GetOrdersByAp
 	resp, err := order.GetByAppUser(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders by app user error: %w", err)
-		return &npool.GetOrdersByAppUserResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersByAppUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -46,7 +46,7 @@ func (s *Server) GetOrdersByApp(ctx context.Context, in *npool.GetOrdersByAppReq
 	resp, err := order.GetByApp(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders by app error: %w", err)
-		return &npool.GetOrdersByAppResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersByAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -55,7 +55,7 @@ func (s *Server) GetOrdersByGood(ctx context.Context, in *npool.GetOrdersByGoodR
 	resp, err := order.GetByGood(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders by good error: %w", err)
-		return &npool.GetOrdersByGoodResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersByGoodResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -64,7 +64,7 @@ func (s *Server) GetOrderDetail(ctx context.Context, in *npool.GetOrderDetailReq
 	resp, err := mw.Get(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get order error: %w", err)
-		return &npool.GetOrderDetailResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrderDetailResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -73,7 +73,7 @@ func (s *Server) GetOrdersDetailByAppUser(ctx context.Context, in *npool.GetOrde
 	resp, err := mw.GetByAppUser(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders detail by app user error: %w", err)
-		return &npool.GetOrdersDetailByAppUserResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersDetailByAppUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -82,7 +82,7 @@ func (s *Server) GetOrdersDetailByApp(ctx context.Context, in *npool.GetOrdersDe
 	resp, err := mw.GetByApp(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders detail by app error: %w", err)
-		return &npool.GetOrdersDetailByAppResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersDetailByAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
@@ -91,7 +91,7 @@ func (s *Server) GetOrdersDetailByGood(ctx context.Context, in *npool.GetOrdersD
 	resp, err := mw.GetByGood(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("get orders detail by good error: %w", err)
-		return &npool.GetOrdersDetailByGoodResponse{}, status.Error(codes.Internal, "internal server error")
+		return &npool.GetOrdersDetailByGoodResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
