@@ -12,7 +12,7 @@ import (
 
 	billingpb "github.com/NpoolPlatform/cloud-hashing-billing/message/npool"
 	coininfopb "github.com/NpoolPlatform/message/npool/coininfo"
-	tradingpb "github.com/NpoolPlatform/message/npool/trading"
+	sphinxproxypb "github.com/NpoolPlatform/message/npool/sphinxproxy"
 )
 
 func watchPaymentState(ctx context.Context) {
@@ -39,11 +39,9 @@ func watchPaymentState(ctx context.Context) {
 			continue
 		}
 
-		balance, err := grpc2.GetWalletBalance(ctx, &tradingpb.GetWalletBalanceRequest{
-			Info: &tradingpb.EntAccount{
-				CoinName: coinInfo.Info.Name,
-				Address:  account.Info.Address,
-			},
+		balance, err := grpc2.GetBalance(ctx, &sphinxproxypb.GetBalanceRequest{
+			Name:    coinInfo.Info.Name,
+			Address: account.Info.Address,
 		})
 		if err != nil {
 			logger.Sugar().Errorf("fail to get wallet balance: %v", err)
@@ -51,9 +49,9 @@ func watchPaymentState(ctx context.Context) {
 		}
 
 		logger.Sugar().Infof("payment %v checking coin %v balance %v start amount %v pay amount %v",
-			pay.ID, coinInfo.Info.Name, balance.AmountFloat64, pay.StartAmount, pay.Amount)
+			pay.ID, coinInfo.Info.Name, balance.Info.Balance, pay.StartAmount, pay.Amount)
 
-		if balance.AmountFloat64-pay.StartAmount > pay.Amount {
+		if balance.Info.Balance-pay.StartAmount > pay.Amount {
 			pay.State = "done"
 			_, err := payment.Update(ctx, &npool.UpdatePaymentRequest{
 				Info: pay,

@@ -8,8 +8,8 @@ import (
 	coininfopb "github.com/NpoolPlatform/message/npool/coininfo"
 	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const" //nolint
 
-	tradingpb "github.com/NpoolPlatform/message/npool/trading"
-	tradingconst "github.com/NpoolPlatform/sphinx-service/pkg/message/const" //nolint
+	sphinxproxypb "github.com/NpoolPlatform/message/npool/sphinxproxy"
+	sphinxproxyconst "github.com/NpoolPlatform/sphinx-proxy/pkg/message/const" //nolint
 
 	billingpb "github.com/NpoolPlatform/cloud-hashing-billing/message/npool"
 	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
@@ -29,14 +29,14 @@ func GetCoinInfo(ctx context.Context, in *coininfopb.GetCoinInfoRequest) (*coini
 
 //--------------------------------------------------------------------------------------------------------------------------
 
-func GetWalletBalance(ctx context.Context, in *tradingpb.GetWalletBalanceRequest) (*tradingpb.GetWalletBalanceResponse, error) {
-	conn, err := grpc2.GetGRPCConn(tradingconst.ServiceName, grpc2.GRPCTAG)
+func GetBalance(ctx context.Context, in *sphinxproxypb.GetBalanceRequest) (*sphinxproxypb.GetBalanceResponse, error) {
+	conn, err := grpc2.GetGRPCConn(sphinxproxyconst.ServiceName, grpc2.GRPCTAG)
 	if err != nil {
-		return nil, xerrors.Errorf("fail get trading connection: %v", err)
+		return nil, xerrors.Errorf("fail get sphinxproxy connection: %v", err)
 	}
 
-	cli := tradingpb.NewTradingClient(conn)
-	return cli.GetWalletBalance(ctx, in)
+	cli := sphinxproxypb.NewSphinxProxyClient(conn)
+	return cli.GetBalance(ctx, in)
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
