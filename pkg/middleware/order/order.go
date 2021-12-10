@@ -3,6 +3,8 @@ package order
 import (
 	"context"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+
 	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/compensate"  //nolint
@@ -42,25 +44,37 @@ func constructOrderDetail(
 }
 
 func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail, error) {
+	var paymentInfo *npool.Payment
+
 	goodPayment, err := payment.GetByOrder(ctx, &npool.GetPaymentByOrderRequest{
 		OrderID: info.ID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("cannot find payment for order: %v", err)
+		logger.Sugar().Warnf("cannot find payment for order: %v", err)
+	} else {
+		paymentInfo = goodPayment.Info
 	}
+
+	var goodPayingInfo *npool.GoodPaying
 
 	goodPaying, err := goodpaying.GetByOrder(ctx, &npool.GetGoodPayingByOrderRequest{
 		OrderID: info.ID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("cannot find good paying for order: %v", err)
+		logger.Sugar().Warnf("cannot find good paying for order: %v", err)
+	} else {
+		goodPayingInfo = goodPaying.Info
 	}
+
+	gasPayingInfos := []*npool.GasPaying{}
 
 	gasPayings, err := gaspaying.GetByOrder(ctx, &npool.GetGasPayingsByOrderRequest{
 		OrderID: info.ID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("cannot find gas paying for order: %v", err)
+		logger.Sugar().Warnf("cannot find gas paying for order: %v", err)
+	} else {
+		gasPayingInfos = gasPayings.Infos
 	}
 
 	compensates, err := compensate.GetByOrder(ctx, &npool.GetCompensatesByOrderRequest{
@@ -79,11 +93,11 @@ func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail,
 
 	return constructOrderDetail(
 		info,
-		goodPaying.Info,
-		gasPayings.Infos,
+		goodPayingInfo,
+		gasPayingInfos,
 		compensates.Infos,
 		outOfGases.Infos,
-		goodPayment.Info), nil
+		paymentInfo), nil
 }
 
 func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderDetailResponse, error) {
