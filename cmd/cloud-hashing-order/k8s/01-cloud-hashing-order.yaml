@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: cloud-hashing-order
-        image: entropypool/cloud-hashing-order:latest
+        image: uhub.service.ucloud.cn/entropypool/cloud-hashing-order:latest
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
