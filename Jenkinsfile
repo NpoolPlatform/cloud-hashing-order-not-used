@@ -319,6 +319,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/cloud-hashing-order:latest/cloud-hashing-order:$tag/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -341,6 +342,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/cloud-hashing-order:latest/cloud-hashing-order:$tag/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
