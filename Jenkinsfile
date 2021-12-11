@@ -302,6 +302,7 @@ pipeline {
         expression { TARGET_ENV == 'development' }
       }
       steps {
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/cloud-hashing-order/k8s/01-cloud-hashing-order.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
