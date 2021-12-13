@@ -120,12 +120,15 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 	if err != nil {
 		return nil, xerrors.Errorf("fail query good paying: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty good paying")
+	
+	var pay *npool.Payment
+	for _, info := range infos {
+		pay = dbRowToPayment(info)
+		break
 	}
 
 	return &npool.GetPaymentByOrderResponse{
-		Info: dbRowToPayment(infos[0]),
+		Info: pay,
 	}, nil
 }
 
