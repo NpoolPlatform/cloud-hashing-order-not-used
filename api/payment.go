@@ -23,6 +23,15 @@ func (s *Server) CreatePayment(ctx context.Context, in *npool.CreatePaymentReque
 	return resp, nil
 }
 
+func (s *Server) GetPayment(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentResponse, error) {
+	resp, err := payment.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get payment error: %w", err)
+		return &npool.GetPaymentResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) UpdatePayment(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdatePaymentResponse, error) {
 	resp, err := payment.Update(ctx, in)
 	if err != nil {
