@@ -102,6 +102,36 @@ func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdateP
 	}, nil
 }
 
+func Get(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentResponse, error) {
+	id, err := uuid.Parse(in.GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid id: %v", err)
+	}
+
+	infos, err := db.Client().
+		Payment.
+		Query().
+		Where(
+			payment.And(
+				payment.ID(id),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query payment: %v", err)
+	}
+
+	var pay *npool.Payment
+	for _, info := range infos {
+		pay = dbRowToPayment(info)
+		break
+	}
+
+	return &npool.GetPaymentResponse{
+		Info: pay,
+	}, nil
+}
+
 func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool.GetPaymentByOrderResponse, error) {
 	orderID, err := uuid.Parse(in.GetOrderID())
 	if err != nil {
@@ -118,7 +148,7 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query good paying: %v", err)
+		return nil, xerrors.Errorf("fail query payment by order: %v", err)
 	}
 
 	var pay *npool.Payment

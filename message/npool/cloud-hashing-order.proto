@@ -324,7 +324,7 @@ message CreatePaymentResponse {
 }
 
 message GetPaymentRequest {
-    string OrderID = 1;
+    string ID = 1;
 }
 
 message GetPaymentResponse {
