@@ -112,6 +112,12 @@ service CloudHashingOrder {
             body: "*"
         };
     }
+    rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/payment"
+            body: "*"
+        };
+    }
     rpc UpdatePayment(UpdatePaymentRequest) returns (UpdatePaymentResponse) {
         option (google.api.http) = {
             post: "/v1/update/payment"
@@ -315,6 +321,14 @@ message CreatePaymentRequest {
 
 message CreatePaymentResponse {
     Payment Info = 2670;
+}
+
+message GetPaymentRequest {
+    string OrderID = 1;
+}
+
+message GetPaymentResponse {
+    Payment Info = 1;
 }
 
 message UpdatePaymentRequest {

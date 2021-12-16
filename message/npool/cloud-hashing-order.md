@@ -44,6 +44,8 @@
     - [GetOutOfGasesByOrderResponse](#cloud.hashing.order.v1.GetOutOfGasesByOrderResponse)
     - [GetPaymentByOrderRequest](#cloud.hashing.order.v1.GetPaymentByOrderRequest)
     - [GetPaymentByOrderResponse](#cloud.hashing.order.v1.GetPaymentByOrderResponse)
+    - [GetPaymentRequest](#cloud.hashing.order.v1.GetPaymentRequest)
+    - [GetPaymentResponse](#cloud.hashing.order.v1.GetPaymentResponse)
     - [GoodPaying](#cloud.hashing.order.v1.GoodPaying)
     - [Order](#cloud.hashing.order.v1.Order)
     - [OrderDetail](#cloud.hashing.order.v1.OrderDetail)
@@ -676,6 +678,36 @@
 
 
 
+<a name="cloud.hashing.order.v1.GetPaymentRequest"></a>
+
+### GetPaymentRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| OrderID | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="cloud.hashing.order.v1.GetPaymentResponse"></a>
+
+### GetPaymentResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Info | [Payment](#cloud.hashing.order.v1.Payment) |  |  |
+
+
+
+
+
+
 <a name="cloud.hashing.order.v1.GoodPaying"></a>
 
 ### GoodPaying
@@ -861,6 +893,7 @@ Service Name
 | CreateOutOfGas | [CreateOutOfGasRequest](#cloud.hashing.order.v1.CreateOutOfGasRequest) | [CreateOutOfGasResponse](#cloud.hashing.order.v1.CreateOutOfGasResponse) |  |
 | GetOutOfGasesByOrder | [GetOutOfGasesByOrderRequest](#cloud.hashing.order.v1.GetOutOfGasesByOrderRequest) | [GetOutOfGasesByOrderResponse](#cloud.hashing.order.v1.GetOutOfGasesByOrderResponse) |  |
 | CreatePayment | [CreatePaymentRequest](#cloud.hashing.order.v1.CreatePaymentRequest) | [CreatePaymentResponse](#cloud.hashing.order.v1.CreatePaymentResponse) |  |
+| GetPayment | [GetPaymentRequest](#cloud.hashing.order.v1.GetPaymentRequest) | [GetPaymentResponse](#cloud.hashing.order.v1.GetPaymentResponse) |  |
 | UpdatePayment | [UpdatePaymentRequest](#cloud.hashing.order.v1.UpdatePaymentRequest) | [UpdatePaymentResponse](#cloud.hashing.order.v1.UpdatePaymentResponse) |  |
 | GetPaymentByOrder | [GetPaymentByOrderRequest](#cloud.hashing.order.v1.GetPaymentByOrderRequest) | [GetPaymentByOrderResponse](#cloud.hashing.order.v1.GetPaymentByOrderResponse) |  |
 | GetOrdersDetailByAppUser | [GetOrdersDetailByAppUserRequest](#cloud.hashing.order.v1.GetOrdersDetailByAppUserRequest) | [GetOrdersDetailByAppUserResponse](#cloud.hashing.order.v1.GetOrdersDetailByAppUserResponse) |  |
