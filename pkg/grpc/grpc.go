@@ -22,6 +22,7 @@ func GetCoinInfo(ctx context.Context, in *coininfopb.GetCoinInfoRequest) (*coini
 	if err != nil {
 		return nil, xerrors.Errorf("fail get coininfo connection: %v", err)
 	}
+	defer conn.Close()
 
 	cli := coininfopb.NewSphinxCoinInfoClient(conn)
 	return cli.GetCoinInfo(ctx, in)
@@ -34,6 +35,7 @@ func GetBalance(ctx context.Context, in *sphinxproxypb.GetBalanceRequest) (*sphi
 	if err != nil {
 		return nil, xerrors.Errorf("fail get sphinxproxy connection: %v", err)
 	}
+	defer conn.Close()
 
 	cli := sphinxproxypb.NewSphinxProxyClient(conn)
 	return cli.GetBalance(ctx, in)
@@ -46,6 +48,7 @@ func GetBillingAccount(ctx context.Context, in *billingpb.GetCoinAccountRequest)
 	if err != nil {
 		return nil, xerrors.Errorf("fail get billing connection: %v", err)
 	}
+	defer conn.Close()
 
 	cli := billingpb.NewCloudHashingBillingClient(conn)
 	return cli.GetCoinAccount(ctx, in)
