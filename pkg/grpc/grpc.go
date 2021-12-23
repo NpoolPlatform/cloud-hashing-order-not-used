@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
@@ -17,6 +18,10 @@ import (
 	"golang.org/x/xerrors"
 )
 
+const (
+	grpcTimeout = 5 * time.Second
+)
+
 func GetCoinInfo(ctx context.Context, in *coininfopb.GetCoinInfoRequest) (*coininfopb.GetCoinInfoResponse, error) {
 	conn, err := grpc2.GetGRPCConn(coininfoconst.ServiceName, grpc2.GRPCTAG)
 	if err != nil {
@@ -25,6 +30,10 @@ func GetCoinInfo(ctx context.Context, in *coininfopb.GetCoinInfoRequest) (*coini
 	defer conn.Close()
 
 	cli := coininfopb.NewSphinxCoinInfoClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
 	return cli.GetCoinInfo(ctx, in)
 }
 
@@ -38,6 +47,10 @@ func GetBalance(ctx context.Context, in *sphinxproxypb.GetBalanceRequest) (*sphi
 	defer conn.Close()
 
 	cli := sphinxproxypb.NewSphinxProxyClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
 	return cli.GetBalance(ctx, in)
 }
 
@@ -51,5 +64,9 @@ func GetBillingAccount(ctx context.Context, in *billingpb.GetCoinAccountRequest)
 	defer conn.Close()
 
 	cli := billingpb.NewCloudHashingBillingClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
 	return cli.GetCoinAccount(ctx, in)
 }
