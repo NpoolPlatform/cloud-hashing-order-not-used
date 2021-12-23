@@ -35,7 +35,12 @@ func Create(ctx context.Context, in *npool.CreateOutOfGasRequest) (*npool.Create
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		OutOfGas.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
@@ -57,7 +62,12 @@ func GetByOrder(ctx context.Context, in *npool.GetOutOfGasesByOrderRequest) (*np
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		OutOfGas.
 		Query().
 		Where(
