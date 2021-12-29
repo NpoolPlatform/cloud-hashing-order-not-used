@@ -63,7 +63,6 @@ func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.Dial
 func msgSender() {
 	id := 0
 	for {
-		logger.Sugar().Infof("send example")
 		err := msgsrv.PublishExample(&msg.Example{
 			ID:      id,
 			Example: "hello world",

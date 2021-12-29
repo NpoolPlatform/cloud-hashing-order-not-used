@@ -50,7 +50,12 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 
 	myPtid := uuid.UUID{}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		Payment.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
@@ -86,7 +91,12 @@ func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdateP
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		Payment.
 		UpdateOneID(id).
 		SetState(payment.State(in.GetInfo().GetState())).
@@ -108,7 +118,12 @@ func Get(ctx context.Context, in *npool.GetPaymentRequest) (*npool.GetPaymentRes
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Payment.
 		Query().
 		Where(
@@ -138,7 +153,12 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Payment.
 		Query().
 		Where(
@@ -167,7 +187,12 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 func GetByState(ctx context.Context, state string) ([]*npool.Payment, error) {
 	payState := payment.State(state)
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Payment.
 		Query().
 		Where(

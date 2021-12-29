@@ -37,7 +37,12 @@ func Create(ctx context.Context, in *npool.CreateGoodPayingRequest) (*npool.Crea
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		GoodPaying.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
@@ -58,7 +63,12 @@ func GetByOrder(ctx context.Context, in *npool.GetGoodPayingByOrderRequest) (*np
 		return nil, xerrors.Errorf("invalid order id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		GoodPaying.
 		Query().
 		Where(

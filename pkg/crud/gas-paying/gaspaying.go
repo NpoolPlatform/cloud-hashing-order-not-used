@@ -42,7 +42,12 @@ func Create(ctx context.Context, in *npool.CreateGasPayingRequest) (*npool.Creat
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
 	}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		GasPaying.
 		Create().
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
@@ -65,7 +70,12 @@ func GetByOrder(ctx context.Context, in *npool.GetGasPayingsByOrderRequest) (*np
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		GasPaying.
 		Query().
 		Where(

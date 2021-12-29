@@ -62,7 +62,12 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		userSpecialReductionID = uuid.UUID{}
 	}
 
-	info, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
 		Order.
 		Create().
 		SetGoodID(uuid.MustParse(in.GetInfo().GetGoodID())).
@@ -90,7 +95,12 @@ func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderRespons
 		return nil, xerrors.Errorf("invalid id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Order.
 		Query().
 		Where(
@@ -122,7 +132,12 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*np
 		return nil, xerrors.Errorf("invalid user id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Order.
 		Query().
 		Where(
@@ -152,7 +167,12 @@ func GetByApp(ctx context.Context, in *npool.GetOrdersByAppRequest) (*npool.GetO
 		return nil, xerrors.Errorf("invalid app id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Order.
 		Query().
 		Where(
@@ -181,7 +201,12 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.Ge
 		return nil, xerrors.Errorf("invalid good id: %v", err)
 	}
 
-	infos, err := db.Client().
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
 		Order.
 		Query().
 		Where(
