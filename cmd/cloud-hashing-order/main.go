@@ -15,7 +15,6 @@ import (
 
 	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
 	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"      //nolint
-	tradingconst "github.com/NpoolPlatform/sphinx-service/pkg/message/const"        //nolint
 
 	cli "github.com/urfave/cli/v2"
 )
@@ -41,7 +40,6 @@ func main() {
 		rabbitmqconst.RabbitMQServiceName,
 		redisconst.RedisServiceName,
 		coininfoconst.ServiceName,
-		tradingconst.ServiceName,
 		billingconst.ServiceName)
 	if err != nil {
 		logger.Sugar().Errorf("fail to create %v: %v", serviceName, err)
