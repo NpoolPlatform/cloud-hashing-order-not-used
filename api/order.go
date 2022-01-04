@@ -78,6 +78,15 @@ func (s *Server) GetOrdersDetailByAppUser(ctx context.Context, in *npool.GetOrde
 	return resp, nil
 }
 
+func (s *Server) GetOrdersShortDetailByAppUser(ctx context.Context, in *npool.GetOrdersShortDetailByAppUserRequest) (*npool.GetOrdersShortDetailByAppUserResponse, error) {
+	resp, err := mw.GetShortByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get orders short detail by app user error: %+w", err)
+		return &npool.GetOrdersShortDetailByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetOrdersDetailByApp(ctx context.Context, in *npool.GetOrdersDetailByAppRequest) (*npool.GetOrdersDetailByAppResponse, error) {
 	resp, err := mw.GetByApp(ctx, in)
 	if err != nil {

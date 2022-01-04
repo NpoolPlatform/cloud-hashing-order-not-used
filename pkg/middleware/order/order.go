@@ -43,7 +43,7 @@ func constructOrderDetail(
 	}
 }
 
-func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail, error) {
+func getOrderDetail(ctx context.Context, info *npool.Order, short bool) (*npool.OrderDetail, error) {
 	var paymentInfo *npool.Payment
 
 	goodPayment, err := payment.GetByOrder(ctx, &npool.GetPaymentByOrderRequest{
@@ -57,46 +57,60 @@ func getOrderDetail(ctx context.Context, info *npool.Order) (*npool.OrderDetail,
 
 	var goodPayingInfo *npool.GoodPaying
 
-	goodPaying, err := goodpaying.GetByOrder(ctx, &npool.GetGoodPayingByOrderRequest{
-		OrderID: info.ID,
-	})
-	if err != nil {
-		logger.Sugar().Warnf("cannot find good paying for order: %v", err)
-	} else {
-		goodPayingInfo = goodPaying.Info
+	if !short {
+		goodPaying, err := goodpaying.GetByOrder(ctx, &npool.GetGoodPayingByOrderRequest{
+			OrderID: info.ID,
+		})
+		if err != nil {
+			logger.Sugar().Warnf("cannot find good paying for order: %v", err)
+		} else {
+			goodPayingInfo = goodPaying.Info
+		}
 	}
 
 	gasPayingInfos := []*npool.GasPaying{}
 
-	gasPayings, err := gaspaying.GetByOrder(ctx, &npool.GetGasPayingsByOrderRequest{
-		OrderID: info.ID,
-	})
-	if err != nil {
-		logger.Sugar().Warnf("cannot find gas paying for order: %v", err)
-	} else {
-		gasPayingInfos = gasPayings.Infos
+	if !short {
+		gasPayings, err := gaspaying.GetByOrder(ctx, &npool.GetGasPayingsByOrderRequest{
+			OrderID: info.ID,
+		})
+		if err != nil {
+			logger.Sugar().Warnf("cannot find gas paying for order: %v", err)
+		} else {
+			gasPayingInfos = gasPayings.Infos
+		}
 	}
 
-	compensates, err := compensate.GetByOrder(ctx, &npool.GetCompensatesByOrderRequest{
-		OrderID: info.ID,
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("fail to get compensates for order: %v", err)
+	var compensateInfos []*npool.Compensate
+
+	if !short {
+		compensates, err := compensate.GetByOrder(ctx, &npool.GetCompensatesByOrderRequest{
+			OrderID: info.ID,
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("fail to get compensates for order: %v", err)
+		}
+		compensateInfos = compensates.Infos
 	}
 
-	outOfGases, err := outofgas.GetByOrder(ctx, &npool.GetOutOfGasesByOrderRequest{
-		OrderID: info.ID,
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("fail to get out of gas for order: %v", err)
+	var outOfGasInfos []*npool.OutOfGas
+
+	if !short {
+		outOfGases, err := outofgas.GetByOrder(ctx, &npool.GetOutOfGasesByOrderRequest{
+			OrderID: info.ID,
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("fail to get out of gas for order: %v", err)
+		}
+		outOfGasInfos = outOfGases.Infos
 	}
 
 	return constructOrderDetail(
 		info,
 		goodPayingInfo,
 		gasPayingInfos,
-		compensates.Infos,
-		outOfGases.Infos,
+		compensateInfos,
+		outOfGasInfos,
 		paymentInfo), nil
 }
 
@@ -108,7 +122,7 @@ func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderD
 		return nil, xerrors.Errorf("fail get order: %v", err)
 	}
 
-	detail, err := getOrderDetail(ctx, info.Info)
+	detail, err := getOrderDetail(ctx, info.Info, false)
 	if err != nil {
 		return nil, xerrors.Errorf("fail get order detail: %v", err)
 	}
@@ -118,10 +132,10 @@ func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderD
 	}, nil
 }
 
-func getOrdersDetail(ctx context.Context, infos []*npool.Order) ([]*npool.OrderDetail, error) {
+func getOrdersDetail(ctx context.Context, infos []*npool.Order, short bool) ([]*npool.OrderDetail, error) {
 	details := []*npool.OrderDetail{}
 	for _, info := range infos {
-		detail, err := getOrderDetail(ctx, info)
+		detail, err := getOrderDetail(ctx, info, short)
 		if err != nil {
 			return nil, xerrors.Errorf("fail get order detail: %v", err)
 		}
@@ -139,12 +153,31 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersDetailByAppUserRequest
 		return nil, xerrors.Errorf("fail get orders by app user: %v", err)
 	}
 
-	details, err := getOrdersDetail(ctx, resp.Infos)
+	details, err := getOrdersDetail(ctx, resp.Infos, false)
 	if err != nil {
 		return nil, xerrors.Errorf("fail get orders detail: %v", err)
 	}
 
 	return &npool.GetOrdersDetailByAppUserResponse{
+		Details: details,
+	}, nil
+}
+
+func GetShortByAppUser(ctx context.Context, in *npool.GetOrdersShortDetailByAppUserRequest) (*npool.GetOrdersShortDetailByAppUserResponse, error) {
+	resp, err := order.GetByAppUser(ctx, &npool.GetOrdersByAppUserRequest{
+		AppID:  in.GetAppID(),
+		UserID: in.GetUserID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders short by app user: %v", err)
+	}
+
+	details, err := getOrdersDetail(ctx, resp.Infos, true)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders detail: %v", err)
+	}
+
+	return &npool.GetOrdersShortDetailByAppUserResponse{
 		Details: details,
 	}, nil
 }
@@ -157,7 +190,7 @@ func GetByApp(ctx context.Context, in *npool.GetOrdersDetailByAppRequest) (*npoo
 		return nil, xerrors.Errorf("fail get orders by app: %v", err)
 	}
 
-	details, err := getOrdersDetail(ctx, resp.Infos)
+	details, err := getOrdersDetail(ctx, resp.Infos, false)
 	if err != nil {
 		return nil, xerrors.Errorf("fail get orders detail: %v", err)
 	}
@@ -175,7 +208,7 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersDetailByGoodRequest) (*np
 		return nil, xerrors.Errorf("fail get orders by app: %v", err)
 	}
 
-	details, err := getOrdersDetail(ctx, resp.Infos)
+	details, err := getOrdersDetail(ctx, resp.Infos, false)
 	if err != nil {
 		return nil, xerrors.Errorf("fail get orders detail: %v", err)
 	}

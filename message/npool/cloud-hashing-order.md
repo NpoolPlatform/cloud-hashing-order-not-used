@@ -40,6 +40,8 @@
     - [GetOrdersDetailByAppUserResponse](#cloud.hashing.order.v1.GetOrdersDetailByAppUserResponse)
     - [GetOrdersDetailByGoodRequest](#cloud.hashing.order.v1.GetOrdersDetailByGoodRequest)
     - [GetOrdersDetailByGoodResponse](#cloud.hashing.order.v1.GetOrdersDetailByGoodResponse)
+    - [GetOrdersShortDetailByAppUserRequest](#cloud.hashing.order.v1.GetOrdersShortDetailByAppUserRequest)
+    - [GetOrdersShortDetailByAppUserResponse](#cloud.hashing.order.v1.GetOrdersShortDetailByAppUserResponse)
     - [GetOutOfGasesByOrderRequest](#cloud.hashing.order.v1.GetOutOfGasesByOrderRequest)
     - [GetOutOfGasesByOrderResponse](#cloud.hashing.order.v1.GetOutOfGasesByOrderResponse)
     - [GetPaymentByOrderRequest](#cloud.hashing.order.v1.GetPaymentByOrderRequest)
@@ -618,6 +620,37 @@
 
 
 
+<a name="cloud.hashing.order.v1.GetOrdersShortDetailByAppUserRequest"></a>
+
+### GetOrdersShortDetailByAppUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| AppID | [string](#string) |  |  |
+| UserID | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="cloud.hashing.order.v1.GetOrdersShortDetailByAppUserResponse"></a>
+
+### GetOrdersShortDetailByAppUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Details | [OrderDetail](#cloud.hashing.order.v1.OrderDetail) | repeated |  |
+
+
+
+
+
+
 <a name="cloud.hashing.order.v1.GetOutOfGasesByOrderRequest"></a>
 
 ### GetOutOfGasesByOrderRequest
@@ -897,6 +930,7 @@ Service Name
 | UpdatePayment | [UpdatePaymentRequest](#cloud.hashing.order.v1.UpdatePaymentRequest) | [UpdatePaymentResponse](#cloud.hashing.order.v1.UpdatePaymentResponse) |  |
 | GetPaymentByOrder | [GetPaymentByOrderRequest](#cloud.hashing.order.v1.GetPaymentByOrderRequest) | [GetPaymentByOrderResponse](#cloud.hashing.order.v1.GetPaymentByOrderResponse) |  |
 | GetOrdersDetailByAppUser | [GetOrdersDetailByAppUserRequest](#cloud.hashing.order.v1.GetOrdersDetailByAppUserRequest) | [GetOrdersDetailByAppUserResponse](#cloud.hashing.order.v1.GetOrdersDetailByAppUserResponse) |  |
+| GetOrdersShortDetailByAppUser | [GetOrdersShortDetailByAppUserRequest](#cloud.hashing.order.v1.GetOrdersShortDetailByAppUserRequest) | [GetOrdersShortDetailByAppUserResponse](#cloud.hashing.order.v1.GetOrdersShortDetailByAppUserResponse) |  |
 | GetOrdersDetailByApp | [GetOrdersDetailByAppRequest](#cloud.hashing.order.v1.GetOrdersDetailByAppRequest) | [GetOrdersDetailByAppResponse](#cloud.hashing.order.v1.GetOrdersDetailByAppResponse) |  |
 | GetOrdersDetailByGood | [GetOrdersDetailByGoodRequest](#cloud.hashing.order.v1.GetOrdersDetailByGoodRequest) | [GetOrdersDetailByGoodResponse](#cloud.hashing.order.v1.GetOrdersDetailByGoodResponse) |  |
 

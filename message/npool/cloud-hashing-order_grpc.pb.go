@@ -40,6 +40,7 @@ type CloudHashingOrderClient interface {
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
 	GetPaymentByOrder(ctx context.Context, in *GetPaymentByOrderRequest, opts ...grpc.CallOption) (*GetPaymentByOrderResponse, error)
 	GetOrdersDetailByAppUser(ctx context.Context, in *GetOrdersDetailByAppUserRequest, opts ...grpc.CallOption) (*GetOrdersDetailByAppUserResponse, error)
+	GetOrdersShortDetailByAppUser(ctx context.Context, in *GetOrdersShortDetailByAppUserRequest, opts ...grpc.CallOption) (*GetOrdersShortDetailByAppUserResponse, error)
 	GetOrdersDetailByApp(ctx context.Context, in *GetOrdersDetailByAppRequest, opts ...grpc.CallOption) (*GetOrdersDetailByAppResponse, error)
 	GetOrdersDetailByGood(ctx context.Context, in *GetOrdersDetailByGoodRequest, opts ...grpc.CallOption) (*GetOrdersDetailByGoodResponse, error)
 }
@@ -232,6 +233,15 @@ func (c *cloudHashingOrderClient) GetOrdersDetailByAppUser(ctx context.Context, 
 	return out, nil
 }
 
+func (c *cloudHashingOrderClient) GetOrdersShortDetailByAppUser(ctx context.Context, in *GetOrdersShortDetailByAppUserRequest, opts ...grpc.CallOption) (*GetOrdersShortDetailByAppUserResponse, error) {
+	out := new(GetOrdersShortDetailByAppUserResponse)
+	err := c.cc.Invoke(ctx, "/cloud.hashing.order.v1.CloudHashingOrder/GetOrdersShortDetailByAppUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *cloudHashingOrderClient) GetOrdersDetailByApp(ctx context.Context, in *GetOrdersDetailByAppRequest, opts ...grpc.CallOption) (*GetOrdersDetailByAppResponse, error) {
 	out := new(GetOrdersDetailByAppResponse)
 	err := c.cc.Invoke(ctx, "/cloud.hashing.order.v1.CloudHashingOrder/GetOrdersDetailByApp", in, out, opts...)
@@ -275,6 +285,7 @@ type CloudHashingOrderServer interface {
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
 	GetPaymentByOrder(context.Context, *GetPaymentByOrderRequest) (*GetPaymentByOrderResponse, error)
 	GetOrdersDetailByAppUser(context.Context, *GetOrdersDetailByAppUserRequest) (*GetOrdersDetailByAppUserResponse, error)
+	GetOrdersShortDetailByAppUser(context.Context, *GetOrdersShortDetailByAppUserRequest) (*GetOrdersShortDetailByAppUserResponse, error)
 	GetOrdersDetailByApp(context.Context, *GetOrdersDetailByAppRequest) (*GetOrdersDetailByAppResponse, error)
 	GetOrdersDetailByGood(context.Context, *GetOrdersDetailByGoodRequest) (*GetOrdersDetailByGoodResponse, error)
 	mustEmbedUnimplementedCloudHashingOrderServer()
@@ -343,6 +354,9 @@ func (UnimplementedCloudHashingOrderServer) GetPaymentByOrder(context.Context, *
 }
 func (UnimplementedCloudHashingOrderServer) GetOrdersDetailByAppUser(context.Context, *GetOrdersDetailByAppUserRequest) (*GetOrdersDetailByAppUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrdersDetailByAppUser not implemented")
+}
+func (UnimplementedCloudHashingOrderServer) GetOrdersShortDetailByAppUser(context.Context, *GetOrdersShortDetailByAppUserRequest) (*GetOrdersShortDetailByAppUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrdersShortDetailByAppUser not implemented")
 }
 func (UnimplementedCloudHashingOrderServer) GetOrdersDetailByApp(context.Context, *GetOrdersDetailByAppRequest) (*GetOrdersDetailByAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrdersDetailByApp not implemented")
@@ -723,6 +737,24 @@ func _CloudHashingOrder_GetOrdersDetailByAppUser_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CloudHashingOrder_GetOrdersShortDetailByAppUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrdersShortDetailByAppUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CloudHashingOrderServer).GetOrdersShortDetailByAppUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cloud.hashing.order.v1.CloudHashingOrder/GetOrdersShortDetailByAppUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CloudHashingOrderServer).GetOrdersShortDetailByAppUser(ctx, req.(*GetOrdersShortDetailByAppUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CloudHashingOrder_GetOrdersDetailByApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetOrdersDetailByAppRequest)
 	if err := dec(in); err != nil {
@@ -845,6 +877,10 @@ var CloudHashingOrder_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrdersDetailByAppUser",
 			Handler:    _CloudHashingOrder_GetOrdersDetailByAppUser_Handler,
+		},
+		{
+			MethodName: "GetOrdersShortDetailByAppUser",
+			Handler:    _CloudHashingOrder_GetOrdersShortDetailByAppUser_Handler,
 		},
 		{
 			MethodName: "GetOrdersDetailByApp",

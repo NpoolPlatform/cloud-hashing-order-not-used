@@ -137,6 +137,12 @@ service CloudHashingOrder {
             body: "*"
         };
     }
+    rpc GetOrdersShortDetailByAppUser(GetOrdersShortDetailByAppUserRequest) returns (GetOrdersShortDetailByAppUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/get/orders/short/detail/by/app/user"
+            body: "*"
+        };
+    }
     rpc GetOrdersDetailByApp(GetOrdersDetailByAppRequest) returns (GetOrdersDetailByAppResponse) {
         option (google.api.http) = {
             post: "/v1/get/orders/detail/by/app"
@@ -379,6 +385,15 @@ message GetOrdersDetailByAppUserRequest {
 }
 
 message GetOrdersDetailByAppUserResponse {
+    repeated OrderDetail Details = 3100;
+}
+
+message GetOrdersShortDetailByAppUserRequest {
+    string AppID = 3000;
+    string UserID = 3001;
+}
+
+message GetOrdersShortDetailByAppUserResponse {
     repeated OrderDetail Details = 3100;
 }
 
