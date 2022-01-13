@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/test-init" //nolint
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/compensate"  //nolint
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/gas-paying"  //nolint

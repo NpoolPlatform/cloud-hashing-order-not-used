@@ -5,8 +5,8 @@ package api
 import (
 	"context"
 
-	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/good-paying" //nolint
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
