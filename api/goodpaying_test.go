@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"

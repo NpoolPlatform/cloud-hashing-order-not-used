@@ -5,7 +5,7 @@ package api
 import (
 	"context"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/order"          //nolint
 	mw "github.com/NpoolPlatform/cloud-hashing-order/pkg/middleware/order" //nolint
 

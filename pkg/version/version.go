@@ -1,7 +1,7 @@
 package version
 
 import (
-	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	cv "github.com/NpoolPlatform/go-service-framework/pkg/version"
 

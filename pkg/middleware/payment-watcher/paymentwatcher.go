@@ -6,11 +6,11 @@ import (
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
-	"github.com/NpoolPlatform/cloud-hashing-order/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/payment"
 	grpc2 "github.com/NpoolPlatform/cloud-hashing-order/pkg/grpc"
 
-	billingpb "github.com/NpoolPlatform/cloud-hashing-billing/message/npool"
+	billingpb "github.com/NpoolPlatform/message/npool/cloud-hashing-billing"
 	coininfopb "github.com/NpoolPlatform/message/npool/coininfo"
 	sphinxproxypb "github.com/NpoolPlatform/message/npool/sphinxproxy"
 )

@@ -12,7 +12,7 @@ import (
 	sphinxproxypb "github.com/NpoolPlatform/message/npool/sphinxproxy"
 	sphinxproxyconst "github.com/NpoolPlatform/sphinx-proxy/pkg/message/const" //nolint
 
-	billingpb "github.com/NpoolPlatform/cloud-hashing-billing/message/npool"
+	billingpb "github.com/NpoolPlatform/message/npool/cloud-hashing-billing"
 	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
 
 	"golang.org/x/xerrors"
