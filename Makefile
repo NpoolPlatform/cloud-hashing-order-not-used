@@ -18,13 +18,9 @@ init:
 
 go.mod:
 	go mod init ${GITREPO}
-	go mod tidy
 
 deps:
-	go get ./...
-	go get github.com/stretchr/testify/assert@v1.7.0
-	go get github.com/go-resty/resty/v2
-	go get entgo.io/ent/cmd/ent
+	go mod tidy
 
 ##@ Verify
 
