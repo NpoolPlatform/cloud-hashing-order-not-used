@@ -20,6 +20,7 @@ go.mod:
 	go mod init ${GITREPO}
 
 deps:
+	go get ./...
 	go mod tidy
 
 ##@ Verify
