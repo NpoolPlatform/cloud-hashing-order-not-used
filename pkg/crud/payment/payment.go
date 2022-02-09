@@ -40,6 +40,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		State:                 string(row.State),
 		ChainTransactionID:    row.ChainTransactionID,
 		PlatformTransactionID: row.PlatformTransactionID.String(),
+		CreateAt:              row.CreateAt,
 	}
 }
 
