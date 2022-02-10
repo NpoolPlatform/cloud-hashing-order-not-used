@@ -40,6 +40,7 @@ func constructOrderDetail(
 		Start:                  info.Start,
 		End:                    info.End,
 		CouponID:               info.CouponID,
+		CreateAt:               info.CreateAt,
 	}
 }
 
