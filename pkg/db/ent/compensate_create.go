@@ -95,6 +95,14 @@ func (cc *CompensateCreate) SetID(u uuid.UUID) *CompensateCreate {
 	return cc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (cc *CompensateCreate) SetNillableID(u *uuid.UUID) *CompensateCreate {
+	if u != nil {
+		cc.SetID(*u)
+	}
+	return cc
+}
+
 // Mutation returns the CompensateMutation object of the builder.
 func (cc *CompensateCreate) Mutation() *CompensateMutation {
 	return cc.mutation
@@ -187,25 +195,25 @@ func (cc *CompensateCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (cc *CompensateCreate) check() error {
 	if _, ok := cc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
+		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "Compensate.order_id"`)}
 	}
 	if _, ok := cc.mutation.Start(); !ok {
-		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "start"`)}
+		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "Compensate.start"`)}
 	}
 	if _, ok := cc.mutation.End(); !ok {
-		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "end"`)}
+		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "Compensate.end"`)}
 	}
 	if _, ok := cc.mutation.Message(); !ok {
-		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "message"`)}
+		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "Compensate.message"`)}
 	}
 	if _, ok := cc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Compensate.create_at"`)}
 	}
 	if _, ok := cc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "update_at"`)}
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "Compensate.update_at"`)}
 	}
 	if _, ok := cc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "delete_at"`)}
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "Compensate.delete_at"`)}
 	}
 	return nil
 }
@@ -219,7 +227,11 @@ func (cc *CompensateCreate) sqlSave(ctx context.Context) (*Compensate, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -238,7 +250,7 @@ func (cc *CompensateCreate) createSpec() (*Compensate, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = cc.conflict
 	if id, ok := cc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := cc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -374,6 +386,12 @@ func (u *CompensateUpsert) UpdateStart() *CompensateUpsert {
 	return u
 }
 
+// AddStart adds v to the "start" field.
+func (u *CompensateUpsert) AddStart(v uint32) *CompensateUpsert {
+	u.Add(compensate.FieldStart, v)
+	return u
+}
+
 // SetEnd sets the "end" field.
 func (u *CompensateUpsert) SetEnd(v uint32) *CompensateUpsert {
 	u.Set(compensate.FieldEnd, v)
@@ -383,6 +401,12 @@ func (u *CompensateUpsert) SetEnd(v uint32) *CompensateUpsert {
 // UpdateEnd sets the "end" field to the value that was provided on create.
 func (u *CompensateUpsert) UpdateEnd() *CompensateUpsert {
 	u.SetExcluded(compensate.FieldEnd)
+	return u
+}
+
+// AddEnd adds v to the "end" field.
+func (u *CompensateUpsert) AddEnd(v uint32) *CompensateUpsert {
+	u.Add(compensate.FieldEnd, v)
 	return u
 }
 
@@ -410,6 +434,12 @@ func (u *CompensateUpsert) UpdateCreateAt() *CompensateUpsert {
 	return u
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *CompensateUpsert) AddCreateAt(v uint32) *CompensateUpsert {
+	u.Add(compensate.FieldCreateAt, v)
+	return u
+}
+
 // SetUpdateAt sets the "update_at" field.
 func (u *CompensateUpsert) SetUpdateAt(v uint32) *CompensateUpsert {
 	u.Set(compensate.FieldUpdateAt, v)
@@ -419,6 +449,12 @@ func (u *CompensateUpsert) SetUpdateAt(v uint32) *CompensateUpsert {
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *CompensateUpsert) UpdateUpdateAt() *CompensateUpsert {
 	u.SetExcluded(compensate.FieldUpdateAt)
+	return u
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *CompensateUpsert) AddUpdateAt(v uint32) *CompensateUpsert {
+	u.Add(compensate.FieldUpdateAt, v)
 	return u
 }
 
@@ -434,7 +470,13 @@ func (u *CompensateUpsert) UpdateDeleteAt() *CompensateUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *CompensateUpsert) AddDeleteAt(v uint32) *CompensateUpsert {
+	u.Add(compensate.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.Compensate.Create().
@@ -505,6 +547,13 @@ func (u *CompensateUpsertOne) SetStart(v uint32) *CompensateUpsertOne {
 	})
 }
 
+// AddStart adds v to the "start" field.
+func (u *CompensateUpsertOne) AddStart(v uint32) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddStart(v)
+	})
+}
+
 // UpdateStart sets the "start" field to the value that was provided on create.
 func (u *CompensateUpsertOne) UpdateStart() *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
@@ -516,6 +565,13 @@ func (u *CompensateUpsertOne) UpdateStart() *CompensateUpsertOne {
 func (u *CompensateUpsertOne) SetEnd(v uint32) *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
 		s.SetEnd(v)
+	})
+}
+
+// AddEnd adds v to the "end" field.
+func (u *CompensateUpsertOne) AddEnd(v uint32) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddEnd(v)
 	})
 }
 
@@ -547,6 +603,13 @@ func (u *CompensateUpsertOne) SetCreateAt(v uint32) *CompensateUpsertOne {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *CompensateUpsertOne) AddCreateAt(v uint32) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *CompensateUpsertOne) UpdateCreateAt() *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
@@ -561,6 +624,13 @@ func (u *CompensateUpsertOne) SetUpdateAt(v uint32) *CompensateUpsertOne {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *CompensateUpsertOne) AddUpdateAt(v uint32) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *CompensateUpsertOne) UpdateUpdateAt() *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
@@ -572,6 +642,13 @@ func (u *CompensateUpsertOne) UpdateUpdateAt() *CompensateUpsertOne {
 func (u *CompensateUpsertOne) SetDeleteAt(v uint32) *CompensateUpsertOne {
 	return u.Update(func(s *CompensateUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *CompensateUpsertOne) AddDeleteAt(v uint32) *CompensateUpsertOne {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
@@ -745,7 +822,7 @@ type CompensateUpsertBulk struct {
 	create *CompensateCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.Compensate.Create().
@@ -819,6 +896,13 @@ func (u *CompensateUpsertBulk) SetStart(v uint32) *CompensateUpsertBulk {
 	})
 }
 
+// AddStart adds v to the "start" field.
+func (u *CompensateUpsertBulk) AddStart(v uint32) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddStart(v)
+	})
+}
+
 // UpdateStart sets the "start" field to the value that was provided on create.
 func (u *CompensateUpsertBulk) UpdateStart() *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
@@ -830,6 +914,13 @@ func (u *CompensateUpsertBulk) UpdateStart() *CompensateUpsertBulk {
 func (u *CompensateUpsertBulk) SetEnd(v uint32) *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
 		s.SetEnd(v)
+	})
+}
+
+// AddEnd adds v to the "end" field.
+func (u *CompensateUpsertBulk) AddEnd(v uint32) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddEnd(v)
 	})
 }
 
@@ -861,6 +952,13 @@ func (u *CompensateUpsertBulk) SetCreateAt(v uint32) *CompensateUpsertBulk {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *CompensateUpsertBulk) AddCreateAt(v uint32) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *CompensateUpsertBulk) UpdateCreateAt() *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
@@ -875,6 +973,13 @@ func (u *CompensateUpsertBulk) SetUpdateAt(v uint32) *CompensateUpsertBulk {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *CompensateUpsertBulk) AddUpdateAt(v uint32) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *CompensateUpsertBulk) UpdateUpdateAt() *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
@@ -886,6 +991,13 @@ func (u *CompensateUpsertBulk) UpdateUpdateAt() *CompensateUpsertBulk {
 func (u *CompensateUpsertBulk) SetDeleteAt(v uint32) *CompensateUpsertBulk {
 	return u.Update(func(s *CompensateUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *CompensateUpsertBulk) AddDeleteAt(v uint32) *CompensateUpsertBulk {
+	return u.Update(func(s *CompensateUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 

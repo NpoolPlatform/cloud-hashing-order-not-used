@@ -95,6 +95,14 @@ func (gpc *GasPayingCreate) SetID(u uuid.UUID) *GasPayingCreate {
 	return gpc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (gpc *GasPayingCreate) SetNillableID(u *uuid.UUID) *GasPayingCreate {
+	if u != nil {
+		gpc.SetID(*u)
+	}
+	return gpc
+}
+
 // Mutation returns the GasPayingMutation object of the builder.
 func (gpc *GasPayingCreate) Mutation() *GasPayingMutation {
 	return gpc.mutation
@@ -187,25 +195,25 @@ func (gpc *GasPayingCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (gpc *GasPayingCreate) check() error {
 	if _, ok := gpc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
+		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "GasPaying.order_id"`)}
 	}
 	if _, ok := gpc.mutation.FeeTypeID(); !ok {
-		return &ValidationError{Name: "fee_type_id", err: errors.New(`ent: missing required field "fee_type_id"`)}
+		return &ValidationError{Name: "fee_type_id", err: errors.New(`ent: missing required field "GasPaying.fee_type_id"`)}
 	}
 	if _, ok := gpc.mutation.PaymentID(); !ok {
-		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "payment_id"`)}
+		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "GasPaying.payment_id"`)}
 	}
 	if _, ok := gpc.mutation.DurationMinutes(); !ok {
-		return &ValidationError{Name: "duration_minutes", err: errors.New(`ent: missing required field "duration_minutes"`)}
+		return &ValidationError{Name: "duration_minutes", err: errors.New(`ent: missing required field "GasPaying.duration_minutes"`)}
 	}
 	if _, ok := gpc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "GasPaying.create_at"`)}
 	}
 	if _, ok := gpc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "update_at"`)}
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "GasPaying.update_at"`)}
 	}
 	if _, ok := gpc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "delete_at"`)}
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "GasPaying.delete_at"`)}
 	}
 	return nil
 }
@@ -219,7 +227,11 @@ func (gpc *GasPayingCreate) sqlSave(ctx context.Context) (*GasPaying, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -238,7 +250,7 @@ func (gpc *GasPayingCreate) createSpec() (*GasPaying, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = gpc.conflict
 	if id, ok := gpc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := gpc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -398,6 +410,12 @@ func (u *GasPayingUpsert) UpdateDurationMinutes() *GasPayingUpsert {
 	return u
 }
 
+// AddDurationMinutes adds v to the "duration_minutes" field.
+func (u *GasPayingUpsert) AddDurationMinutes(v uint32) *GasPayingUpsert {
+	u.Add(gaspaying.FieldDurationMinutes, v)
+	return u
+}
+
 // SetCreateAt sets the "create_at" field.
 func (u *GasPayingUpsert) SetCreateAt(v uint32) *GasPayingUpsert {
 	u.Set(gaspaying.FieldCreateAt, v)
@@ -407,6 +425,12 @@ func (u *GasPayingUpsert) SetCreateAt(v uint32) *GasPayingUpsert {
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *GasPayingUpsert) UpdateCreateAt() *GasPayingUpsert {
 	u.SetExcluded(gaspaying.FieldCreateAt)
+	return u
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *GasPayingUpsert) AddCreateAt(v uint32) *GasPayingUpsert {
+	u.Add(gaspaying.FieldCreateAt, v)
 	return u
 }
 
@@ -422,6 +446,12 @@ func (u *GasPayingUpsert) UpdateUpdateAt() *GasPayingUpsert {
 	return u
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GasPayingUpsert) AddUpdateAt(v uint32) *GasPayingUpsert {
+	u.Add(gaspaying.FieldUpdateAt, v)
+	return u
+}
+
 // SetDeleteAt sets the "delete_at" field.
 func (u *GasPayingUpsert) SetDeleteAt(v uint32) *GasPayingUpsert {
 	u.Set(gaspaying.FieldDeleteAt, v)
@@ -434,7 +464,13 @@ func (u *GasPayingUpsert) UpdateDeleteAt() *GasPayingUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GasPayingUpsert) AddDeleteAt(v uint32) *GasPayingUpsert {
+	u.Add(gaspaying.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.GasPaying.Create().
@@ -533,6 +569,13 @@ func (u *GasPayingUpsertOne) SetDurationMinutes(v uint32) *GasPayingUpsertOne {
 	})
 }
 
+// AddDurationMinutes adds v to the "duration_minutes" field.
+func (u *GasPayingUpsertOne) AddDurationMinutes(v uint32) *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddDurationMinutes(v)
+	})
+}
+
 // UpdateDurationMinutes sets the "duration_minutes" field to the value that was provided on create.
 func (u *GasPayingUpsertOne) UpdateDurationMinutes() *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
@@ -544,6 +587,13 @@ func (u *GasPayingUpsertOne) UpdateDurationMinutes() *GasPayingUpsertOne {
 func (u *GasPayingUpsertOne) SetCreateAt(v uint32) *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.SetCreateAt(v)
+	})
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *GasPayingUpsertOne) AddCreateAt(v uint32) *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddCreateAt(v)
 	})
 }
 
@@ -561,6 +611,13 @@ func (u *GasPayingUpsertOne) SetUpdateAt(v uint32) *GasPayingUpsertOne {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GasPayingUpsertOne) AddUpdateAt(v uint32) *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *GasPayingUpsertOne) UpdateUpdateAt() *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
@@ -572,6 +629,13 @@ func (u *GasPayingUpsertOne) UpdateUpdateAt() *GasPayingUpsertOne {
 func (u *GasPayingUpsertOne) SetDeleteAt(v uint32) *GasPayingUpsertOne {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GasPayingUpsertOne) AddDeleteAt(v uint32) *GasPayingUpsertOne {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
@@ -745,7 +809,7 @@ type GasPayingUpsertBulk struct {
 	create *GasPayingCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.GasPaying.Create().
@@ -847,6 +911,13 @@ func (u *GasPayingUpsertBulk) SetDurationMinutes(v uint32) *GasPayingUpsertBulk 
 	})
 }
 
+// AddDurationMinutes adds v to the "duration_minutes" field.
+func (u *GasPayingUpsertBulk) AddDurationMinutes(v uint32) *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddDurationMinutes(v)
+	})
+}
+
 // UpdateDurationMinutes sets the "duration_minutes" field to the value that was provided on create.
 func (u *GasPayingUpsertBulk) UpdateDurationMinutes() *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
@@ -858,6 +929,13 @@ func (u *GasPayingUpsertBulk) UpdateDurationMinutes() *GasPayingUpsertBulk {
 func (u *GasPayingUpsertBulk) SetCreateAt(v uint32) *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.SetCreateAt(v)
+	})
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *GasPayingUpsertBulk) AddCreateAt(v uint32) *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddCreateAt(v)
 	})
 }
 
@@ -875,6 +953,13 @@ func (u *GasPayingUpsertBulk) SetUpdateAt(v uint32) *GasPayingUpsertBulk {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GasPayingUpsertBulk) AddUpdateAt(v uint32) *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *GasPayingUpsertBulk) UpdateUpdateAt() *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
@@ -886,6 +971,13 @@ func (u *GasPayingUpsertBulk) UpdateUpdateAt() *GasPayingUpsertBulk {
 func (u *GasPayingUpsertBulk) SetDeleteAt(v uint32) *GasPayingUpsertBulk {
 	return u.Update(func(s *GasPayingUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GasPayingUpsertBulk) AddDeleteAt(v uint32) *GasPayingUpsertBulk {
+	return u.Update(func(s *GasPayingUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 

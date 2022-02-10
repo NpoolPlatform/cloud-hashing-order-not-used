@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -55,7 +56,7 @@ func (gpu *GoodPayingUpdate) SetNillableCreateAt(u *uint32) *GoodPayingUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (gpu *GoodPayingUpdate) AddCreateAt(u uint32) *GoodPayingUpdate {
+func (gpu *GoodPayingUpdate) AddCreateAt(u int32) *GoodPayingUpdate {
 	gpu.mutation.AddCreateAt(u)
 	return gpu
 }
@@ -68,7 +69,7 @@ func (gpu *GoodPayingUpdate) SetUpdateAt(u uint32) *GoodPayingUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (gpu *GoodPayingUpdate) AddUpdateAt(u uint32) *GoodPayingUpdate {
+func (gpu *GoodPayingUpdate) AddUpdateAt(u int32) *GoodPayingUpdate {
 	gpu.mutation.AddUpdateAt(u)
 	return gpu
 }
@@ -89,7 +90,7 @@ func (gpu *GoodPayingUpdate) SetNillableDeleteAt(u *uint32) *GoodPayingUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (gpu *GoodPayingUpdate) AddDeleteAt(u uint32) *GoodPayingUpdate {
+func (gpu *GoodPayingUpdate) AddDeleteAt(u int32) *GoodPayingUpdate {
 	gpu.mutation.AddDeleteAt(u)
 	return gpu
 }
@@ -283,7 +284,7 @@ func (gpuo *GoodPayingUpdateOne) SetNillableCreateAt(u *uint32) *GoodPayingUpdat
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (gpuo *GoodPayingUpdateOne) AddCreateAt(u uint32) *GoodPayingUpdateOne {
+func (gpuo *GoodPayingUpdateOne) AddCreateAt(u int32) *GoodPayingUpdateOne {
 	gpuo.mutation.AddCreateAt(u)
 	return gpuo
 }
@@ -296,7 +297,7 @@ func (gpuo *GoodPayingUpdateOne) SetUpdateAt(u uint32) *GoodPayingUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (gpuo *GoodPayingUpdateOne) AddUpdateAt(u uint32) *GoodPayingUpdateOne {
+func (gpuo *GoodPayingUpdateOne) AddUpdateAt(u int32) *GoodPayingUpdateOne {
 	gpuo.mutation.AddUpdateAt(u)
 	return gpuo
 }
@@ -317,7 +318,7 @@ func (gpuo *GoodPayingUpdateOne) SetNillableDeleteAt(u *uint32) *GoodPayingUpdat
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (gpuo *GoodPayingUpdateOne) AddDeleteAt(u uint32) *GoodPayingUpdateOne {
+func (gpuo *GoodPayingUpdateOne) AddDeleteAt(u int32) *GoodPayingUpdateOne {
 	gpuo.mutation.AddDeleteAt(u)
 	return gpuo
 }
@@ -410,7 +411,7 @@ func (gpuo *GoodPayingUpdateOne) sqlSave(ctx context.Context) (_node *GoodPaying
 	}
 	id, ok := gpuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing GoodPaying.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GoodPaying.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := gpuo.fields; len(fields) > 0 {

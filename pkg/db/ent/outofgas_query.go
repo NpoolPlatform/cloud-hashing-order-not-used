@@ -337,6 +337,10 @@ func (oogq *OutOfGasQuery) sqlAll(ctx context.Context) ([]*OutOfGas, error) {
 
 func (oogq *OutOfGasQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := oogq.querySpec()
+	_spec.Node.Columns = oogq.fields
+	if len(oogq.fields) > 0 {
+		_spec.Unique = oogq.unique != nil && *oogq.unique
+	}
 	return sqlgraph.CountNodes(ctx, oogq.driver, _spec)
 }
 
@@ -407,6 +411,9 @@ func (oogq *OutOfGasQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if oogq.sql != nil {
 		selector = oogq.sql
 		selector.Select(selector.Columns(columns...)...)
+	}
+	if oogq.unique != nil && *oogq.unique {
+		selector.Distinct()
 	}
 	for _, p := range oogq.predicates {
 		p(selector)
@@ -686,9 +693,7 @@ func (ooggb *OutOfGasGroupBy) sqlQuery() *sql.Selector {
 		for _, f := range ooggb.fields {
 			columns = append(columns, selector.C(f))
 		}
-		for _, c := range aggregation {
-			columns = append(columns, c)
-		}
+		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
 	return selector.GroupBy(selector.Columns(ooggb.fields...)...)

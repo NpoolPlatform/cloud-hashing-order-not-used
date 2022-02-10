@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -47,7 +48,7 @@ func (pu *PaymentUpdate) SetStartAmount(u uint64) *PaymentUpdate {
 }
 
 // AddStartAmount adds u to the "start_amount" field.
-func (pu *PaymentUpdate) AddStartAmount(u uint64) *PaymentUpdate {
+func (pu *PaymentUpdate) AddStartAmount(u int64) *PaymentUpdate {
 	pu.mutation.AddStartAmount(u)
 	return pu
 }
@@ -60,8 +61,21 @@ func (pu *PaymentUpdate) SetAmount(u uint64) *PaymentUpdate {
 }
 
 // AddAmount adds u to the "amount" field.
-func (pu *PaymentUpdate) AddAmount(u uint64) *PaymentUpdate {
+func (pu *PaymentUpdate) AddAmount(u int64) *PaymentUpdate {
 	pu.mutation.AddAmount(u)
+	return pu
+}
+
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (pu *PaymentUpdate) SetCoinUsdCurrency(u uint64) *PaymentUpdate {
+	pu.mutation.ResetCoinUsdCurrency()
+	pu.mutation.SetCoinUsdCurrency(u)
+	return pu
+}
+
+// AddCoinUsdCurrency adds u to the "coin_usd_currency" field.
+func (pu *PaymentUpdate) AddCoinUsdCurrency(u int64) *PaymentUpdate {
+	pu.mutation.AddCoinUsdCurrency(u)
 	return pu
 }
 
@@ -105,7 +119,7 @@ func (pu *PaymentUpdate) SetNillableCreateAt(u *uint32) *PaymentUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (pu *PaymentUpdate) AddCreateAt(u uint32) *PaymentUpdate {
+func (pu *PaymentUpdate) AddCreateAt(u int32) *PaymentUpdate {
 	pu.mutation.AddCreateAt(u)
 	return pu
 }
@@ -118,7 +132,7 @@ func (pu *PaymentUpdate) SetUpdateAt(u uint32) *PaymentUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (pu *PaymentUpdate) AddUpdateAt(u uint32) *PaymentUpdate {
+func (pu *PaymentUpdate) AddUpdateAt(u int32) *PaymentUpdate {
 	pu.mutation.AddUpdateAt(u)
 	return pu
 }
@@ -139,7 +153,7 @@ func (pu *PaymentUpdate) SetNillableDeleteAt(u *uint32) *PaymentUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (pu *PaymentUpdate) AddDeleteAt(u uint32) *PaymentUpdate {
+func (pu *PaymentUpdate) AddDeleteAt(u int32) *PaymentUpdate {
 	pu.mutation.AddDeleteAt(u)
 	return pu
 }
@@ -222,7 +236,7 @@ func (pu *PaymentUpdate) defaults() {
 func (pu *PaymentUpdate) check() error {
 	if v, ok := pu.mutation.State(); ok {
 		if err := payment.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Payment.state": %w`, err)}
 		}
 	}
 	return nil
@@ -286,6 +300,20 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeUint64,
 			Value:  value,
 			Column: payment.FieldAmount,
+		})
+	}
+	if value, ok := pu.mutation.CoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldCoinUsdCurrency,
+		})
+	}
+	if value, ok := pu.mutation.AddedCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldCoinUsdCurrency,
 		})
 	}
 	if value, ok := pu.mutation.CoinInfoID(); ok {
@@ -397,7 +425,7 @@ func (puo *PaymentUpdateOne) SetStartAmount(u uint64) *PaymentUpdateOne {
 }
 
 // AddStartAmount adds u to the "start_amount" field.
-func (puo *PaymentUpdateOne) AddStartAmount(u uint64) *PaymentUpdateOne {
+func (puo *PaymentUpdateOne) AddStartAmount(u int64) *PaymentUpdateOne {
 	puo.mutation.AddStartAmount(u)
 	return puo
 }
@@ -410,8 +438,21 @@ func (puo *PaymentUpdateOne) SetAmount(u uint64) *PaymentUpdateOne {
 }
 
 // AddAmount adds u to the "amount" field.
-func (puo *PaymentUpdateOne) AddAmount(u uint64) *PaymentUpdateOne {
+func (puo *PaymentUpdateOne) AddAmount(u int64) *PaymentUpdateOne {
 	puo.mutation.AddAmount(u)
+	return puo
+}
+
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (puo *PaymentUpdateOne) SetCoinUsdCurrency(u uint64) *PaymentUpdateOne {
+	puo.mutation.ResetCoinUsdCurrency()
+	puo.mutation.SetCoinUsdCurrency(u)
+	return puo
+}
+
+// AddCoinUsdCurrency adds u to the "coin_usd_currency" field.
+func (puo *PaymentUpdateOne) AddCoinUsdCurrency(u int64) *PaymentUpdateOne {
+	puo.mutation.AddCoinUsdCurrency(u)
 	return puo
 }
 
@@ -455,7 +496,7 @@ func (puo *PaymentUpdateOne) SetNillableCreateAt(u *uint32) *PaymentUpdateOne {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (puo *PaymentUpdateOne) AddCreateAt(u uint32) *PaymentUpdateOne {
+func (puo *PaymentUpdateOne) AddCreateAt(u int32) *PaymentUpdateOne {
 	puo.mutation.AddCreateAt(u)
 	return puo
 }
@@ -468,7 +509,7 @@ func (puo *PaymentUpdateOne) SetUpdateAt(u uint32) *PaymentUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (puo *PaymentUpdateOne) AddUpdateAt(u uint32) *PaymentUpdateOne {
+func (puo *PaymentUpdateOne) AddUpdateAt(u int32) *PaymentUpdateOne {
 	puo.mutation.AddUpdateAt(u)
 	return puo
 }
@@ -489,7 +530,7 @@ func (puo *PaymentUpdateOne) SetNillableDeleteAt(u *uint32) *PaymentUpdateOne {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (puo *PaymentUpdateOne) AddDeleteAt(u uint32) *PaymentUpdateOne {
+func (puo *PaymentUpdateOne) AddDeleteAt(u int32) *PaymentUpdateOne {
 	puo.mutation.AddDeleteAt(u)
 	return puo
 }
@@ -579,7 +620,7 @@ func (puo *PaymentUpdateOne) defaults() {
 func (puo *PaymentUpdateOne) check() error {
 	if v, ok := puo.mutation.State(); ok {
 		if err := payment.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf("ent: validator failed for field \"state\": %w", err)}
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Payment.state": %w`, err)}
 		}
 	}
 	return nil
@@ -598,7 +639,7 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 	}
 	id, ok := puo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Payment.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Payment.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := puo.fields; len(fields) > 0 {
@@ -660,6 +701,20 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUint64,
 			Value:  value,
 			Column: payment.FieldAmount,
+		})
+	}
+	if value, ok := puo.mutation.CoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldCoinUsdCurrency,
+		})
+	}
+	if value, ok := puo.mutation.AddedCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldCoinUsdCurrency,
 		})
 	}
 	if value, ok := puo.mutation.CoinInfoID(); ok {

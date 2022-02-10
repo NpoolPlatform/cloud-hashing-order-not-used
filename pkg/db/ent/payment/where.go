@@ -119,6 +119,13 @@ func Amount(v uint64) predicate.Payment {
 	})
 }
 
+// CoinUsdCurrency applies equality check predicate on the "coin_usd_currency" field. It's identical to CoinUsdCurrencyEQ.
+func CoinUsdCurrency(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
 // CoinInfoID applies equality check predicate on the "coin_info_id" field. It's identical to CoinInfoIDEQ.
 func CoinInfoID(v uuid.UUID) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
@@ -462,6 +469,82 @@ func AmountLT(v uint64) predicate.Payment {
 func AmountLTE(v uint64) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAmount), v))
+	})
+}
+
+// CoinUsdCurrencyEQ applies the EQ predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyEQ(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
+// CoinUsdCurrencyNEQ applies the NEQ predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyNEQ(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
+// CoinUsdCurrencyIn applies the In predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyIn(vs ...uint64) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCoinUsdCurrency), v...))
+	})
+}
+
+// CoinUsdCurrencyNotIn applies the NotIn predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyNotIn(vs ...uint64) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCoinUsdCurrency), v...))
+	})
+}
+
+// CoinUsdCurrencyGT applies the GT predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyGT(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
+// CoinUsdCurrencyGTE applies the GTE predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyGTE(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
+// CoinUsdCurrencyLT applies the LT predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyLT(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCoinUsdCurrency), v))
+	})
+}
+
+// CoinUsdCurrencyLTE applies the LTE predicate on the "coin_usd_currency" field.
+func CoinUsdCurrencyLTE(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCoinUsdCurrency), v))
 	})
 }
 

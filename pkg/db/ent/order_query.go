@@ -337,6 +337,10 @@ func (oq *OrderQuery) sqlAll(ctx context.Context) ([]*Order, error) {
 
 func (oq *OrderQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := oq.querySpec()
+	_spec.Node.Columns = oq.fields
+	if len(oq.fields) > 0 {
+		_spec.Unique = oq.unique != nil && *oq.unique
+	}
 	return sqlgraph.CountNodes(ctx, oq.driver, _spec)
 }
 
@@ -407,6 +411,9 @@ func (oq *OrderQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if oq.sql != nil {
 		selector = oq.sql
 		selector.Select(selector.Columns(columns...)...)
+	}
+	if oq.unique != nil && *oq.unique {
+		selector.Distinct()
 	}
 	for _, p := range oq.predicates {
 		p(selector)
@@ -686,9 +693,7 @@ func (ogb *OrderGroupBy) sqlQuery() *sql.Selector {
 		for _, f := range ogb.fields {
 			columns = append(columns, selector.C(f))
 		}
-		for _, c := range aggregation {
-			columns = append(columns, c)
-		}
+		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
 	return selector.GroupBy(selector.Columns(ogb.fields...)...)

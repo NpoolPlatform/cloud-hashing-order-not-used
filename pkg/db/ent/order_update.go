@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -53,7 +54,7 @@ func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
 }
 
 // AddUnits adds u to the "units" field.
-func (ou *OrderUpdate) AddUnits(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddUnits(u int32) *OrderUpdate {
 	ou.mutation.AddUnits(u)
 	return ou
 }
@@ -78,7 +79,7 @@ func (ou *OrderUpdate) SetStart(u uint32) *OrderUpdate {
 }
 
 // AddStart adds u to the "start" field.
-func (ou *OrderUpdate) AddStart(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddStart(u int32) *OrderUpdate {
 	ou.mutation.AddStart(u)
 	return ou
 }
@@ -91,7 +92,7 @@ func (ou *OrderUpdate) SetEnd(u uint32) *OrderUpdate {
 }
 
 // AddEnd adds u to the "end" field.
-func (ou *OrderUpdate) AddEnd(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddEnd(u int32) *OrderUpdate {
 	ou.mutation.AddEnd(u)
 	return ou
 }
@@ -118,7 +119,7 @@ func (ou *OrderUpdate) SetNillableCreateAt(u *uint32) *OrderUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (ou *OrderUpdate) AddCreateAt(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddCreateAt(u int32) *OrderUpdate {
 	ou.mutation.AddCreateAt(u)
 	return ou
 }
@@ -131,7 +132,7 @@ func (ou *OrderUpdate) SetUpdateAt(u uint32) *OrderUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (ou *OrderUpdate) AddUpdateAt(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddUpdateAt(u int32) *OrderUpdate {
 	ou.mutation.AddUpdateAt(u)
 	return ou
 }
@@ -152,7 +153,7 @@ func (ou *OrderUpdate) SetNillableDeleteAt(u *uint32) *OrderUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (ou *OrderUpdate) AddDeleteAt(u uint32) *OrderUpdate {
+func (ou *OrderUpdate) AddDeleteAt(u int32) *OrderUpdate {
 	ou.mutation.AddDeleteAt(u)
 	return ou
 }
@@ -414,7 +415,7 @@ func (ouo *OrderUpdateOne) SetUnits(u uint32) *OrderUpdateOne {
 }
 
 // AddUnits adds u to the "units" field.
-func (ouo *OrderUpdateOne) AddUnits(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddUnits(u int32) *OrderUpdateOne {
 	ouo.mutation.AddUnits(u)
 	return ouo
 }
@@ -439,7 +440,7 @@ func (ouo *OrderUpdateOne) SetStart(u uint32) *OrderUpdateOne {
 }
 
 // AddStart adds u to the "start" field.
-func (ouo *OrderUpdateOne) AddStart(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddStart(u int32) *OrderUpdateOne {
 	ouo.mutation.AddStart(u)
 	return ouo
 }
@@ -452,7 +453,7 @@ func (ouo *OrderUpdateOne) SetEnd(u uint32) *OrderUpdateOne {
 }
 
 // AddEnd adds u to the "end" field.
-func (ouo *OrderUpdateOne) AddEnd(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddEnd(u int32) *OrderUpdateOne {
 	ouo.mutation.AddEnd(u)
 	return ouo
 }
@@ -479,7 +480,7 @@ func (ouo *OrderUpdateOne) SetNillableCreateAt(u *uint32) *OrderUpdateOne {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (ouo *OrderUpdateOne) AddCreateAt(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddCreateAt(u int32) *OrderUpdateOne {
 	ouo.mutation.AddCreateAt(u)
 	return ouo
 }
@@ -492,7 +493,7 @@ func (ouo *OrderUpdateOne) SetUpdateAt(u uint32) *OrderUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (ouo *OrderUpdateOne) AddUpdateAt(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddUpdateAt(u int32) *OrderUpdateOne {
 	ouo.mutation.AddUpdateAt(u)
 	return ouo
 }
@@ -513,7 +514,7 @@ func (ouo *OrderUpdateOne) SetNillableDeleteAt(u *uint32) *OrderUpdateOne {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (ouo *OrderUpdateOne) AddDeleteAt(u uint32) *OrderUpdateOne {
+func (ouo *OrderUpdateOne) AddDeleteAt(u int32) *OrderUpdateOne {
 	ouo.mutation.AddDeleteAt(u)
 	return ouo
 }
@@ -606,7 +607,7 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 	}
 	id, ok := ouo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Order.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Order.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := ouo.fields; len(fields) > 0 {

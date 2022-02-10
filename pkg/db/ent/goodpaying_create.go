@@ -83,6 +83,14 @@ func (gpc *GoodPayingCreate) SetID(u uuid.UUID) *GoodPayingCreate {
 	return gpc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (gpc *GoodPayingCreate) SetNillableID(u *uuid.UUID) *GoodPayingCreate {
+	if u != nil {
+		gpc.SetID(*u)
+	}
+	return gpc
+}
+
 // Mutation returns the GoodPayingMutation object of the builder.
 func (gpc *GoodPayingCreate) Mutation() *GoodPayingMutation {
 	return gpc.mutation
@@ -175,19 +183,19 @@ func (gpc *GoodPayingCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (gpc *GoodPayingCreate) check() error {
 	if _, ok := gpc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
+		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "GoodPaying.order_id"`)}
 	}
 	if _, ok := gpc.mutation.PaymentID(); !ok {
-		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "payment_id"`)}
+		return &ValidationError{Name: "payment_id", err: errors.New(`ent: missing required field "GoodPaying.payment_id"`)}
 	}
 	if _, ok := gpc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "GoodPaying.create_at"`)}
 	}
 	if _, ok := gpc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "update_at"`)}
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "GoodPaying.update_at"`)}
 	}
 	if _, ok := gpc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "delete_at"`)}
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "GoodPaying.delete_at"`)}
 	}
 	return nil
 }
@@ -201,7 +209,11 @@ func (gpc *GoodPayingCreate) sqlSave(ctx context.Context) (*GoodPaying, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -220,7 +232,7 @@ func (gpc *GoodPayingCreate) createSpec() (*GoodPaying, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = gpc.conflict
 	if id, ok := gpc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := gpc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -352,6 +364,12 @@ func (u *GoodPayingUpsert) UpdateCreateAt() *GoodPayingUpsert {
 	return u
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *GoodPayingUpsert) AddCreateAt(v uint32) *GoodPayingUpsert {
+	u.Add(goodpaying.FieldCreateAt, v)
+	return u
+}
+
 // SetUpdateAt sets the "update_at" field.
 func (u *GoodPayingUpsert) SetUpdateAt(v uint32) *GoodPayingUpsert {
 	u.Set(goodpaying.FieldUpdateAt, v)
@@ -361,6 +379,12 @@ func (u *GoodPayingUpsert) SetUpdateAt(v uint32) *GoodPayingUpsert {
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *GoodPayingUpsert) UpdateUpdateAt() *GoodPayingUpsert {
 	u.SetExcluded(goodpaying.FieldUpdateAt)
+	return u
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GoodPayingUpsert) AddUpdateAt(v uint32) *GoodPayingUpsert {
+	u.Add(goodpaying.FieldUpdateAt, v)
 	return u
 }
 
@@ -376,7 +400,13 @@ func (u *GoodPayingUpsert) UpdateDeleteAt() *GoodPayingUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GoodPayingUpsert) AddDeleteAt(v uint32) *GoodPayingUpsert {
+	u.Add(goodpaying.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.GoodPaying.Create().
@@ -461,6 +491,13 @@ func (u *GoodPayingUpsertOne) SetCreateAt(v uint32) *GoodPayingUpsertOne {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *GoodPayingUpsertOne) AddCreateAt(v uint32) *GoodPayingUpsertOne {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *GoodPayingUpsertOne) UpdateCreateAt() *GoodPayingUpsertOne {
 	return u.Update(func(s *GoodPayingUpsert) {
@@ -475,6 +512,13 @@ func (u *GoodPayingUpsertOne) SetUpdateAt(v uint32) *GoodPayingUpsertOne {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GoodPayingUpsertOne) AddUpdateAt(v uint32) *GoodPayingUpsertOne {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *GoodPayingUpsertOne) UpdateUpdateAt() *GoodPayingUpsertOne {
 	return u.Update(func(s *GoodPayingUpsert) {
@@ -486,6 +530,13 @@ func (u *GoodPayingUpsertOne) UpdateUpdateAt() *GoodPayingUpsertOne {
 func (u *GoodPayingUpsertOne) SetDeleteAt(v uint32) *GoodPayingUpsertOne {
 	return u.Update(func(s *GoodPayingUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GoodPayingUpsertOne) AddDeleteAt(v uint32) *GoodPayingUpsertOne {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
@@ -659,7 +710,7 @@ type GoodPayingUpsertBulk struct {
 	create *GoodPayingCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.GoodPaying.Create().
@@ -747,6 +798,13 @@ func (u *GoodPayingUpsertBulk) SetCreateAt(v uint32) *GoodPayingUpsertBulk {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *GoodPayingUpsertBulk) AddCreateAt(v uint32) *GoodPayingUpsertBulk {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *GoodPayingUpsertBulk) UpdateCreateAt() *GoodPayingUpsertBulk {
 	return u.Update(func(s *GoodPayingUpsert) {
@@ -761,6 +819,13 @@ func (u *GoodPayingUpsertBulk) SetUpdateAt(v uint32) *GoodPayingUpsertBulk {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *GoodPayingUpsertBulk) AddUpdateAt(v uint32) *GoodPayingUpsertBulk {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *GoodPayingUpsertBulk) UpdateUpdateAt() *GoodPayingUpsertBulk {
 	return u.Update(func(s *GoodPayingUpsert) {
@@ -772,6 +837,13 @@ func (u *GoodPayingUpsertBulk) UpdateUpdateAt() *GoodPayingUpsertBulk {
 func (u *GoodPayingUpsertBulk) SetDeleteAt(v uint32) *GoodPayingUpsertBulk {
 	return u.Update(func(s *GoodPayingUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *GoodPayingUpsertBulk) AddDeleteAt(v uint32) *GoodPayingUpsertBulk {
+	return u.Update(func(s *GoodPayingUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 

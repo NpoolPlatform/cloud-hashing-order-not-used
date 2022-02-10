@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -53,7 +54,7 @@ func (gpu *GasPayingUpdate) SetDurationMinutes(u uint32) *GasPayingUpdate {
 }
 
 // AddDurationMinutes adds u to the "duration_minutes" field.
-func (gpu *GasPayingUpdate) AddDurationMinutes(u uint32) *GasPayingUpdate {
+func (gpu *GasPayingUpdate) AddDurationMinutes(u int32) *GasPayingUpdate {
 	gpu.mutation.AddDurationMinutes(u)
 	return gpu
 }
@@ -74,7 +75,7 @@ func (gpu *GasPayingUpdate) SetNillableCreateAt(u *uint32) *GasPayingUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (gpu *GasPayingUpdate) AddCreateAt(u uint32) *GasPayingUpdate {
+func (gpu *GasPayingUpdate) AddCreateAt(u int32) *GasPayingUpdate {
 	gpu.mutation.AddCreateAt(u)
 	return gpu
 }
@@ -87,7 +88,7 @@ func (gpu *GasPayingUpdate) SetUpdateAt(u uint32) *GasPayingUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (gpu *GasPayingUpdate) AddUpdateAt(u uint32) *GasPayingUpdate {
+func (gpu *GasPayingUpdate) AddUpdateAt(u int32) *GasPayingUpdate {
 	gpu.mutation.AddUpdateAt(u)
 	return gpu
 }
@@ -108,7 +109,7 @@ func (gpu *GasPayingUpdate) SetNillableDeleteAt(u *uint32) *GasPayingUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (gpu *GasPayingUpdate) AddDeleteAt(u uint32) *GasPayingUpdate {
+func (gpu *GasPayingUpdate) AddDeleteAt(u int32) *GasPayingUpdate {
 	gpu.mutation.AddDeleteAt(u)
 	return gpu
 }
@@ -321,7 +322,7 @@ func (gpuo *GasPayingUpdateOne) SetDurationMinutes(u uint32) *GasPayingUpdateOne
 }
 
 // AddDurationMinutes adds u to the "duration_minutes" field.
-func (gpuo *GasPayingUpdateOne) AddDurationMinutes(u uint32) *GasPayingUpdateOne {
+func (gpuo *GasPayingUpdateOne) AddDurationMinutes(u int32) *GasPayingUpdateOne {
 	gpuo.mutation.AddDurationMinutes(u)
 	return gpuo
 }
@@ -342,7 +343,7 @@ func (gpuo *GasPayingUpdateOne) SetNillableCreateAt(u *uint32) *GasPayingUpdateO
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (gpuo *GasPayingUpdateOne) AddCreateAt(u uint32) *GasPayingUpdateOne {
+func (gpuo *GasPayingUpdateOne) AddCreateAt(u int32) *GasPayingUpdateOne {
 	gpuo.mutation.AddCreateAt(u)
 	return gpuo
 }
@@ -355,7 +356,7 @@ func (gpuo *GasPayingUpdateOne) SetUpdateAt(u uint32) *GasPayingUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (gpuo *GasPayingUpdateOne) AddUpdateAt(u uint32) *GasPayingUpdateOne {
+func (gpuo *GasPayingUpdateOne) AddUpdateAt(u int32) *GasPayingUpdateOne {
 	gpuo.mutation.AddUpdateAt(u)
 	return gpuo
 }
@@ -376,7 +377,7 @@ func (gpuo *GasPayingUpdateOne) SetNillableDeleteAt(u *uint32) *GasPayingUpdateO
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (gpuo *GasPayingUpdateOne) AddDeleteAt(u uint32) *GasPayingUpdateOne {
+func (gpuo *GasPayingUpdateOne) AddDeleteAt(u int32) *GasPayingUpdateOne {
 	gpuo.mutation.AddDeleteAt(u)
 	return gpuo
 }
@@ -469,7 +470,7 @@ func (gpuo *GasPayingUpdateOne) sqlSave(ctx context.Context) (_node *GasPaying, 
 	}
 	id, ok := gpuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing GasPaying.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GasPaying.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := gpuo.fields; len(fields) > 0 {

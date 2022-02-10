@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -41,7 +42,7 @@ func (oogu *OutOfGasUpdate) SetStart(u uint32) *OutOfGasUpdate {
 }
 
 // AddStart adds u to the "start" field.
-func (oogu *OutOfGasUpdate) AddStart(u uint32) *OutOfGasUpdate {
+func (oogu *OutOfGasUpdate) AddStart(u int32) *OutOfGasUpdate {
 	oogu.mutation.AddStart(u)
 	return oogu
 }
@@ -54,7 +55,7 @@ func (oogu *OutOfGasUpdate) SetEnd(u uint32) *OutOfGasUpdate {
 }
 
 // AddEnd adds u to the "end" field.
-func (oogu *OutOfGasUpdate) AddEnd(u uint32) *OutOfGasUpdate {
+func (oogu *OutOfGasUpdate) AddEnd(u int32) *OutOfGasUpdate {
 	oogu.mutation.AddEnd(u)
 	return oogu
 }
@@ -75,7 +76,7 @@ func (oogu *OutOfGasUpdate) SetNillableCreateAt(u *uint32) *OutOfGasUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (oogu *OutOfGasUpdate) AddCreateAt(u uint32) *OutOfGasUpdate {
+func (oogu *OutOfGasUpdate) AddCreateAt(u int32) *OutOfGasUpdate {
 	oogu.mutation.AddCreateAt(u)
 	return oogu
 }
@@ -88,7 +89,7 @@ func (oogu *OutOfGasUpdate) SetUpdateAt(u uint32) *OutOfGasUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (oogu *OutOfGasUpdate) AddUpdateAt(u uint32) *OutOfGasUpdate {
+func (oogu *OutOfGasUpdate) AddUpdateAt(u int32) *OutOfGasUpdate {
 	oogu.mutation.AddUpdateAt(u)
 	return oogu
 }
@@ -109,7 +110,7 @@ func (oogu *OutOfGasUpdate) SetNillableDeleteAt(u *uint32) *OutOfGasUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (oogu *OutOfGasUpdate) AddDeleteAt(u uint32) *OutOfGasUpdate {
+func (oogu *OutOfGasUpdate) AddDeleteAt(u int32) *OutOfGasUpdate {
 	oogu.mutation.AddDeleteAt(u)
 	return oogu
 }
@@ -310,7 +311,7 @@ func (ooguo *OutOfGasUpdateOne) SetStart(u uint32) *OutOfGasUpdateOne {
 }
 
 // AddStart adds u to the "start" field.
-func (ooguo *OutOfGasUpdateOne) AddStart(u uint32) *OutOfGasUpdateOne {
+func (ooguo *OutOfGasUpdateOne) AddStart(u int32) *OutOfGasUpdateOne {
 	ooguo.mutation.AddStart(u)
 	return ooguo
 }
@@ -323,7 +324,7 @@ func (ooguo *OutOfGasUpdateOne) SetEnd(u uint32) *OutOfGasUpdateOne {
 }
 
 // AddEnd adds u to the "end" field.
-func (ooguo *OutOfGasUpdateOne) AddEnd(u uint32) *OutOfGasUpdateOne {
+func (ooguo *OutOfGasUpdateOne) AddEnd(u int32) *OutOfGasUpdateOne {
 	ooguo.mutation.AddEnd(u)
 	return ooguo
 }
@@ -344,7 +345,7 @@ func (ooguo *OutOfGasUpdateOne) SetNillableCreateAt(u *uint32) *OutOfGasUpdateOn
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (ooguo *OutOfGasUpdateOne) AddCreateAt(u uint32) *OutOfGasUpdateOne {
+func (ooguo *OutOfGasUpdateOne) AddCreateAt(u int32) *OutOfGasUpdateOne {
 	ooguo.mutation.AddCreateAt(u)
 	return ooguo
 }
@@ -357,7 +358,7 @@ func (ooguo *OutOfGasUpdateOne) SetUpdateAt(u uint32) *OutOfGasUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (ooguo *OutOfGasUpdateOne) AddUpdateAt(u uint32) *OutOfGasUpdateOne {
+func (ooguo *OutOfGasUpdateOne) AddUpdateAt(u int32) *OutOfGasUpdateOne {
 	ooguo.mutation.AddUpdateAt(u)
 	return ooguo
 }
@@ -378,7 +379,7 @@ func (ooguo *OutOfGasUpdateOne) SetNillableDeleteAt(u *uint32) *OutOfGasUpdateOn
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (ooguo *OutOfGasUpdateOne) AddDeleteAt(u uint32) *OutOfGasUpdateOne {
+func (ooguo *OutOfGasUpdateOne) AddDeleteAt(u int32) *OutOfGasUpdateOne {
 	ooguo.mutation.AddDeleteAt(u)
 	return ooguo
 }
@@ -471,7 +472,7 @@ func (ooguo *OutOfGasUpdateOne) sqlSave(ctx context.Context) (_node *OutOfGas, e
 	}
 	id, ok := ooguo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing OutOfGas.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "OutOfGas.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := ooguo.fields; len(fields) > 0 {

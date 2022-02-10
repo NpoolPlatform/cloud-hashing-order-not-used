@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -41,7 +42,7 @@ func (cu *CompensateUpdate) SetStart(u uint32) *CompensateUpdate {
 }
 
 // AddStart adds u to the "start" field.
-func (cu *CompensateUpdate) AddStart(u uint32) *CompensateUpdate {
+func (cu *CompensateUpdate) AddStart(u int32) *CompensateUpdate {
 	cu.mutation.AddStart(u)
 	return cu
 }
@@ -54,7 +55,7 @@ func (cu *CompensateUpdate) SetEnd(u uint32) *CompensateUpdate {
 }
 
 // AddEnd adds u to the "end" field.
-func (cu *CompensateUpdate) AddEnd(u uint32) *CompensateUpdate {
+func (cu *CompensateUpdate) AddEnd(u int32) *CompensateUpdate {
 	cu.mutation.AddEnd(u)
 	return cu
 }
@@ -81,7 +82,7 @@ func (cu *CompensateUpdate) SetNillableCreateAt(u *uint32) *CompensateUpdate {
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (cu *CompensateUpdate) AddCreateAt(u uint32) *CompensateUpdate {
+func (cu *CompensateUpdate) AddCreateAt(u int32) *CompensateUpdate {
 	cu.mutation.AddCreateAt(u)
 	return cu
 }
@@ -94,7 +95,7 @@ func (cu *CompensateUpdate) SetUpdateAt(u uint32) *CompensateUpdate {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (cu *CompensateUpdate) AddUpdateAt(u uint32) *CompensateUpdate {
+func (cu *CompensateUpdate) AddUpdateAt(u int32) *CompensateUpdate {
 	cu.mutation.AddUpdateAt(u)
 	return cu
 }
@@ -115,7 +116,7 @@ func (cu *CompensateUpdate) SetNillableDeleteAt(u *uint32) *CompensateUpdate {
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (cu *CompensateUpdate) AddDeleteAt(u uint32) *CompensateUpdate {
+func (cu *CompensateUpdate) AddDeleteAt(u int32) *CompensateUpdate {
 	cu.mutation.AddDeleteAt(u)
 	return cu
 }
@@ -323,7 +324,7 @@ func (cuo *CompensateUpdateOne) SetStart(u uint32) *CompensateUpdateOne {
 }
 
 // AddStart adds u to the "start" field.
-func (cuo *CompensateUpdateOne) AddStart(u uint32) *CompensateUpdateOne {
+func (cuo *CompensateUpdateOne) AddStart(u int32) *CompensateUpdateOne {
 	cuo.mutation.AddStart(u)
 	return cuo
 }
@@ -336,7 +337,7 @@ func (cuo *CompensateUpdateOne) SetEnd(u uint32) *CompensateUpdateOne {
 }
 
 // AddEnd adds u to the "end" field.
-func (cuo *CompensateUpdateOne) AddEnd(u uint32) *CompensateUpdateOne {
+func (cuo *CompensateUpdateOne) AddEnd(u int32) *CompensateUpdateOne {
 	cuo.mutation.AddEnd(u)
 	return cuo
 }
@@ -363,7 +364,7 @@ func (cuo *CompensateUpdateOne) SetNillableCreateAt(u *uint32) *CompensateUpdate
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (cuo *CompensateUpdateOne) AddCreateAt(u uint32) *CompensateUpdateOne {
+func (cuo *CompensateUpdateOne) AddCreateAt(u int32) *CompensateUpdateOne {
 	cuo.mutation.AddCreateAt(u)
 	return cuo
 }
@@ -376,7 +377,7 @@ func (cuo *CompensateUpdateOne) SetUpdateAt(u uint32) *CompensateUpdateOne {
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (cuo *CompensateUpdateOne) AddUpdateAt(u uint32) *CompensateUpdateOne {
+func (cuo *CompensateUpdateOne) AddUpdateAt(u int32) *CompensateUpdateOne {
 	cuo.mutation.AddUpdateAt(u)
 	return cuo
 }
@@ -397,7 +398,7 @@ func (cuo *CompensateUpdateOne) SetNillableDeleteAt(u *uint32) *CompensateUpdate
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (cuo *CompensateUpdateOne) AddDeleteAt(u uint32) *CompensateUpdateOne {
+func (cuo *CompensateUpdateOne) AddDeleteAt(u int32) *CompensateUpdateOne {
 	cuo.mutation.AddDeleteAt(u)
 	return cuo
 }
@@ -490,7 +491,7 @@ func (cuo *CompensateUpdateOne) sqlSave(ctx context.Context) (_node *Compensate,
 	}
 	id, ok := cuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Compensate.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Compensate.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := cuo.fields; len(fields) > 0 {

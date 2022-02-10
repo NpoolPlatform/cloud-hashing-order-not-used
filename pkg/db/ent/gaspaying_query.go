@@ -337,6 +337,10 @@ func (gpq *GasPayingQuery) sqlAll(ctx context.Context) ([]*GasPaying, error) {
 
 func (gpq *GasPayingQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := gpq.querySpec()
+	_spec.Node.Columns = gpq.fields
+	if len(gpq.fields) > 0 {
+		_spec.Unique = gpq.unique != nil && *gpq.unique
+	}
 	return sqlgraph.CountNodes(ctx, gpq.driver, _spec)
 }
 
@@ -407,6 +411,9 @@ func (gpq *GasPayingQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if gpq.sql != nil {
 		selector = gpq.sql
 		selector.Select(selector.Columns(columns...)...)
+	}
+	if gpq.unique != nil && *gpq.unique {
+		selector.Distinct()
 	}
 	for _, p := range gpq.predicates {
 		p(selector)
@@ -686,9 +693,7 @@ func (gpgb *GasPayingGroupBy) sqlQuery() *sql.Selector {
 		for _, f := range gpgb.fields {
 			columns = append(columns, selector.C(f))
 		}
-		for _, c := range aggregation {
-			columns = append(columns, c)
-		}
+		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
 	return selector.GroupBy(selector.Columns(gpgb.fields...)...)

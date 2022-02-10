@@ -21,6 +21,8 @@ const (
 	FieldStartAmount = "start_amount"
 	// FieldAmount holds the string denoting the amount field in the database.
 	FieldAmount = "amount"
+	// FieldCoinUsdCurrency holds the string denoting the coin_usd_currency field in the database.
+	FieldCoinUsdCurrency = "coin_usd_currency"
 	// FieldCoinInfoID holds the string denoting the coin_info_id field in the database.
 	FieldCoinInfoID = "coin_info_id"
 	// FieldState holds the string denoting the state field in the database.
@@ -46,6 +48,7 @@ var Columns = []string{
 	FieldAccountID,
 	FieldStartAmount,
 	FieldAmount,
+	FieldCoinUsdCurrency,
 	FieldCoinInfoID,
 	FieldState,
 	FieldChainTransactionID,

@@ -89,6 +89,14 @@ func (oogc *OutOfGasCreate) SetID(u uuid.UUID) *OutOfGasCreate {
 	return oogc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (oogc *OutOfGasCreate) SetNillableID(u *uuid.UUID) *OutOfGasCreate {
+	if u != nil {
+		oogc.SetID(*u)
+	}
+	return oogc
+}
+
 // Mutation returns the OutOfGasMutation object of the builder.
 func (oogc *OutOfGasCreate) Mutation() *OutOfGasMutation {
 	return oogc.mutation
@@ -181,22 +189,22 @@ func (oogc *OutOfGasCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (oogc *OutOfGasCreate) check() error {
 	if _, ok := oogc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
+		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "OutOfGas.order_id"`)}
 	}
 	if _, ok := oogc.mutation.Start(); !ok {
-		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "start"`)}
+		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "OutOfGas.start"`)}
 	}
 	if _, ok := oogc.mutation.End(); !ok {
-		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "end"`)}
+		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "OutOfGas.end"`)}
 	}
 	if _, ok := oogc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "OutOfGas.create_at"`)}
 	}
 	if _, ok := oogc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "update_at"`)}
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "OutOfGas.update_at"`)}
 	}
 	if _, ok := oogc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "delete_at"`)}
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "OutOfGas.delete_at"`)}
 	}
 	return nil
 }
@@ -210,7 +218,11 @@ func (oogc *OutOfGasCreate) sqlSave(ctx context.Context) (*OutOfGas, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -229,7 +241,7 @@ func (oogc *OutOfGasCreate) createSpec() (*OutOfGas, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = oogc.conflict
 	if id, ok := oogc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := oogc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -357,6 +369,12 @@ func (u *OutOfGasUpsert) UpdateStart() *OutOfGasUpsert {
 	return u
 }
 
+// AddStart adds v to the "start" field.
+func (u *OutOfGasUpsert) AddStart(v uint32) *OutOfGasUpsert {
+	u.Add(outofgas.FieldStart, v)
+	return u
+}
+
 // SetEnd sets the "end" field.
 func (u *OutOfGasUpsert) SetEnd(v uint32) *OutOfGasUpsert {
 	u.Set(outofgas.FieldEnd, v)
@@ -366,6 +384,12 @@ func (u *OutOfGasUpsert) SetEnd(v uint32) *OutOfGasUpsert {
 // UpdateEnd sets the "end" field to the value that was provided on create.
 func (u *OutOfGasUpsert) UpdateEnd() *OutOfGasUpsert {
 	u.SetExcluded(outofgas.FieldEnd)
+	return u
+}
+
+// AddEnd adds v to the "end" field.
+func (u *OutOfGasUpsert) AddEnd(v uint32) *OutOfGasUpsert {
+	u.Add(outofgas.FieldEnd, v)
 	return u
 }
 
@@ -381,6 +405,12 @@ func (u *OutOfGasUpsert) UpdateCreateAt() *OutOfGasUpsert {
 	return u
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *OutOfGasUpsert) AddCreateAt(v uint32) *OutOfGasUpsert {
+	u.Add(outofgas.FieldCreateAt, v)
+	return u
+}
+
 // SetUpdateAt sets the "update_at" field.
 func (u *OutOfGasUpsert) SetUpdateAt(v uint32) *OutOfGasUpsert {
 	u.Set(outofgas.FieldUpdateAt, v)
@@ -390,6 +420,12 @@ func (u *OutOfGasUpsert) SetUpdateAt(v uint32) *OutOfGasUpsert {
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *OutOfGasUpsert) UpdateUpdateAt() *OutOfGasUpsert {
 	u.SetExcluded(outofgas.FieldUpdateAt)
+	return u
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *OutOfGasUpsert) AddUpdateAt(v uint32) *OutOfGasUpsert {
+	u.Add(outofgas.FieldUpdateAt, v)
 	return u
 }
 
@@ -405,7 +441,13 @@ func (u *OutOfGasUpsert) UpdateDeleteAt() *OutOfGasUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *OutOfGasUpsert) AddDeleteAt(v uint32) *OutOfGasUpsert {
+	u.Add(outofgas.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.OutOfGas.Create().
@@ -476,6 +518,13 @@ func (u *OutOfGasUpsertOne) SetStart(v uint32) *OutOfGasUpsertOne {
 	})
 }
 
+// AddStart adds v to the "start" field.
+func (u *OutOfGasUpsertOne) AddStart(v uint32) *OutOfGasUpsertOne {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddStart(v)
+	})
+}
+
 // UpdateStart sets the "start" field to the value that was provided on create.
 func (u *OutOfGasUpsertOne) UpdateStart() *OutOfGasUpsertOne {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -487,6 +536,13 @@ func (u *OutOfGasUpsertOne) UpdateStart() *OutOfGasUpsertOne {
 func (u *OutOfGasUpsertOne) SetEnd(v uint32) *OutOfGasUpsertOne {
 	return u.Update(func(s *OutOfGasUpsert) {
 		s.SetEnd(v)
+	})
+}
+
+// AddEnd adds v to the "end" field.
+func (u *OutOfGasUpsertOne) AddEnd(v uint32) *OutOfGasUpsertOne {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddEnd(v)
 	})
 }
 
@@ -504,6 +560,13 @@ func (u *OutOfGasUpsertOne) SetCreateAt(v uint32) *OutOfGasUpsertOne {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *OutOfGasUpsertOne) AddCreateAt(v uint32) *OutOfGasUpsertOne {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *OutOfGasUpsertOne) UpdateCreateAt() *OutOfGasUpsertOne {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -518,6 +581,13 @@ func (u *OutOfGasUpsertOne) SetUpdateAt(v uint32) *OutOfGasUpsertOne {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *OutOfGasUpsertOne) AddUpdateAt(v uint32) *OutOfGasUpsertOne {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *OutOfGasUpsertOne) UpdateUpdateAt() *OutOfGasUpsertOne {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -529,6 +599,13 @@ func (u *OutOfGasUpsertOne) UpdateUpdateAt() *OutOfGasUpsertOne {
 func (u *OutOfGasUpsertOne) SetDeleteAt(v uint32) *OutOfGasUpsertOne {
 	return u.Update(func(s *OutOfGasUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *OutOfGasUpsertOne) AddDeleteAt(v uint32) *OutOfGasUpsertOne {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
@@ -702,7 +779,7 @@ type OutOfGasUpsertBulk struct {
 	create *OutOfGasCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.OutOfGas.Create().
@@ -776,6 +853,13 @@ func (u *OutOfGasUpsertBulk) SetStart(v uint32) *OutOfGasUpsertBulk {
 	})
 }
 
+// AddStart adds v to the "start" field.
+func (u *OutOfGasUpsertBulk) AddStart(v uint32) *OutOfGasUpsertBulk {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddStart(v)
+	})
+}
+
 // UpdateStart sets the "start" field to the value that was provided on create.
 func (u *OutOfGasUpsertBulk) UpdateStart() *OutOfGasUpsertBulk {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -787,6 +871,13 @@ func (u *OutOfGasUpsertBulk) UpdateStart() *OutOfGasUpsertBulk {
 func (u *OutOfGasUpsertBulk) SetEnd(v uint32) *OutOfGasUpsertBulk {
 	return u.Update(func(s *OutOfGasUpsert) {
 		s.SetEnd(v)
+	})
+}
+
+// AddEnd adds v to the "end" field.
+func (u *OutOfGasUpsertBulk) AddEnd(v uint32) *OutOfGasUpsertBulk {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddEnd(v)
 	})
 }
 
@@ -804,6 +895,13 @@ func (u *OutOfGasUpsertBulk) SetCreateAt(v uint32) *OutOfGasUpsertBulk {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *OutOfGasUpsertBulk) AddCreateAt(v uint32) *OutOfGasUpsertBulk {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *OutOfGasUpsertBulk) UpdateCreateAt() *OutOfGasUpsertBulk {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -818,6 +916,13 @@ func (u *OutOfGasUpsertBulk) SetUpdateAt(v uint32) *OutOfGasUpsertBulk {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *OutOfGasUpsertBulk) AddUpdateAt(v uint32) *OutOfGasUpsertBulk {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *OutOfGasUpsertBulk) UpdateUpdateAt() *OutOfGasUpsertBulk {
 	return u.Update(func(s *OutOfGasUpsert) {
@@ -829,6 +934,13 @@ func (u *OutOfGasUpsertBulk) UpdateUpdateAt() *OutOfGasUpsertBulk {
 func (u *OutOfGasUpsertBulk) SetDeleteAt(v uint32) *OutOfGasUpsertBulk {
 	return u.Update(func(s *OutOfGasUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *OutOfGasUpsertBulk) AddDeleteAt(v uint32) *OutOfGasUpsertBulk {
+	return u.Update(func(s *OutOfGasUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 

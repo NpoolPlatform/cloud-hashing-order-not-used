@@ -47,6 +47,12 @@ func (pc *PaymentCreate) SetAmount(u uint64) *PaymentCreate {
 	return pc
 }
 
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (pc *PaymentCreate) SetCoinUsdCurrency(u uint64) *PaymentCreate {
+	pc.mutation.SetCoinUsdCurrency(u)
+	return pc
+}
+
 // SetCoinInfoID sets the "coin_info_id" field.
 func (pc *PaymentCreate) SetCoinInfoID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetCoinInfoID(u)
@@ -116,6 +122,14 @@ func (pc *PaymentCreate) SetNillableDeleteAt(u *uint32) *PaymentCreate {
 // SetID sets the "id" field.
 func (pc *PaymentCreate) SetID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetID(u)
+	return pc
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableID(u *uuid.UUID) *PaymentCreate {
+	if u != nil {
+		pc.SetID(*u)
+	}
 	return pc
 }
 
@@ -211,42 +225,45 @@ func (pc *PaymentCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (pc *PaymentCreate) check() error {
 	if _, ok := pc.mutation.OrderID(); !ok {
-		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "order_id"`)}
+		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "Payment.order_id"`)}
 	}
 	if _, ok := pc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "account_id"`)}
+		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Payment.account_id"`)}
 	}
 	if _, ok := pc.mutation.StartAmount(); !ok {
-		return &ValidationError{Name: "start_amount", err: errors.New(`ent: missing required field "start_amount"`)}
+		return &ValidationError{Name: "start_amount", err: errors.New(`ent: missing required field "Payment.start_amount"`)}
 	}
 	if _, ok := pc.mutation.Amount(); !ok {
-		return &ValidationError{Name: "amount", err: errors.New(`ent: missing required field "amount"`)}
+		return &ValidationError{Name: "amount", err: errors.New(`ent: missing required field "Payment.amount"`)}
+	}
+	if _, ok := pc.mutation.CoinUsdCurrency(); !ok {
+		return &ValidationError{Name: "coin_usd_currency", err: errors.New(`ent: missing required field "Payment.coin_usd_currency"`)}
 	}
 	if _, ok := pc.mutation.CoinInfoID(); !ok {
-		return &ValidationError{Name: "coin_info_id", err: errors.New(`ent: missing required field "coin_info_id"`)}
+		return &ValidationError{Name: "coin_info_id", err: errors.New(`ent: missing required field "Payment.coin_info_id"`)}
 	}
 	if _, ok := pc.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "state"`)}
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Payment.state"`)}
 	}
 	if v, ok := pc.mutation.State(); ok {
 		if err := payment.StateValidator(v); err != nil {
-			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "state": %w`, err)}
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Payment.state": %w`, err)}
 		}
 	}
 	if _, ok := pc.mutation.ChainTransactionID(); !ok {
-		return &ValidationError{Name: "chain_transaction_id", err: errors.New(`ent: missing required field "chain_transaction_id"`)}
+		return &ValidationError{Name: "chain_transaction_id", err: errors.New(`ent: missing required field "Payment.chain_transaction_id"`)}
 	}
 	if _, ok := pc.mutation.PlatformTransactionID(); !ok {
-		return &ValidationError{Name: "platform_transaction_id", err: errors.New(`ent: missing required field "platform_transaction_id"`)}
+		return &ValidationError{Name: "platform_transaction_id", err: errors.New(`ent: missing required field "Payment.platform_transaction_id"`)}
 	}
 	if _, ok := pc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "create_at"`)}
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Payment.create_at"`)}
 	}
 	if _, ok := pc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "update_at"`)}
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "Payment.update_at"`)}
 	}
 	if _, ok := pc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "delete_at"`)}
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "Payment.delete_at"`)}
 	}
 	return nil
 }
@@ -260,7 +277,11 @@ func (pc *PaymentCreate) sqlSave(ctx context.Context) (*Payment, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -279,7 +300,7 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = pc.conflict
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := pc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -312,6 +333,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldAmount,
 		})
 		_node.Amount = value
+	}
+	if value, ok := pc.mutation.CoinUsdCurrency(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldCoinUsdCurrency,
+		})
+		_node.CoinUsdCurrency = value
 	}
 	if value, ok := pc.mutation.CoinInfoID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -459,6 +488,12 @@ func (u *PaymentUpsert) UpdateStartAmount() *PaymentUpsert {
 	return u
 }
 
+// AddStartAmount adds v to the "start_amount" field.
+func (u *PaymentUpsert) AddStartAmount(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldStartAmount, v)
+	return u
+}
+
 // SetAmount sets the "amount" field.
 func (u *PaymentUpsert) SetAmount(v uint64) *PaymentUpsert {
 	u.Set(payment.FieldAmount, v)
@@ -468,6 +503,30 @@ func (u *PaymentUpsert) SetAmount(v uint64) *PaymentUpsert {
 // UpdateAmount sets the "amount" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateAmount() *PaymentUpsert {
 	u.SetExcluded(payment.FieldAmount)
+	return u
+}
+
+// AddAmount adds v to the "amount" field.
+func (u *PaymentUpsert) AddAmount(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldAmount, v)
+	return u
+}
+
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (u *PaymentUpsert) SetCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Set(payment.FieldCoinUsdCurrency, v)
+	return u
+}
+
+// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateCoinUsdCurrency() *PaymentUpsert {
+	u.SetExcluded(payment.FieldCoinUsdCurrency)
+	return u
+}
+
+// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
+func (u *PaymentUpsert) AddCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldCoinUsdCurrency, v)
 	return u
 }
 
@@ -531,6 +590,12 @@ func (u *PaymentUpsert) UpdateCreateAt() *PaymentUpsert {
 	return u
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *PaymentUpsert) AddCreateAt(v uint32) *PaymentUpsert {
+	u.Add(payment.FieldCreateAt, v)
+	return u
+}
+
 // SetUpdateAt sets the "update_at" field.
 func (u *PaymentUpsert) SetUpdateAt(v uint32) *PaymentUpsert {
 	u.Set(payment.FieldUpdateAt, v)
@@ -540,6 +605,12 @@ func (u *PaymentUpsert) SetUpdateAt(v uint32) *PaymentUpsert {
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateUpdateAt() *PaymentUpsert {
 	u.SetExcluded(payment.FieldUpdateAt)
+	return u
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *PaymentUpsert) AddUpdateAt(v uint32) *PaymentUpsert {
+	u.Add(payment.FieldUpdateAt, v)
 	return u
 }
 
@@ -555,7 +626,13 @@ func (u *PaymentUpsert) UpdateDeleteAt() *PaymentUpsert {
 	return u
 }
 
-// UpdateNewValues updates the fields using the new values that were set on create except the ID field.
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *PaymentUpsert) AddDeleteAt(v uint32) *PaymentUpsert {
+	u.Add(payment.FieldDeleteAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.Payment.Create().
@@ -640,6 +717,13 @@ func (u *PaymentUpsertOne) SetStartAmount(v uint64) *PaymentUpsertOne {
 	})
 }
 
+// AddStartAmount adds v to the "start_amount" field.
+func (u *PaymentUpsertOne) AddStartAmount(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddStartAmount(v)
+	})
+}
+
 // UpdateStartAmount sets the "start_amount" field to the value that was provided on create.
 func (u *PaymentUpsertOne) UpdateStartAmount() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
@@ -654,10 +738,38 @@ func (u *PaymentUpsertOne) SetAmount(v uint64) *PaymentUpsertOne {
 	})
 }
 
+// AddAmount adds v to the "amount" field.
+func (u *PaymentUpsertOne) AddAmount(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddAmount(v)
+	})
+}
+
 // UpdateAmount sets the "amount" field to the value that was provided on create.
 func (u *PaymentUpsertOne) UpdateAmount() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAmount()
+	})
+}
+
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (u *PaymentUpsertOne) SetCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetCoinUsdCurrency(v)
+	})
+}
+
+// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
+func (u *PaymentUpsertOne) AddCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddCoinUsdCurrency(v)
+	})
+}
+
+// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateCoinUsdCurrency() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateCoinUsdCurrency()
 	})
 }
 
@@ -724,6 +836,13 @@ func (u *PaymentUpsertOne) SetCreateAt(v uint32) *PaymentUpsertOne {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *PaymentUpsertOne) AddCreateAt(v uint32) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *PaymentUpsertOne) UpdateCreateAt() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
@@ -738,6 +857,13 @@ func (u *PaymentUpsertOne) SetUpdateAt(v uint32) *PaymentUpsertOne {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *PaymentUpsertOne) AddUpdateAt(v uint32) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *PaymentUpsertOne) UpdateUpdateAt() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
@@ -749,6 +875,13 @@ func (u *PaymentUpsertOne) UpdateUpdateAt() *PaymentUpsertOne {
 func (u *PaymentUpsertOne) SetDeleteAt(v uint32) *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *PaymentUpsertOne) AddDeleteAt(v uint32) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
@@ -922,7 +1055,7 @@ type PaymentUpsertBulk struct {
 	create *PaymentCreateBulk
 }
 
-// UpdateNewValues updates the fields using the new values that
+// UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
 //	client.Payment.Create().
@@ -1010,6 +1143,13 @@ func (u *PaymentUpsertBulk) SetStartAmount(v uint64) *PaymentUpsertBulk {
 	})
 }
 
+// AddStartAmount adds v to the "start_amount" field.
+func (u *PaymentUpsertBulk) AddStartAmount(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddStartAmount(v)
+	})
+}
+
 // UpdateStartAmount sets the "start_amount" field to the value that was provided on create.
 func (u *PaymentUpsertBulk) UpdateStartAmount() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
@@ -1024,10 +1164,38 @@ func (u *PaymentUpsertBulk) SetAmount(v uint64) *PaymentUpsertBulk {
 	})
 }
 
+// AddAmount adds v to the "amount" field.
+func (u *PaymentUpsertBulk) AddAmount(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddAmount(v)
+	})
+}
+
 // UpdateAmount sets the "amount" field to the value that was provided on create.
 func (u *PaymentUpsertBulk) UpdateAmount() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAmount()
+	})
+}
+
+// SetCoinUsdCurrency sets the "coin_usd_currency" field.
+func (u *PaymentUpsertBulk) SetCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetCoinUsdCurrency(v)
+	})
+}
+
+// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
+func (u *PaymentUpsertBulk) AddCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddCoinUsdCurrency(v)
+	})
+}
+
+// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateCoinUsdCurrency() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateCoinUsdCurrency()
 	})
 }
 
@@ -1094,6 +1262,13 @@ func (u *PaymentUpsertBulk) SetCreateAt(v uint32) *PaymentUpsertBulk {
 	})
 }
 
+// AddCreateAt adds v to the "create_at" field.
+func (u *PaymentUpsertBulk) AddCreateAt(v uint32) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
 // UpdateCreateAt sets the "create_at" field to the value that was provided on create.
 func (u *PaymentUpsertBulk) UpdateCreateAt() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
@@ -1108,6 +1283,13 @@ func (u *PaymentUpsertBulk) SetUpdateAt(v uint32) *PaymentUpsertBulk {
 	})
 }
 
+// AddUpdateAt adds v to the "update_at" field.
+func (u *PaymentUpsertBulk) AddUpdateAt(v uint32) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
 // UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
 func (u *PaymentUpsertBulk) UpdateUpdateAt() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
@@ -1119,6 +1301,13 @@ func (u *PaymentUpsertBulk) UpdateUpdateAt() *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) SetDeleteAt(v uint32) *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.SetDeleteAt(v)
+	})
+}
+
+// AddDeleteAt adds v to the "delete_at" field.
+func (u *PaymentUpsertBulk) AddDeleteAt(v uint32) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddDeleteAt(v)
 	})
 }
 
