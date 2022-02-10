@@ -39,6 +39,7 @@ func dbRowToOrder(row *ent.Order) *npool.Order {
 		Start:                  row.Start,
 		End:                    row.End,
 		CouponID:               row.CouponID.String(),
+		CreateAt:               row.CreateAt,
 	}
 }
 

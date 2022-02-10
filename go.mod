@@ -7,7 +7,7 @@ require (
 	github.com/NpoolPlatform/api-manager v0.0.0-20220205130236-69d286e72dba
 	github.com/NpoolPlatform/cloud-hashing-billing v0.0.0-20211120094336-58e1a1ffa8be
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220120091626-4e8035637592
-	github.com/NpoolPlatform/message v0.0.0-20220210040035-3099ba433ddd
+	github.com/NpoolPlatform/message v0.0.0-20220210042836-7d7d08e60e99
 	github.com/NpoolPlatform/sphinx-coininfo v0.0.0-20211208035009-5ad2768d2290
 	github.com/NpoolPlatform/sphinx-proxy v0.0.0-20211209140052-de1778e36e36
 	github.com/go-resty/resty/v2 v2.7.0
