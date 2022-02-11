@@ -2,10 +2,12 @@ package paymentwatcher
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
+	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/payment"
 	grpc2 "github.com/NpoolPlatform/cloud-hashing-order/pkg/grpc"
 	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
@@ -76,4 +78,8 @@ func Watch(ctx context.Context) {
 			watchPaymentState(ctx)
 		}
 	}
+}
+
+func AccountLockKey(accountID string) string {
+	return fmt.Sprintf("%v:%v", constant.OrderPaymentLockKeyPrefix, accountID)
 }
