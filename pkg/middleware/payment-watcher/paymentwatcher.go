@@ -18,7 +18,7 @@ import (
 	sphinxproxypb "github.com/NpoolPlatform/message/npool/sphinxproxy"
 )
 
-func watchPaymentState(ctx context.Context) {
+func watchPaymentState(ctx context.Context) { //nolint
 	payments, err := payment.GetByState(ctx, "wait")
 	if err != nil {
 		logger.Sugar().Errorf("fail to get wait payments: %v", err)
@@ -71,6 +71,24 @@ func watchPaymentState(ctx context.Context) {
 			if err != nil {
 				logger.Sugar().Errorf("fail to update payment state: %v", err)
 				continue
+			}
+		}
+
+		if newState == constant.PaymentStateDone {
+			myPayment, err := grpc2.GetGoodPaymentByAccount(ctx, &billingpb.GetGoodPaymentByAccountRequest{
+				AccountID: account.Info.ID,
+			})
+			if err != nil {
+				logger.Sugar().Errorf("fail to get good payment: %v", err)
+				continue
+			}
+
+			myPayment.Info.Idle = true
+			_, err = grpc2.UpdateGoodPayment(ctx, &billingpb.UpdateGoodPaymentRequest{
+				Info: myPayment.Info,
+			})
+			if err != nil {
+				logger.Sugar().Errorf("fail to update good payment: %v", err)
 			}
 
 			lockKey := AccountLockKey(account.Info.ID)
