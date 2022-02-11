@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.10.0
 	github.com/NpoolPlatform/api-manager v0.0.0-20220205130236-69d286e72dba
 	github.com/NpoolPlatform/cloud-hashing-billing v0.0.0-20211120094336-58e1a1ffa8be
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220120091626-4e8035637592
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20220211051615-b2300d03022a
 	github.com/NpoolPlatform/message v0.0.0-20220210044814-7ae975ae9f52
 	github.com/NpoolPlatform/sphinx-coininfo v0.0.0-20211208035009-5ad2768d2290
 	github.com/NpoolPlatform/sphinx-proxy v0.0.0-20211209140052-de1778e36e36

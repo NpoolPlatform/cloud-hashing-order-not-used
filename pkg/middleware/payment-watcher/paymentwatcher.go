@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	redis2 "github.com/NpoolPlatform/go-service-framework/pkg/redis"
 
 	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/payment"
@@ -53,8 +54,17 @@ func watchPaymentState(ctx context.Context) {
 		logger.Sugar().Infof("payment %v checking coin %v balance %v start amount %v pay amount %v",
 			pay.ID, coinInfo.Info.Name, balance.Info.Balance, pay.StartAmount, pay.Amount)
 
+		newState := pay.State
 		if balance.Info.Balance-pay.StartAmount > pay.Amount {
-			pay.State = "done"
+			newState = constant.PaymentStateDone
+		}
+		if pay.CreateAt+constant.TimeoutSeconds < uint32(time.Now().Unix()) {
+			newState = constant.PaymentStateTimeout
+		}
+
+		if newState != pay.State {
+			logger.Sugar().Infof("payment %v try %v -> %v", pay.ID, pay.State, newState)
+			pay.State = newState
 			_, err := payment.Update(ctx, &npool.UpdatePaymentRequest{
 				Info: pay,
 			})
@@ -62,10 +72,13 @@ func watchPaymentState(ctx context.Context) {
 				logger.Sugar().Errorf("fail to update payment state: %v", err)
 				continue
 			}
-			logger.Sugar().Infof("payment %v done", pay.ID)
-		}
 
-		// TODO: payment timeout
+			lockKey := AccountLockKey(account.Info.ID)
+			err = redis2.Unlock(lockKey)
+			if err != nil {
+				logger.Sugar().Errorf("fail unlock %v: %v", lockKey, err)
+			}
+		}
 	}
 }
 
