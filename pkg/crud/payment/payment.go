@@ -185,10 +185,8 @@ func GetByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool
 	}, nil
 }
 
-//---------------------------------------------------------------------------------------------------------------------------
-
-func GetByState(ctx context.Context, state string) ([]*npool.Payment, error) {
-	payState := payment.State(state)
+func GetByState(ctx context.Context, in *npool.GetPaymentsByStateRequest) (*npool.GetPaymentsByStateResponse, error) {
+	payState := payment.State(in.GetState())
 
 	cli, err := db.Client()
 	if err != nil {
@@ -213,5 +211,7 @@ func GetByState(ctx context.Context, state string) ([]*npool.Payment, error) {
 		payments = append(payments, dbRowToPayment(info))
 	}
 
-	return payments, nil
+	return &npool.GetPaymentsByStateResponse{
+		Infos: payments,
+	}, nil
 }
