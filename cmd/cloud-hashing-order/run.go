@@ -9,7 +9,6 @@ import (
 	msglistener "github.com/NpoolPlatform/cloud-hashing-order/pkg/message/listener"
 	msg "github.com/NpoolPlatform/cloud-hashing-order/pkg/message/message"
 	msgsrv "github.com/NpoolPlatform/cloud-hashing-order/pkg/message/server"
-	paywatcher "github.com/NpoolPlatform/cloud-hashing-order/pkg/middleware/payment-watcher" //nolint
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -46,7 +45,6 @@ var runCmd = &cli.Command{
 
 		go msglistener.Listen()
 		go msgSender()
-		go paywatcher.Watch(c.Context)
 
 		return grpc2.RunGRPCGateWay(rpcGatewayRegister)
 	},
