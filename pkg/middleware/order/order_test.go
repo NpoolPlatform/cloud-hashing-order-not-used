@@ -98,6 +98,7 @@ func TestGetDetail(t *testing.T) {
 	myPayment := npool.Payment{
 		AppID:      myOrder.AppID,
 		UserID:     myOrder.UserID,
+		GoodID:     myOrder.GoodID,
 		OrderID:    orderResp.Info.ID,
 		AccountID:  uuid.New().String(),
 		Amount:     1490.6,

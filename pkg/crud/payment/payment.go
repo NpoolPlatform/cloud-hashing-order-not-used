@@ -23,6 +23,9 @@ func validatePayment(info *npool.Payment) error {
 	if _, err := uuid.Parse(info.GetUserID()); err != nil {
 		return xerrors.Errorf("invalid user id: %v", err)
 	}
+	if _, err := uuid.Parse(info.GetGoodID()); err != nil {
+		return xerrors.Errorf("invalid good id: %v", err)
+	}
 	if _, err := uuid.Parse(info.GetOrderID()); err != nil {
 		return xerrors.Errorf("invalid order id: %v", err)
 	}
@@ -40,6 +43,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		ID:                    row.ID.String(),
 		AppID:                 row.AppID.String(),
 		UserID:                row.UserID.String(),
+		GoodID:                row.GoodID.String(),
 		OrderID:               row.OrderID.String(),
 		AccountID:             row.AccountID.String(),
 		StartAmount:           price.DBPriceToVisualPrice(row.StartAmount),
@@ -70,6 +74,7 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
+		SetGoodID(uuid.MustParse(in.GetInfo().GetGoodID())).
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
 		SetAccountID(uuid.MustParse(in.GetInfo().GetAccountID())).
 		SetStartAmount(price.VisualPriceToDBPrice(in.GetInfo().GetStartAmount())).

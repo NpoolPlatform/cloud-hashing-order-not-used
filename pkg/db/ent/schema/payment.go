@@ -23,6 +23,7 @@ func (Payment) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
+		field.UUID("good_id", uuid.UUID{}),
 		field.UUID("order_id", uuid.UUID{}).
 			Unique(),
 		field.UUID("account_id", uuid.UUID{}),

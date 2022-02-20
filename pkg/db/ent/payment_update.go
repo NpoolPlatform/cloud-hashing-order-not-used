@@ -40,6 +40,12 @@ func (pu *PaymentUpdate) SetUserID(u uuid.UUID) *PaymentUpdate {
 	return pu
 }
 
+// SetGoodID sets the "good_id" field.
+func (pu *PaymentUpdate) SetGoodID(u uuid.UUID) *PaymentUpdate {
+	pu.mutation.SetGoodID(u)
+	return pu
+}
+
 // SetOrderID sets the "order_id" field.
 func (pu *PaymentUpdate) SetOrderID(u uuid.UUID) *PaymentUpdate {
 	pu.mutation.SetOrderID(u)
@@ -286,6 +292,13 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldUserID,
 		})
 	}
+	if value, ok := pu.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldGoodID,
+		})
+	}
 	if value, ok := pu.mutation.OrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -440,6 +453,12 @@ func (puo *PaymentUpdateOne) SetAppID(u uuid.UUID) *PaymentUpdateOne {
 // SetUserID sets the "user_id" field.
 func (puo *PaymentUpdateOne) SetUserID(u uuid.UUID) *PaymentUpdateOne {
 	puo.mutation.SetUserID(u)
+	return puo
+}
+
+// SetGoodID sets the "good_id" field.
+func (puo *PaymentUpdateOne) SetGoodID(u uuid.UUID) *PaymentUpdateOne {
+	puo.mutation.SetGoodID(u)
 	return puo
 }
 
@@ -711,6 +730,13 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: payment.FieldUserID,
+		})
+	}
+	if value, ok := puo.mutation.GoodID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldGoodID,
 		})
 	}
 	if value, ok := puo.mutation.OrderID(); ok {

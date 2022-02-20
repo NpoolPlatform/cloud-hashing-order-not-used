@@ -4132,6 +4132,7 @@ type PaymentMutation struct {
 	id                      *uuid.UUID
 	app_id                  *uuid.UUID
 	user_id                 *uuid.UUID
+	good_id                 *uuid.UUID
 	order_id                *uuid.UUID
 	account_id              *uuid.UUID
 	start_amount            *uint64
@@ -4330,6 +4331,42 @@ func (m *PaymentMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error
 // ResetUserID resets all changes to the "user_id" field.
 func (m *PaymentMutation) ResetUserID() {
 	m.user_id = nil
+}
+
+// SetGoodID sets the "good_id" field.
+func (m *PaymentMutation) SetGoodID(u uuid.UUID) {
+	m.good_id = &u
+}
+
+// GoodID returns the value of the "good_id" field in the mutation.
+func (m *PaymentMutation) GoodID() (r uuid.UUID, exists bool) {
+	v := m.good_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoodID returns the old "good_id" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldGoodID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoodID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoodID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoodID: %w", err)
+	}
+	return oldValue.GoodID, nil
+}
+
+// ResetGoodID resets all changes to the "good_id" field.
+func (m *PaymentMutation) ResetGoodID() {
+	m.good_id = nil
 }
 
 // SetOrderID sets the "order_id" field.
@@ -4903,12 +4940,15 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 15)
 	if m.app_id != nil {
 		fields = append(fields, payment.FieldAppID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, payment.FieldUserID)
+	}
+	if m.good_id != nil {
+		fields = append(fields, payment.FieldGoodID)
 	}
 	if m.order_id != nil {
 		fields = append(fields, payment.FieldOrderID)
@@ -4958,6 +4998,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case payment.FieldUserID:
 		return m.UserID()
+	case payment.FieldGoodID:
+		return m.GoodID()
 	case payment.FieldOrderID:
 		return m.OrderID()
 	case payment.FieldAccountID:
@@ -4995,6 +5037,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldAppID(ctx)
 	case payment.FieldUserID:
 		return m.OldUserID(ctx)
+	case payment.FieldGoodID:
+		return m.OldGoodID(ctx)
 	case payment.FieldOrderID:
 		return m.OldOrderID(ctx)
 	case payment.FieldAccountID:
@@ -5041,6 +5085,13 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
+		return nil
+	case payment.FieldGoodID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoodID(v)
 		return nil
 	case payment.FieldOrderID:
 		v, ok := value.(uuid.UUID)
@@ -5255,6 +5306,9 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case payment.FieldGoodID:
+		m.ResetGoodID()
 		return nil
 	case payment.FieldOrderID:
 		m.ResetOrderID()

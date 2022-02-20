@@ -35,6 +35,12 @@ func (pc *PaymentCreate) SetUserID(u uuid.UUID) *PaymentCreate {
 	return pc
 }
 
+// SetGoodID sets the "good_id" field.
+func (pc *PaymentCreate) SetGoodID(u uuid.UUID) *PaymentCreate {
+	pc.mutation.SetGoodID(u)
+	return pc
+}
+
 // SetOrderID sets the "order_id" field.
 func (pc *PaymentCreate) SetOrderID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetOrderID(u)
@@ -242,6 +248,9 @@ func (pc *PaymentCreate) check() error {
 	if _, ok := pc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Payment.user_id"`)}
 	}
+	if _, ok := pc.mutation.GoodID(); !ok {
+		return &ValidationError{Name: "good_id", err: errors.New(`ent: missing required field "Payment.good_id"`)}
+	}
 	if _, ok := pc.mutation.OrderID(); !ok {
 		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "Payment.order_id"`)}
 	}
@@ -335,6 +344,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldUserID,
 		})
 		_node.UserID = value
+	}
+	if value, ok := pc.mutation.GoodID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldGoodID,
+		})
+		_node.GoodID = value
 	}
 	if value, ok := pc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -507,6 +524,18 @@ func (u *PaymentUpsert) SetUserID(v uuid.UUID) *PaymentUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateUserID() *PaymentUpsert {
 	u.SetExcluded(payment.FieldUserID)
+	return u
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *PaymentUpsert) SetGoodID(v uuid.UUID) *PaymentUpsert {
+	u.Set(payment.FieldGoodID, v)
+	return u
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateGoodID() *PaymentUpsert {
+	u.SetExcluded(payment.FieldGoodID)
 	return u
 }
 
@@ -765,6 +794,20 @@ func (u *PaymentUpsertOne) SetUserID(v uuid.UUID) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateUserID() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *PaymentUpsertOne) SetGoodID(v uuid.UUID) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateGoodID() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateGoodID()
 	})
 }
 
@@ -1219,6 +1262,20 @@ func (u *PaymentUpsertBulk) SetUserID(v uuid.UUID) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateUserID() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetGoodID sets the "good_id" field.
+func (u *PaymentUpsertBulk) SetGoodID(v uuid.UUID) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetGoodID(v)
+	})
+}
+
+// UpdateGoodID sets the "good_id" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateGoodID() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateGoodID()
 	})
 }
 
