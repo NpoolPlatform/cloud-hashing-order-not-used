@@ -23,6 +23,18 @@ type PaymentCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetAppID sets the "app_id" field.
+func (pc *PaymentCreate) SetAppID(u uuid.UUID) *PaymentCreate {
+	pc.mutation.SetAppID(u)
+	return pc
+}
+
+// SetUserID sets the "user_id" field.
+func (pc *PaymentCreate) SetUserID(u uuid.UUID) *PaymentCreate {
+	pc.mutation.SetUserID(u)
+	return pc
+}
+
 // SetOrderID sets the "order_id" field.
 func (pc *PaymentCreate) SetOrderID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetOrderID(u)
@@ -224,6 +236,12 @@ func (pc *PaymentCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (pc *PaymentCreate) check() error {
+	if _, ok := pc.mutation.AppID(); !ok {
+		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "Payment.app_id"`)}
+	}
+	if _, ok := pc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Payment.user_id"`)}
+	}
 	if _, ok := pc.mutation.OrderID(); !ok {
 		return &ValidationError{Name: "order_id", err: errors.New(`ent: missing required field "Payment.order_id"`)}
 	}
@@ -301,6 +319,22 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := pc.mutation.AppID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldAppID,
+		})
+		_node.AppID = value
+	}
+	if value, ok := pc.mutation.UserID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldUserID,
+		})
+		_node.UserID = value
 	}
 	if value, ok := pc.mutation.OrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -405,7 +439,7 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.Payment.Create().
-//		SetOrderID(v).
+//		SetAppID(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -414,7 +448,7 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.PaymentUpsert) {
-//			SetOrderID(v+v).
+//			SetAppID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -451,6 +485,30 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetAppID sets the "app_id" field.
+func (u *PaymentUpsert) SetAppID(v uuid.UUID) *PaymentUpsert {
+	u.Set(payment.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateAppID() *PaymentUpsert {
+	u.SetExcluded(payment.FieldAppID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *PaymentUpsert) SetUserID(v uuid.UUID) *PaymentUpsert {
+	u.Set(payment.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateUserID() *PaymentUpsert {
+	u.SetExcluded(payment.FieldUserID)
+	return u
+}
 
 // SetOrderID sets the "order_id" field.
 func (u *PaymentUpsert) SetOrderID(v uuid.UUID) *PaymentUpsert {
@@ -680,6 +738,34 @@ func (u *PaymentUpsertOne) Update(set func(*PaymentUpsert)) *PaymentUpsertOne {
 		set(&PaymentUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetAppID sets the "app_id" field.
+func (u *PaymentUpsertOne) SetAppID(v uuid.UUID) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateAppID() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *PaymentUpsertOne) SetUserID(v uuid.UUID) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateUserID() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserID()
+	})
 }
 
 // SetOrderID sets the "order_id" field.
@@ -1024,7 +1110,7 @@ func (pcb *PaymentCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.PaymentUpsert) {
-//			SetOrderID(v+v).
+//			SetAppID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -1106,6 +1192,34 @@ func (u *PaymentUpsertBulk) Update(set func(*PaymentUpsert)) *PaymentUpsertBulk 
 		set(&PaymentUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetAppID sets the "app_id" field.
+func (u *PaymentUpsertBulk) SetAppID(v uuid.UUID) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateAppID() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *PaymentUpsertBulk) SetUserID(v uuid.UUID) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateUserID() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserID()
+	})
 }
 
 // SetOrderID sets the "order_id" field.

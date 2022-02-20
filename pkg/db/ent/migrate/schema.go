@@ -98,6 +98,8 @@ var (
 	// PaymentsColumns holds the columns for the "payments" table.
 	PaymentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "order_id", Type: field.TypeUUID, Unique: true},
 		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "start_amount", Type: field.TypeUint64},

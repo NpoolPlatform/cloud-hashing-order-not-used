@@ -28,6 +28,18 @@ func (pu *PaymentUpdate) Where(ps ...predicate.Payment) *PaymentUpdate {
 	return pu
 }
 
+// SetAppID sets the "app_id" field.
+func (pu *PaymentUpdate) SetAppID(u uuid.UUID) *PaymentUpdate {
+	pu.mutation.SetAppID(u)
+	return pu
+}
+
+// SetUserID sets the "user_id" field.
+func (pu *PaymentUpdate) SetUserID(u uuid.UUID) *PaymentUpdate {
+	pu.mutation.SetUserID(u)
+	return pu
+}
+
 // SetOrderID sets the "order_id" field.
 func (pu *PaymentUpdate) SetOrderID(u uuid.UUID) *PaymentUpdate {
 	pu.mutation.SetOrderID(u)
@@ -260,6 +272,20 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := pu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldAppID,
+		})
+	}
+	if value, ok := pu.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldUserID,
+		})
+	}
 	if value, ok := pu.mutation.OrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -403,6 +429,18 @@ type PaymentUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *PaymentMutation
+}
+
+// SetAppID sets the "app_id" field.
+func (puo *PaymentUpdateOne) SetAppID(u uuid.UUID) *PaymentUpdateOne {
+	puo.mutation.SetAppID(u)
+	return puo
+}
+
+// SetUserID sets the "user_id" field.
+func (puo *PaymentUpdateOne) SetUserID(u uuid.UUID) *PaymentUpdateOne {
+	puo.mutation.SetUserID(u)
+	return puo
 }
 
 // SetOrderID sets the "order_id" field.
@@ -660,6 +698,20 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := puo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldAppID,
+		})
+	}
+	if value, ok := puo.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: payment.FieldUserID,
+		})
 	}
 	if value, ok := puo.mutation.OrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

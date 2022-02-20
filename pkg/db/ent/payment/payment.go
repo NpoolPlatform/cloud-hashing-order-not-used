@@ -13,6 +13,10 @@ const (
 	Label = "payment"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldAppID holds the string denoting the app_id field in the database.
+	FieldAppID = "app_id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldOrderID holds the string denoting the order_id field in the database.
 	FieldOrderID = "order_id"
 	// FieldAccountID holds the string denoting the account_id field in the database.
@@ -44,6 +48,8 @@ const (
 // Columns holds all SQL columns for payment fields.
 var Columns = []string{
 	FieldID,
+	FieldAppID,
+	FieldUserID,
 	FieldOrderID,
 	FieldAccountID,
 	FieldStartAmount,

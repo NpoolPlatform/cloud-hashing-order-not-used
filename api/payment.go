@@ -58,3 +58,30 @@ func (s *Server) GetPaymentsByState(ctx context.Context, in *npool.GetPaymentsBy
 	}
 	return resp, nil
 }
+
+func (s *Server) GetPaymentsByApp(ctx context.Context, in *npool.GetPaymentsByAppRequest) (*npool.GetPaymentsByAppResponse, error) {
+	resp, err := payment.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get payments by app error: %v", err)
+		return &npool.GetPaymentsByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetPaymentsByAppUser(ctx context.Context, in *npool.GetPaymentsByAppUserRequest) (*npool.GetPaymentsByAppUserResponse, error) {
+	resp, err := payment.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get payments by app user error: %v", err)
+		return &npool.GetPaymentsByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetPayments(ctx context.Context, in *npool.GetPaymentsRequest) (*npool.GetPaymentsResponse, error) {
+	resp, err := payment.GetAll(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get payments error: %v", err)
+		return &npool.GetPaymentsResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}

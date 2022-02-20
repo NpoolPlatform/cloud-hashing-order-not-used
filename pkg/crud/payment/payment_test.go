@@ -25,6 +25,8 @@ func init() {
 }
 
 func assertPayment(t *testing.T, actual, expected *npool.Payment) {
+	assert.Equal(t, actual.AppID, expected.AppID)
+	assert.Equal(t, actual.UserID, expected.UserID)
 	assert.Equal(t, actual.OrderID, expected.OrderID)
 	assert.Equal(t, actual.AccountID, expected.AccountID)
 	assert.Equal(t, actual.State, expected.State)
@@ -36,6 +38,8 @@ func TestCRUD(t *testing.T) {
 	}
 
 	payment := npool.Payment{
+		AppID:      uuid.New().String(),
+		UserID:     uuid.New().String(),
 		OrderID:    uuid.New().String(),
 		AccountID:  uuid.New().String(),
 		CoinInfoID: uuid.New().String(),

@@ -16,6 +16,10 @@ type Payment struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// AppID holds the value of the "app_id" field.
+	AppID uuid.UUID `json:"app_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID uuid.UUID `json:"user_id,omitempty"`
 	// OrderID holds the value of the "order_id" field.
 	OrderID uuid.UUID `json:"order_id,omitempty"`
 	// AccountID holds the value of the "account_id" field.
@@ -51,7 +55,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case payment.FieldState, payment.FieldChainTransactionID:
 			values[i] = new(sql.NullString)
-		case payment.FieldID, payment.FieldOrderID, payment.FieldAccountID, payment.FieldCoinInfoID, payment.FieldPlatformTransactionID:
+		case payment.FieldID, payment.FieldAppID, payment.FieldUserID, payment.FieldOrderID, payment.FieldAccountID, payment.FieldCoinInfoID, payment.FieldPlatformTransactionID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Payment", columns[i])
@@ -73,6 +77,18 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				pa.ID = *value
+			}
+		case payment.FieldAppID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+			} else if value != nil {
+				pa.AppID = *value
+			}
+		case payment.FieldUserID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value != nil {
+				pa.UserID = *value
 			}
 		case payment.FieldOrderID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -174,6 +190,10 @@ func (pa *Payment) String() string {
 	var builder strings.Builder
 	builder.WriteString("Payment(")
 	builder.WriteString(fmt.Sprintf("id=%v", pa.ID))
+	builder.WriteString(", app_id=")
+	builder.WriteString(fmt.Sprintf("%v", pa.AppID))
+	builder.WriteString(", user_id=")
+	builder.WriteString(fmt.Sprintf("%v", pa.UserID))
 	builder.WriteString(", order_id=")
 	builder.WriteString(fmt.Sprintf("%v", pa.OrderID))
 	builder.WriteString(", account_id=")

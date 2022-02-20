@@ -254,12 +254,12 @@ func (pq *PaymentQuery) Clone() *PaymentQuery {
 // Example:
 //
 //	var v []struct {
-//		OrderID uuid.UUID `json:"order_id,omitempty"`
+//		AppID uuid.UUID `json:"app_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Payment.Query().
-//		GroupBy(payment.FieldOrderID).
+//		GroupBy(payment.FieldAppID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -281,11 +281,11 @@ func (pq *PaymentQuery) GroupBy(field string, fields ...string) *PaymentGroupBy 
 // Example:
 //
 //	var v []struct {
-//		OrderID uuid.UUID `json:"order_id,omitempty"`
+//		AppID uuid.UUID `json:"app_id,omitempty"`
 //	}
 //
 //	client.Payment.Query().
-//		Select(payment.FieldOrderID).
+//		Select(payment.FieldAppID).
 //		Scan(ctx, &v)
 //
 func (pq *PaymentQuery) Select(fields ...string) *PaymentSelect {
