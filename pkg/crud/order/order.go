@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 
+	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/db"
@@ -105,20 +106,20 @@ func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderRespons
 		Order.
 		Query().
 		Where(
-			order.And(
-				order.ID(id),
-			),
+			order.ID(id),
 		).
 		All(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail query order: %v", err)
 	}
-	if len(infos) == 0 {
-		return nil, xerrors.Errorf("empty order")
+
+	var _order *npool.Order
+	for _, info := range infos {
+		_order = dbRowToOrder(info)
 	}
 
 	return &npool.GetOrderResponse{
-		Info: dbRowToOrder(infos[0]),
+		Info: _order,
 	}, nil
 }
 
@@ -162,6 +163,71 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*np
 	}, nil
 }
 
+func GetByAppUserCouponTypeID(ctx context.Context, in *npool.GetOrderByAppUserCouponTypeIDRequest) (*npool.GetOrderByAppUserCouponTypeIDResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	couponID, err := uuid.Parse(in.GetCouponID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid coupon id: %v", err)
+	}
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	query := cli.Order.Query()
+
+	switch in.GetCouponType() {
+	case constant.FixAmountCoupon:
+		query = query.Where(
+			order.And(
+				order.AppID(appID),
+				order.UserID(userID),
+				order.CouponID(couponID),
+			),
+		)
+	case constant.DiscountCoupon:
+		query = query.Where(
+			order.And(
+				order.AppID(appID),
+				order.UserID(userID),
+				order.DiscountCouponID(couponID),
+			),
+		)
+	case constant.UserSpecialReductionCoupon:
+		query = query.Where(
+			order.And(
+				order.AppID(appID),
+				order.UserID(userID),
+				order.UserSpecialReductionID(couponID),
+			),
+		)
+	}
+	infos, err := query.All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+
+	var _order *npool.Order
+	for _, info := range infos {
+		_order = dbRowToOrder(info)
+		break
+	}
+
+	return &npool.GetOrderByAppUserCouponTypeIDResponse{
+		Info: _order,
+	}, nil
+}
+
 func GetByApp(ctx context.Context, in *npool.GetOrdersByAppRequest) (*npool.GetOrdersByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
@@ -177,9 +243,7 @@ func GetByApp(ctx context.Context, in *npool.GetOrdersByAppRequest) (*npool.GetO
 		Order.
 		Query().
 		Where(
-			order.And(
-				order.AppID(appID),
-			),
+			order.AppID(appID),
 		).
 		All(ctx)
 	if err != nil {
@@ -211,9 +275,7 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.Ge
 		Order.
 		Query().
 		Where(
-			order.And(
-				order.GoodID(goodID),
-			),
+			order.GoodID(goodID),
 		).
 		All(ctx)
 	if err != nil {
