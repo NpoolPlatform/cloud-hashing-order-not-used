@@ -25,22 +25,12 @@ func constructOrderDetail(
 	outOfGases []*npool.OutOfGas,
 	goodPayment *npool.Payment) *npool.OrderDetail {
 	return &npool.OrderDetail{
-		ID:                     info.ID,
-		GoodID:                 info.GoodID,
-		AppID:                  info.AppID,
-		UserID:                 info.UserID,
-		Units:                  info.Units,
-		DiscountCouponID:       info.DiscountCouponID,
-		UserSpecialReductionID: info.UserSpecialReductionID,
-		GoodPaying:             goodPaying,
-		GasPayings:             gasPayings,
-		Compensates:            compensates,
-		OutOfGases:             outOfGases,
-		Payment:                goodPayment,
-		Start:                  info.Start,
-		End:                    info.End,
-		CouponID:               info.CouponID,
-		CreateAt:               info.CreateAt,
+		Order:       info,
+		GoodPaying:  goodPaying,
+		GasPayings:  gasPayings,
+		Compensates: compensates,
+		OutOfGases:  outOfGases,
+		Payment:     goodPayment,
 	}
 }
 
@@ -129,7 +119,7 @@ func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderD
 	}
 
 	return &npool.GetOrderDetailResponse{
-		Detail: detail,
+		Info: detail,
 	}, nil
 }
 
@@ -160,7 +150,7 @@ func GetByAppUser(ctx context.Context, in *npool.GetOrdersDetailByAppUserRequest
 	}
 
 	return &npool.GetOrdersDetailByAppUserResponse{
-		Details: details,
+		Infos: details,
 	}, nil
 }
 
@@ -179,7 +169,7 @@ func GetShortByAppUser(ctx context.Context, in *npool.GetOrdersShortDetailByAppU
 	}
 
 	return &npool.GetOrdersShortDetailByAppUserResponse{
-		Details: details,
+		Infos: details,
 	}, nil
 }
 
@@ -197,7 +187,7 @@ func GetByApp(ctx context.Context, in *npool.GetOrdersDetailByAppRequest) (*npoo
 	}
 
 	return &npool.GetOrdersDetailByAppResponse{
-		Details: details,
+		Infos: details,
 	}, nil
 }
 
@@ -215,6 +205,6 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersDetailByGoodRequest) (*np
 	}
 
 	return &npool.GetOrdersDetailByGoodResponse{
-		Details: details,
+		Infos: details,
 	}, nil
 }
