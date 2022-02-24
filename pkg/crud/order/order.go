@@ -40,6 +40,7 @@ func dbRowToOrder(row *ent.Order) *npool.Order {
 		Start:                  row.Start,
 		End:                    row.End,
 		CouponID:               row.CouponID.String(),
+		PromotionID:            row.PromotionID.String(),
 		CreateAt:               row.CreateAt,
 	}
 }
@@ -57,6 +58,11 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 	discountCouponID, err := uuid.Parse(in.GetInfo().GetDiscountCouponID())
 	if err != nil {
 		discountCouponID = uuid.UUID{}
+	}
+
+	promotionID, err := uuid.Parse(in.GetInfo().GetPromotionID())
+	if err != nil {
+		promotionID = uuid.UUID{}
 	}
 
 	userSpecialReductionID, err := uuid.Parse(in.GetInfo().GetUserSpecialReductionID())
@@ -81,6 +87,7 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetStart(in.GetInfo().GetStart()).
 		SetEnd(in.GetInfo().GetEnd()).
 		SetCouponID(couponID).
+		SetPromotionID(promotionID).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create order: %v", err)

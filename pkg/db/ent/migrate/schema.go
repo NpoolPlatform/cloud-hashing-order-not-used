@@ -64,6 +64,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "units", Type: field.TypeUint32},
+		{Name: "promotion_id", Type: field.TypeUUID},
 		{Name: "discount_coupon_id", Type: field.TypeUUID},
 		{Name: "user_special_reduction_id", Type: field.TypeUUID},
 		{Name: "start", Type: field.TypeUint32},

@@ -24,6 +24,8 @@ type Order struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// Units holds the value of the "units" field.
 	Units uint32 `json:"units,omitempty"`
+	// PromotionID holds the value of the "promotion_id" field.
+	PromotionID uuid.UUID `json:"promotion_id,omitempty"`
 	// DiscountCouponID holds the value of the "discount_coupon_id" field.
 	DiscountCouponID uuid.UUID `json:"discount_coupon_id,omitempty"`
 	// UserSpecialReductionID holds the value of the "user_special_reduction_id" field.
@@ -49,7 +51,7 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case order.FieldUnits, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
@@ -95,6 +97,12 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field units", values[i])
 			} else if value.Valid {
 				o.Units = uint32(value.Int64)
+			}
+		case order.FieldPromotionID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field promotion_id", values[i])
+			} else if value != nil {
+				o.PromotionID = *value
 			}
 		case order.FieldDiscountCouponID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -180,6 +188,8 @@ func (o *Order) String() string {
 	builder.WriteString(fmt.Sprintf("%v", o.UserID))
 	builder.WriteString(", units=")
 	builder.WriteString(fmt.Sprintf("%v", o.Units))
+	builder.WriteString(", promotion_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.PromotionID))
 	builder.WriteString(", discount_coupon_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.DiscountCouponID))
 	builder.WriteString(", user_special_reduction_id=")

@@ -47,6 +47,12 @@ func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	return oc
 }
 
+// SetPromotionID sets the "promotion_id" field.
+func (oc *OrderCreate) SetPromotionID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetPromotionID(u)
+	return oc
+}
+
 // SetDiscountCouponID sets the "discount_coupon_id" field.
 func (oc *OrderCreate) SetDiscountCouponID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetDiscountCouponID(u)
@@ -236,6 +242,9 @@ func (oc *OrderCreate) check() error {
 	if _, ok := oc.mutation.Units(); !ok {
 		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "Order.units"`)}
 	}
+	if _, ok := oc.mutation.PromotionID(); !ok {
+		return &ValidationError{Name: "promotion_id", err: errors.New(`ent: missing required field "Order.promotion_id"`)}
+	}
 	if _, ok := oc.mutation.DiscountCouponID(); !ok {
 		return &ValidationError{Name: "discount_coupon_id", err: errors.New(`ent: missing required field "Order.discount_coupon_id"`)}
 	}
@@ -328,6 +337,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldUnits,
 		})
 		_node.Units = value
+	}
+	if value, ok := oc.mutation.PromotionID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldPromotionID,
+		})
+		_node.PromotionID = value
 	}
 	if value, ok := oc.mutation.DiscountCouponID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -498,6 +515,18 @@ func (u *OrderUpsert) UpdateUnits() *OrderUpsert {
 // AddUnits adds v to the "units" field.
 func (u *OrderUpsert) AddUnits(v uint32) *OrderUpsert {
 	u.Add(order.FieldUnits, v)
+	return u
+}
+
+// SetPromotionID sets the "promotion_id" field.
+func (u *OrderUpsert) SetPromotionID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldPromotionID, v)
+	return u
+}
+
+// UpdatePromotionID sets the "promotion_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdatePromotionID() *OrderUpsert {
+	u.SetExcluded(order.FieldPromotionID)
 	return u
 }
 
@@ -737,6 +766,20 @@ func (u *OrderUpsertOne) AddUnits(v uint32) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateUnits() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUnits()
+	})
+}
+
+// SetPromotionID sets the "promotion_id" field.
+func (u *OrderUpsertOne) SetPromotionID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetPromotionID(v)
+	})
+}
+
+// UpdatePromotionID sets the "promotion_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdatePromotionID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdatePromotionID()
 	})
 }
 
@@ -1163,6 +1206,20 @@ func (u *OrderUpsertBulk) AddUnits(v uint32) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateUnits() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUnits()
+	})
+}
+
+// SetPromotionID sets the "promotion_id" field.
+func (u *OrderUpsertBulk) SetPromotionID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetPromotionID(v)
+	})
+}
+
+// UpdatePromotionID sets the "promotion_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdatePromotionID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdatePromotionID()
 	})
 }
 

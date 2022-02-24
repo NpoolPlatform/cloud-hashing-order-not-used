@@ -43,12 +43,12 @@ func assertOrderDetail( //nolint
 	compensates []*npool.Compensate, //nolint
 	outOfGases []*npool.OutOfGas, //nolint
 	myPayment *npool.Payment) { //nolint
-	assert.Equal(t, actual.GoodID, orderInfo.GoodID)
-	assert.Equal(t, actual.AppID, orderInfo.AppID)
-	assert.Equal(t, actual.UserID, orderInfo.UserID)
-	assert.Equal(t, actual.Units, orderInfo.Units)
-	assert.Equal(t, actual.DiscountCouponID, orderInfo.DiscountCouponID)
-	assert.Equal(t, actual.UserSpecialReductionID, orderInfo.UserSpecialReductionID)
+	assert.Equal(t, actual.Order.GoodID, orderInfo.GoodID)
+	assert.Equal(t, actual.Order.AppID, orderInfo.AppID)
+	assert.Equal(t, actual.Order.UserID, orderInfo.UserID)
+	assert.Equal(t, actual.Order.Units, orderInfo.Units)
+	assert.Equal(t, actual.Order.DiscountCouponID, orderInfo.DiscountCouponID)
+	assert.Equal(t, actual.Order.UserSpecialReductionID, orderInfo.UserSpecialReductionID)
 
 	assert.Equal(t, actual.GoodPaying, goodPaying)
 
@@ -63,9 +63,9 @@ func assertOrderDetail( //nolint
 	// assert.EqualValues(t, actual.OutOfGases, outOfGases) //nolint
 	assert.Equal(t, actual.Payment, myPayment)
 
-	assert.Equal(t, actual.Start, orderInfo.Start)
-	assert.Equal(t, actual.End, orderInfo.End)
-	assert.Equal(t, actual.CouponID, orderInfo.CouponID)
+	assert.Equal(t, actual.Order.Start, orderInfo.Start)
+	assert.Equal(t, actual.Order.End, orderInfo.End)
+	assert.Equal(t, actual.Order.CouponID, orderInfo.CouponID)
 }
 
 func TestGetDetail(t *testing.T) {
@@ -186,10 +186,10 @@ func TestGetDetail(t *testing.T) {
 		ID: orderResp.Info.ID,
 	})
 	if assert.Nil(t, err) {
-		assert.Equal(t, orderDetail.Detail.ID, orderResp.Info.ID)
+		assert.Equal(t, orderDetail.Info.Order.ID, orderResp.Info.ID)
 		assertOrderDetail(
 			t,
-			orderDetail.Detail,
+			orderDetail.Info,
 			&myOrder,
 			goodPayingResp.Info,
 			[]*npool.GasPaying{
@@ -212,11 +212,11 @@ func TestGetDetail(t *testing.T) {
 		UserID: userID,
 	})
 	if assert.Nil(t, err) {
-		if assert.Equal(t, len(orderDetails.Details), 1) {
-			assert.Equal(t, orderDetails.Details[0].ID, orderResp.Info.ID)
+		if assert.Equal(t, len(orderDetails.Infos), 1) {
+			assert.Equal(t, orderDetails.Infos[0].Order.ID, orderResp.Info.ID)
 			assertOrderDetail(
 				t,
-				orderDetail.Detail,
+				orderDetail.Info,
 				&myOrder,
 				goodPayingResp.Info,
 				[]*npool.GasPaying{
@@ -239,11 +239,11 @@ func TestGetDetail(t *testing.T) {
 		AppID: appID,
 	})
 	if assert.Nil(t, err) {
-		if assert.Equal(t, len(orderDetails1.Details), 1) {
-			assert.Equal(t, orderDetails1.Details[0].ID, orderResp.Info.ID)
+		if assert.Equal(t, len(orderDetails1.Infos), 1) {
+			assert.Equal(t, orderDetails1.Infos[0].Order.ID, orderResp.Info.ID)
 			assertOrderDetail(
 				t,
-				orderDetail.Detail,
+				orderDetail.Info,
 				&myOrder,
 				goodPayingResp.Info,
 				[]*npool.GasPaying{
@@ -266,11 +266,11 @@ func TestGetDetail(t *testing.T) {
 		GoodID: goodID,
 	})
 	if assert.Nil(t, err) {
-		if assert.Equal(t, len(orderDetails2.Details), 1) {
-			assert.Equal(t, orderDetails2.Details[0].ID, orderResp.Info.ID)
+		if assert.Equal(t, len(orderDetails2.Infos), 1) {
+			assert.Equal(t, orderDetails2.Infos[0].Order.ID, orderResp.Info.ID)
 			assertOrderDetail(
 				t,
-				orderDetail.Detail,
+				orderDetail.Info,
 				&myOrder,
 				goodPayingResp.Info,
 				[]*npool.GasPaying{

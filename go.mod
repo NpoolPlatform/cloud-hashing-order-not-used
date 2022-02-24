@@ -8,7 +8,7 @@ require (
 	github.com/NpoolPlatform/cloud-hashing-billing v0.0.0-20220211112041-cb90970f6df1
 	github.com/NpoolPlatform/cloud-hashing-inspire v0.0.0-20220224025352-b4d29cbbeebc
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220211051615-b2300d03022a
-	github.com/NpoolPlatform/message v0.0.0-20220224032823-b48b892b18c3
+	github.com/NpoolPlatform/message v0.0.0-20220224050312-2563c069d663
 	github.com/NpoolPlatform/sphinx-coininfo v0.0.0-20211208035009-5ad2768d2290
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0

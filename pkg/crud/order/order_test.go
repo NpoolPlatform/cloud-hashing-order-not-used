@@ -35,6 +35,7 @@ func assertOrder(t *testing.T, actual, expected *npool.Order) {
 	assert.Equal(t, actual.Start, expected.Start)
 	assert.Equal(t, actual.End, expected.End)
 	assert.Equal(t, actual.CouponID, expected.CouponID)
+	assert.Equal(t, actual.PromotionID, expected.PromotionID)
 }
 
 func TestCRUD(t *testing.T) {
@@ -54,6 +55,7 @@ func TestCRUD(t *testing.T) {
 		Start:                  second,
 		End:                    second + 20,
 		CouponID:               uuid.New().String(),
+		PromotionID:            uuid.New().String(),
 	}
 
 	resp, err := Create(context.Background(), &npool.CreateOrderRequest{

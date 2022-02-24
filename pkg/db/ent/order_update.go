@@ -59,6 +59,12 @@ func (ou *OrderUpdate) AddUnits(u int32) *OrderUpdate {
 	return ou
 }
 
+// SetPromotionID sets the "promotion_id" field.
+func (ou *OrderUpdate) SetPromotionID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetPromotionID(u)
+	return ou
+}
+
 // SetDiscountCouponID sets the "discount_coupon_id" field.
 func (ou *OrderUpdate) SetDiscountCouponID(u uuid.UUID) *OrderUpdate {
 	ou.mutation.SetDiscountCouponID(u)
@@ -279,6 +285,13 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUnits,
 		})
 	}
+	if value, ok := ou.mutation.PromotionID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldPromotionID,
+		})
+	}
 	if value, ok := ou.mutation.DiscountCouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -417,6 +430,12 @@ func (ouo *OrderUpdateOne) SetUnits(u uint32) *OrderUpdateOne {
 // AddUnits adds u to the "units" field.
 func (ouo *OrderUpdateOne) AddUnits(u int32) *OrderUpdateOne {
 	ouo.mutation.AddUnits(u)
+	return ouo
+}
+
+// SetPromotionID sets the "promotion_id" field.
+func (ouo *OrderUpdateOne) SetPromotionID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetPromotionID(u)
 	return ouo
 }
 
@@ -662,6 +681,13 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: order.FieldUnits,
+		})
+	}
+	if value, ok := ouo.mutation.PromotionID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldPromotionID,
 		})
 	}
 	if value, ok := ouo.mutation.DiscountCouponID(); ok {

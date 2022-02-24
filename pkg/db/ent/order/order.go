@@ -19,6 +19,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
+	// FieldPromotionID holds the string denoting the promotion_id field in the database.
+	FieldPromotionID = "promotion_id"
 	// FieldDiscountCouponID holds the string denoting the discount_coupon_id field in the database.
 	FieldDiscountCouponID = "discount_coupon_id"
 	// FieldUserSpecialReductionID holds the string denoting the user_special_reduction_id field in the database.
@@ -46,6 +48,7 @@ var Columns = []string{
 	FieldAppID,
 	FieldUserID,
 	FieldUnits,
+	FieldPromotionID,
 	FieldDiscountCouponID,
 	FieldUserSpecialReductionID,
 	FieldStart,

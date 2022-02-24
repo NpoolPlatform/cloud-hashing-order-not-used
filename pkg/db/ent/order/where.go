@@ -119,6 +119,13 @@ func Units(v uint32) predicate.Order {
 	})
 }
 
+// PromotionID applies equality check predicate on the "promotion_id" field. It's identical to PromotionIDEQ.
+func PromotionID(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPromotionID), v))
+	})
+}
+
 // DiscountCouponID applies equality check predicate on the "discount_coupon_id" field. It's identical to DiscountCouponIDEQ.
 func DiscountCouponID(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
@@ -476,6 +483,82 @@ func UnitsLT(v uint32) predicate.Order {
 func UnitsLTE(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldUnits), v))
+	})
+}
+
+// PromotionIDEQ applies the EQ predicate on the "promotion_id" field.
+func PromotionIDEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPromotionID), v))
+	})
+}
+
+// PromotionIDNEQ applies the NEQ predicate on the "promotion_id" field.
+func PromotionIDNEQ(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPromotionID), v))
+	})
+}
+
+// PromotionIDIn applies the In predicate on the "promotion_id" field.
+func PromotionIDIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPromotionID), v...))
+	})
+}
+
+// PromotionIDNotIn applies the NotIn predicate on the "promotion_id" field.
+func PromotionIDNotIn(vs ...uuid.UUID) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPromotionID), v...))
+	})
+}
+
+// PromotionIDGT applies the GT predicate on the "promotion_id" field.
+func PromotionIDGT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPromotionID), v))
+	})
+}
+
+// PromotionIDGTE applies the GTE predicate on the "promotion_id" field.
+func PromotionIDGTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPromotionID), v))
+	})
+}
+
+// PromotionIDLT applies the LT predicate on the "promotion_id" field.
+func PromotionIDLT(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPromotionID), v))
+	})
+}
+
+// PromotionIDLTE applies the LTE predicate on the "promotion_id" field.
+func PromotionIDLTE(v uuid.UUID) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPromotionID), v))
 	})
 }
 

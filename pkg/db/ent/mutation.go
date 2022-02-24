@@ -2268,6 +2268,7 @@ type OrderMutation struct {
 	user_id                   *uuid.UUID
 	units                     *uint32
 	addunits                  *int32
+	promotion_id              *uuid.UUID
 	discount_coupon_id        *uuid.UUID
 	user_special_reduction_id *uuid.UUID
 	start                     *uint32
@@ -2553,6 +2554,42 @@ func (m *OrderMutation) AddedUnits() (r int32, exists bool) {
 func (m *OrderMutation) ResetUnits() {
 	m.units = nil
 	m.addunits = nil
+}
+
+// SetPromotionID sets the "promotion_id" field.
+func (m *OrderMutation) SetPromotionID(u uuid.UUID) {
+	m.promotion_id = &u
+}
+
+// PromotionID returns the value of the "promotion_id" field in the mutation.
+func (m *OrderMutation) PromotionID() (r uuid.UUID, exists bool) {
+	v := m.promotion_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPromotionID returns the old "promotion_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldPromotionID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPromotionID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPromotionID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPromotionID: %w", err)
+	}
+	return oldValue.PromotionID, nil
+}
+
+// ResetPromotionID resets all changes to the "promotion_id" field.
+func (m *OrderMutation) ResetPromotionID() {
+	m.promotion_id = nil
 }
 
 // SetDiscountCouponID sets the "discount_coupon_id" field.
@@ -2962,7 +2999,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 13)
 	if m.good_id != nil {
 		fields = append(fields, order.FieldGoodID)
 	}
@@ -2974,6 +3011,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.units != nil {
 		fields = append(fields, order.FieldUnits)
+	}
+	if m.promotion_id != nil {
+		fields = append(fields, order.FieldPromotionID)
 	}
 	if m.discount_coupon_id != nil {
 		fields = append(fields, order.FieldDiscountCouponID)
@@ -3015,6 +3055,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case order.FieldUnits:
 		return m.Units()
+	case order.FieldPromotionID:
+		return m.PromotionID()
 	case order.FieldDiscountCouponID:
 		return m.DiscountCouponID()
 	case order.FieldUserSpecialReductionID:
@@ -3048,6 +3090,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldUserID(ctx)
 	case order.FieldUnits:
 		return m.OldUnits(ctx)
+	case order.FieldPromotionID:
+		return m.OldPromotionID(ctx)
 	case order.FieldDiscountCouponID:
 		return m.OldDiscountCouponID(ctx)
 	case order.FieldUserSpecialReductionID:
@@ -3100,6 +3144,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnits(v)
+		return nil
+	case order.FieldPromotionID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPromotionID(v)
 		return nil
 	case order.FieldDiscountCouponID:
 		v, ok := value.(uuid.UUID)
@@ -3292,6 +3343,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldUnits:
 		m.ResetUnits()
+		return nil
+	case order.FieldPromotionID:
+		m.ResetPromotionID()
 		return nil
 	case order.FieldDiscountCouponID:
 		m.ResetDiscountCouponID()
