@@ -65,6 +65,12 @@ func (pc *PaymentCreate) SetAmount(u uint64) *PaymentCreate {
 	return pc
 }
 
+// SetFinishAmount sets the "finish_amount" field.
+func (pc *PaymentCreate) SetFinishAmount(u uint64) *PaymentCreate {
+	pc.mutation.SetFinishAmount(u)
+	return pc
+}
+
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (pc *PaymentCreate) SetCoinUsdCurrency(u uint64) *PaymentCreate {
 	pc.mutation.SetCoinUsdCurrency(u)
@@ -263,6 +269,9 @@ func (pc *PaymentCreate) check() error {
 	if _, ok := pc.mutation.Amount(); !ok {
 		return &ValidationError{Name: "amount", err: errors.New(`ent: missing required field "Payment.amount"`)}
 	}
+	if _, ok := pc.mutation.FinishAmount(); !ok {
+		return &ValidationError{Name: "finish_amount", err: errors.New(`ent: missing required field "Payment.finish_amount"`)}
+	}
 	if _, ok := pc.mutation.CoinUsdCurrency(); !ok {
 		return &ValidationError{Name: "coin_usd_currency", err: errors.New(`ent: missing required field "Payment.coin_usd_currency"`)}
 	}
@@ -384,6 +393,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldAmount,
 		})
 		_node.Amount = value
+	}
+	if value, ok := pc.mutation.FinishAmount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldFinishAmount,
+		})
+		_node.FinishAmount = value
 	}
 	if value, ok := pc.mutation.CoinUsdCurrency(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -596,6 +613,24 @@ func (u *PaymentUpsert) UpdateAmount() *PaymentUpsert {
 // AddAmount adds v to the "amount" field.
 func (u *PaymentUpsert) AddAmount(v uint64) *PaymentUpsert {
 	u.Add(payment.FieldAmount, v)
+	return u
+}
+
+// SetFinishAmount sets the "finish_amount" field.
+func (u *PaymentUpsert) SetFinishAmount(v uint64) *PaymentUpsert {
+	u.Set(payment.FieldFinishAmount, v)
+	return u
+}
+
+// UpdateFinishAmount sets the "finish_amount" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateFinishAmount() *PaymentUpsert {
+	u.SetExcluded(payment.FieldFinishAmount)
+	return u
+}
+
+// AddFinishAmount adds v to the "finish_amount" field.
+func (u *PaymentUpsert) AddFinishAmount(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldFinishAmount, v)
 	return u
 }
 
@@ -878,6 +913,27 @@ func (u *PaymentUpsertOne) AddAmount(v uint64) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateAmount() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAmount()
+	})
+}
+
+// SetFinishAmount sets the "finish_amount" field.
+func (u *PaymentUpsertOne) SetFinishAmount(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetFinishAmount(v)
+	})
+}
+
+// AddFinishAmount adds v to the "finish_amount" field.
+func (u *PaymentUpsertOne) AddFinishAmount(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddFinishAmount(v)
+	})
+}
+
+// UpdateFinishAmount sets the "finish_amount" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateFinishAmount() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateFinishAmount()
 	})
 }
 
@@ -1346,6 +1402,27 @@ func (u *PaymentUpsertBulk) AddAmount(v uint64) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateAmount() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateAmount()
+	})
+}
+
+// SetFinishAmount sets the "finish_amount" field.
+func (u *PaymentUpsertBulk) SetFinishAmount(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetFinishAmount(v)
+	})
+}
+
+// AddFinishAmount adds v to the "finish_amount" field.
+func (u *PaymentUpsertBulk) AddFinishAmount(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddFinishAmount(v)
+	})
+}
+
+// UpdateFinishAmount sets the "finish_amount" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateFinishAmount() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateFinishAmount()
 	})
 }
 

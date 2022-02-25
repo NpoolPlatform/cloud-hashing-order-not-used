@@ -47,6 +47,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		OrderID:               row.OrderID.String(),
 		AccountID:             row.AccountID.String(),
 		StartAmount:           price.DBPriceToVisualPrice(row.StartAmount),
+		FinishAmount:          price.DBPriceToVisualPrice(row.FinishAmount),
 		Amount:                price.DBPriceToVisualPrice(row.Amount),
 		CoinUSDCurrency:       price.DBPriceToVisualPrice(row.CoinUsdCurrency),
 		CoinInfoID:            row.CoinInfoID.String(),
@@ -78,6 +79,7 @@ func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreateP
 		SetOrderID(uuid.MustParse(in.GetInfo().GetOrderID())).
 		SetAccountID(uuid.MustParse(in.GetInfo().GetAccountID())).
 		SetStartAmount(price.VisualPriceToDBPrice(in.GetInfo().GetStartAmount())).
+		SetFinishAmount(price.VisualPriceToDBPrice(in.GetInfo().GetFinishAmount())).
 		SetAmount(price.VisualPriceToDBPrice(in.GetInfo().GetAmount())).
 		SetCoinUsdCurrency(price.VisualPriceToDBPrice(in.GetInfo().GetCoinUSDCurrency())).
 		SetCoinInfoID(uuid.MustParse(in.GetInfo().GetCoinInfoID())).
@@ -119,6 +121,7 @@ func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdateP
 		UpdateOneID(id).
 		SetState(payment.State(in.GetInfo().GetState())).
 		SetChainTransactionID(in.GetInfo().GetChainTransactionID()).
+		SetFinishAmount(price.VisualPriceToDBPrice(in.GetInfo().GetFinishAmount())).
 		SetPlatformTransactionID(ptid).
 		Save(ctx)
 	if err != nil {

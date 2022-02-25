@@ -140,6 +140,13 @@ func Amount(v uint64) predicate.Payment {
 	})
 }
 
+// FinishAmount applies equality check predicate on the "finish_amount" field. It's identical to FinishAmountEQ.
+func FinishAmount(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFinishAmount), v))
+	})
+}
+
 // CoinUsdCurrency applies equality check predicate on the "coin_usd_currency" field. It's identical to CoinUsdCurrencyEQ.
 func CoinUsdCurrency(v uint64) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
@@ -718,6 +725,82 @@ func AmountLT(v uint64) predicate.Payment {
 func AmountLTE(v uint64) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAmount), v))
+	})
+}
+
+// FinishAmountEQ applies the EQ predicate on the "finish_amount" field.
+func FinishAmountEQ(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFinishAmount), v))
+	})
+}
+
+// FinishAmountNEQ applies the NEQ predicate on the "finish_amount" field.
+func FinishAmountNEQ(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFinishAmount), v))
+	})
+}
+
+// FinishAmountIn applies the In predicate on the "finish_amount" field.
+func FinishAmountIn(vs ...uint64) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldFinishAmount), v...))
+	})
+}
+
+// FinishAmountNotIn applies the NotIn predicate on the "finish_amount" field.
+func FinishAmountNotIn(vs ...uint64) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldFinishAmount), v...))
+	})
+}
+
+// FinishAmountGT applies the GT predicate on the "finish_amount" field.
+func FinishAmountGT(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFinishAmount), v))
+	})
+}
+
+// FinishAmountGTE applies the GTE predicate on the "finish_amount" field.
+func FinishAmountGTE(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFinishAmount), v))
+	})
+}
+
+// FinishAmountLT applies the LT predicate on the "finish_amount" field.
+func FinishAmountLT(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFinishAmount), v))
+	})
+}
+
+// FinishAmountLTE applies the LTE predicate on the "finish_amount" field.
+func FinishAmountLTE(v uint64) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFinishAmount), v))
 	})
 }
 

@@ -84,6 +84,19 @@ func (pu *PaymentUpdate) AddAmount(u int64) *PaymentUpdate {
 	return pu
 }
 
+// SetFinishAmount sets the "finish_amount" field.
+func (pu *PaymentUpdate) SetFinishAmount(u uint64) *PaymentUpdate {
+	pu.mutation.ResetFinishAmount()
+	pu.mutation.SetFinishAmount(u)
+	return pu
+}
+
+// AddFinishAmount adds u to the "finish_amount" field.
+func (pu *PaymentUpdate) AddFinishAmount(u int64) *PaymentUpdate {
+	pu.mutation.AddFinishAmount(u)
+	return pu
+}
+
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (pu *PaymentUpdate) SetCoinUsdCurrency(u uint64) *PaymentUpdate {
 	pu.mutation.ResetCoinUsdCurrency()
@@ -341,6 +354,20 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldAmount,
 		})
 	}
+	if value, ok := pu.mutation.FinishAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldFinishAmount,
+		})
+	}
+	if value, ok := pu.mutation.AddedFinishAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldFinishAmount,
+		})
+	}
 	if value, ok := pu.mutation.CoinUsdCurrency(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint64,
@@ -497,6 +524,19 @@ func (puo *PaymentUpdateOne) SetAmount(u uint64) *PaymentUpdateOne {
 // AddAmount adds u to the "amount" field.
 func (puo *PaymentUpdateOne) AddAmount(u int64) *PaymentUpdateOne {
 	puo.mutation.AddAmount(u)
+	return puo
+}
+
+// SetFinishAmount sets the "finish_amount" field.
+func (puo *PaymentUpdateOne) SetFinishAmount(u uint64) *PaymentUpdateOne {
+	puo.mutation.ResetFinishAmount()
+	puo.mutation.SetFinishAmount(u)
+	return puo
+}
+
+// AddFinishAmount adds u to the "finish_amount" field.
+func (puo *PaymentUpdateOne) AddFinishAmount(u int64) *PaymentUpdateOne {
+	puo.mutation.AddFinishAmount(u)
 	return puo
 }
 
@@ -779,6 +819,20 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUint64,
 			Value:  value,
 			Column: payment.FieldAmount,
+		})
+	}
+	if value, ok := puo.mutation.FinishAmount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldFinishAmount,
+		})
+	}
+	if value, ok := puo.mutation.AddedFinishAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldFinishAmount,
 		})
 	}
 	if value, ok := puo.mutation.CoinUsdCurrency(); ok {

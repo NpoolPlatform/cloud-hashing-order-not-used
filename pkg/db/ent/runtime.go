@@ -120,17 +120,17 @@ func init() {
 	paymentFields := schema.Payment{}.Fields()
 	_ = paymentFields
 	// paymentDescCreateAt is the schema descriptor for create_at field.
-	paymentDescCreateAt := paymentFields[13].Descriptor()
+	paymentDescCreateAt := paymentFields[14].Descriptor()
 	// payment.DefaultCreateAt holds the default value on creation for the create_at field.
 	payment.DefaultCreateAt = paymentDescCreateAt.Default.(func() uint32)
 	// paymentDescUpdateAt is the schema descriptor for update_at field.
-	paymentDescUpdateAt := paymentFields[14].Descriptor()
+	paymentDescUpdateAt := paymentFields[15].Descriptor()
 	// payment.DefaultUpdateAt holds the default value on creation for the update_at field.
 	payment.DefaultUpdateAt = paymentDescUpdateAt.Default.(func() uint32)
 	// payment.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	payment.UpdateDefaultUpdateAt = paymentDescUpdateAt.UpdateDefault.(func() uint32)
 	// paymentDescDeleteAt is the schema descriptor for delete_at field.
-	paymentDescDeleteAt := paymentFields[15].Descriptor()
+	paymentDescDeleteAt := paymentFields[16].Descriptor()
 	// payment.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	payment.DefaultDeleteAt = paymentDescDeleteAt.Default.(func() uint32)
 	// paymentDescID is the schema descriptor for id field.

@@ -106,6 +106,7 @@ var (
 		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "start_amount", Type: field.TypeUint64},
 		{Name: "amount", Type: field.TypeUint64},
+		{Name: "finish_amount", Type: field.TypeUint64},
 		{Name: "coin_usd_currency", Type: field.TypeUint64},
 		{Name: "coin_info_id", Type: field.TypeUUID},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},

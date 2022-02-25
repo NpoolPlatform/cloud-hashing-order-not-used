@@ -4193,6 +4193,8 @@ type PaymentMutation struct {
 	addstart_amount         *int64
 	amount                  *uint64
 	addamount               *int64
+	finish_amount           *uint64
+	addfinish_amount        *int64
 	coin_usd_currency       *uint64
 	addcoin_usd_currency    *int64
 	coin_info_id            *uuid.UUID
@@ -4607,6 +4609,62 @@ func (m *PaymentMutation) ResetAmount() {
 	m.addamount = nil
 }
 
+// SetFinishAmount sets the "finish_amount" field.
+func (m *PaymentMutation) SetFinishAmount(u uint64) {
+	m.finish_amount = &u
+	m.addfinish_amount = nil
+}
+
+// FinishAmount returns the value of the "finish_amount" field in the mutation.
+func (m *PaymentMutation) FinishAmount() (r uint64, exists bool) {
+	v := m.finish_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFinishAmount returns the old "finish_amount" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldFinishAmount(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFinishAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFinishAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFinishAmount: %w", err)
+	}
+	return oldValue.FinishAmount, nil
+}
+
+// AddFinishAmount adds u to the "finish_amount" field.
+func (m *PaymentMutation) AddFinishAmount(u int64) {
+	if m.addfinish_amount != nil {
+		*m.addfinish_amount += u
+	} else {
+		m.addfinish_amount = &u
+	}
+}
+
+// AddedFinishAmount returns the value that was added to the "finish_amount" field in this mutation.
+func (m *PaymentMutation) AddedFinishAmount() (r int64, exists bool) {
+	v := m.addfinish_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetFinishAmount resets all changes to the "finish_amount" field.
+func (m *PaymentMutation) ResetFinishAmount() {
+	m.finish_amount = nil
+	m.addfinish_amount = nil
+}
+
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (m *PaymentMutation) SetCoinUsdCurrency(u uint64) {
 	m.coin_usd_currency = &u
@@ -4994,7 +5052,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.app_id != nil {
 		fields = append(fields, payment.FieldAppID)
 	}
@@ -5015,6 +5073,9 @@ func (m *PaymentMutation) Fields() []string {
 	}
 	if m.amount != nil {
 		fields = append(fields, payment.FieldAmount)
+	}
+	if m.finish_amount != nil {
+		fields = append(fields, payment.FieldFinishAmount)
 	}
 	if m.coin_usd_currency != nil {
 		fields = append(fields, payment.FieldCoinUsdCurrency)
@@ -5062,6 +5123,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.StartAmount()
 	case payment.FieldAmount:
 		return m.Amount()
+	case payment.FieldFinishAmount:
+		return m.FinishAmount()
 	case payment.FieldCoinUsdCurrency:
 		return m.CoinUsdCurrency()
 	case payment.FieldCoinInfoID:
@@ -5101,6 +5164,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldStartAmount(ctx)
 	case payment.FieldAmount:
 		return m.OldAmount(ctx)
+	case payment.FieldFinishAmount:
+		return m.OldFinishAmount(ctx)
 	case payment.FieldCoinUsdCurrency:
 		return m.OldCoinUsdCurrency(ctx)
 	case payment.FieldCoinInfoID:
@@ -5175,6 +5240,13 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAmount(v)
 		return nil
+	case payment.FieldFinishAmount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFinishAmount(v)
+		return nil
 	case payment.FieldCoinUsdCurrency:
 		v, ok := value.(uint64)
 		if !ok {
@@ -5245,6 +5317,9 @@ func (m *PaymentMutation) AddedFields() []string {
 	if m.addamount != nil {
 		fields = append(fields, payment.FieldAmount)
 	}
+	if m.addfinish_amount != nil {
+		fields = append(fields, payment.FieldFinishAmount)
+	}
 	if m.addcoin_usd_currency != nil {
 		fields = append(fields, payment.FieldCoinUsdCurrency)
 	}
@@ -5269,6 +5344,8 @@ func (m *PaymentMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedStartAmount()
 	case payment.FieldAmount:
 		return m.AddedAmount()
+	case payment.FieldFinishAmount:
+		return m.AddedFinishAmount()
 	case payment.FieldCoinUsdCurrency:
 		return m.AddedCoinUsdCurrency()
 	case payment.FieldCreateAt:
@@ -5299,6 +5376,13 @@ func (m *PaymentMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddAmount(v)
+		return nil
+	case payment.FieldFinishAmount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFinishAmount(v)
 		return nil
 	case payment.FieldCoinUsdCurrency:
 		v, ok := value.(int64)
@@ -5375,6 +5459,9 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldAmount:
 		m.ResetAmount()
+		return nil
+	case payment.FieldFinishAmount:
+		m.ResetFinishAmount()
 		return nil
 	case payment.FieldCoinUsdCurrency:
 		m.ResetCoinUsdCurrency()
