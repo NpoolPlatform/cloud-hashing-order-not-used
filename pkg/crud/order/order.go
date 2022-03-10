@@ -298,3 +298,37 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.Ge
 		Infos: orders,
 	}, nil
 }
+
+func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.GetSoldByGoodResponse, error) {
+	goodID, err := uuid.Parse(in.GetGoodID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid good id: %v", err)
+	}
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	var units []struct {
+		GoodID string `json:"good_id"`
+		Units  uint32 `json:"sum"`
+	}
+
+	err = cli.
+		Order.
+		Query().
+		Where(
+			order.GoodID(goodID),
+		).
+		GroupBy(order.FieldGoodID).
+		Aggregate(ent.Sum(order.FieldUnits)).
+		Scan(ctx, &units)
+	if err != nil {
+		return nil, xerrors.Errorf("fail count good order: %v", err)
+	}
+
+	return &npool.GetSoldByGoodResponse{
+		Sold: units[0].Units,
+	}, nil
+}
