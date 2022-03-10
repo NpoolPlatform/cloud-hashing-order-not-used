@@ -2,9 +2,11 @@ package order
 
 import (
 	"context"
+	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
+	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 	npool "github.com/NpoolPlatform/message/npool/cloud-hashing-order"
 
 	"github.com/NpoolPlatform/cloud-hashing-order/pkg/crud/compensate"  //nolint
@@ -196,7 +198,7 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersDetailByGoodRequest) (*np
 		GoodID: in.GetGoodID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get orders by app: %v", err)
+		return nil, xerrors.Errorf("fail get orders by good: %v", err)
 	}
 
 	details, err := getOrdersDetail(ctx, resp.Infos, false)
@@ -206,5 +208,37 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersDetailByGoodRequest) (*np
 
 	return &npool.GetOrdersDetailByGoodResponse{
 		Infos: details,
+	}, nil
+}
+
+func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.GetSoldByGoodResponse, error) {
+	resp, err := order.GetByGood(ctx, &npool.GetOrdersByGoodRequest{
+		GoodID: in.GetGoodID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get orders by good: %v", err)
+	}
+
+	units := uint32(0)
+
+	for _, info := range resp.Infos {
+		pay, err := payment.GetByOrder(ctx, &npool.GetPaymentByOrderRequest{
+			OrderID: info.ID,
+		})
+		if err != nil {
+			continue
+		}
+
+		if pay.Info.State == constant.PaymentStateCanceled || pay.Info.State == constant.PaymentStateTimeout {
+			if info.CreateAt <= uint32(time.Now().Unix()-constant.TimeoutSeconds) {
+				continue
+			}
+		}
+
+		units += info.Units
+	}
+
+	return &npool.GetSoldByGoodResponse{
+		Sold: units,
 	}, nil
 }
