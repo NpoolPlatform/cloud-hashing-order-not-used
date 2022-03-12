@@ -225,7 +225,7 @@ func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.Get
 		pay, err := payment.GetByOrder(ctx, &npool.GetPaymentByOrderRequest{
 			OrderID: info.ID,
 		})
-		if err != nil {
+		if err != nil || pay.Info == nil {
 			continue
 		}
 
