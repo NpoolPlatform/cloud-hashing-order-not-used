@@ -230,9 +230,13 @@ func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.Get
 		}
 
 		if pay.Info.State == constant.PaymentStateCanceled || pay.Info.State == constant.PaymentStateTimeout {
-			if info.CreateAt <= uint32(time.Now().Unix()-constant.TimeoutSeconds) {
-				continue
-			}
+			continue
+		}
+		if info.CreateAt <= uint32(time.Now().Unix()-constant.TimeoutSeconds) {
+			continue
+		}
+		if info.End < info.Start+in.GetDurationDays()*24*60*60 {
+			continue
 		}
 
 		units += info.Units
