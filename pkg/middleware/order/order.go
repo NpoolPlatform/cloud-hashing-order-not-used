@@ -235,7 +235,7 @@ func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.Get
 		if info.CreateAt <= uint32(time.Now().Unix()-constant.TimeoutSeconds) {
 			continue
 		}
-		if info.End < info.Start+in.GetDurationDays()*24*60*60 {
+		if uint32(time.Now().Unix()) < info.End {
 			continue
 		}
 
