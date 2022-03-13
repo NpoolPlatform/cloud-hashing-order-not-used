@@ -232,9 +232,6 @@ func SoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.Get
 		if pay.Info.State == constant.PaymentStateCanceled || pay.Info.State == constant.PaymentStateTimeout {
 			continue
 		}
-		if info.CreateAt <= uint32(time.Now().Unix()-constant.TimeoutSeconds) {
-			continue
-		}
 		if uint32(time.Now().Unix()) < info.End {
 			continue
 		}
