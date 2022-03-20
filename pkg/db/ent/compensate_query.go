@@ -107,7 +107,7 @@ func (cq *CompensateQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single Compensate entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Compensate entity is not found.
+// Returns a *NotSingularError when more than one Compensate entity is found.
 // Returns a *NotFoundError when no Compensate entities are found.
 func (cq *CompensateQuery) Only(ctx context.Context) (*Compensate, error) {
 	nodes, err := cq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (cq *CompensateQuery) OnlyX(ctx context.Context) *Compensate {
 }
 
 // OnlyID is like Only, but returns the only Compensate ID in the query.
-// Returns a *NotSingularError when exactly one Compensate ID is not found.
+// Returns a *NotSingularError when more than one Compensate ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (cq *CompensateQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (cq *CompensateQuery) Clone() *CompensateQuery {
 		order:      append([]OrderFunc{}, cq.order...),
 		predicates: append([]predicate.Compensate{}, cq.predicates...),
 		// clone intermediate query.
-		sql:  cq.sql.Clone(),
-		path: cq.path,
+		sql:    cq.sql.Clone(),
+		path:   cq.path,
+		unique: cq.unique,
 	}
 }
 

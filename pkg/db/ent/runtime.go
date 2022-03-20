@@ -119,18 +119,26 @@ func init() {
 	outofgas.DefaultID = outofgasDescID.Default.(func() uuid.UUID)
 	paymentFields := schema.Payment{}.Fields()
 	_ = paymentFields
+	// paymentDescUserSetPaid is the schema descriptor for user_set_paid field.
+	paymentDescUserSetPaid := paymentFields[14].Descriptor()
+	// payment.DefaultUserSetPaid holds the default value on creation for the user_set_paid field.
+	payment.DefaultUserSetPaid = paymentDescUserSetPaid.Default.(bool)
+	// paymentDescUserPaymentTxid is the schema descriptor for user_payment_txid field.
+	paymentDescUserPaymentTxid := paymentFields[15].Descriptor()
+	// payment.DefaultUserPaymentTxid holds the default value on creation for the user_payment_txid field.
+	payment.DefaultUserPaymentTxid = paymentDescUserPaymentTxid.Default.(string)
 	// paymentDescCreateAt is the schema descriptor for create_at field.
-	paymentDescCreateAt := paymentFields[14].Descriptor()
+	paymentDescCreateAt := paymentFields[16].Descriptor()
 	// payment.DefaultCreateAt holds the default value on creation for the create_at field.
 	payment.DefaultCreateAt = paymentDescCreateAt.Default.(func() uint32)
 	// paymentDescUpdateAt is the schema descriptor for update_at field.
-	paymentDescUpdateAt := paymentFields[15].Descriptor()
+	paymentDescUpdateAt := paymentFields[17].Descriptor()
 	// payment.DefaultUpdateAt holds the default value on creation for the update_at field.
 	payment.DefaultUpdateAt = paymentDescUpdateAt.Default.(func() uint32)
 	// payment.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	payment.UpdateDefaultUpdateAt = paymentDescUpdateAt.UpdateDefault.(func() uint32)
 	// paymentDescDeleteAt is the schema descriptor for delete_at field.
-	paymentDescDeleteAt := paymentFields[16].Descriptor()
+	paymentDescDeleteAt := paymentFields[18].Descriptor()
 	// payment.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	payment.DefaultDeleteAt = paymentDescDeleteAt.Default.(func() uint32)
 	// paymentDescID is the schema descriptor for id field.

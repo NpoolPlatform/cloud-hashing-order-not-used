@@ -41,6 +41,15 @@ func (s *Server) UpdatePayment(ctx context.Context, in *npool.UpdatePaymentReque
 	return resp, nil
 }
 
+func (s *Server) UpdatePaymentByUser(ctx context.Context, in *npool.UpdatePaymentByUserRequest) (*npool.UpdatePaymentByUserResponse, error) {
+	resp, err := payment.UpdateByUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("update payment error: %v", err)
+		return &npool.UpdatePaymentByUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetPaymentByOrder(ctx context.Context, in *npool.GetPaymentByOrderRequest) (*npool.GetPaymentByOrderResponse, error) {
 	resp, err := payment.GetByOrder(ctx, in)
 	if err != nil {

@@ -107,7 +107,7 @@ func (oq *OrderQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single Order entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Order entity is not found.
+// Returns a *NotSingularError when more than one Order entity is found.
 // Returns a *NotFoundError when no Order entities are found.
 func (oq *OrderQuery) Only(ctx context.Context) (*Order, error) {
 	nodes, err := oq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (oq *OrderQuery) OnlyX(ctx context.Context) *Order {
 }
 
 // OnlyID is like Only, but returns the only Order ID in the query.
-// Returns a *NotSingularError when exactly one Order ID is not found.
+// Returns a *NotSingularError when more than one Order ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (oq *OrderQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (oq *OrderQuery) Clone() *OrderQuery {
 		order:      append([]OrderFunc{}, oq.order...),
 		predicates: append([]predicate.Order{}, oq.predicates...),
 		// clone intermediate query.
-		sql:  oq.sql.Clone(),
-		path: oq.path,
+		sql:    oq.sql.Clone(),
+		path:   oq.path,
+		unique: oq.unique,
 	}
 }
 

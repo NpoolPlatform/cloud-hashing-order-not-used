@@ -107,7 +107,7 @@ func (oogq *OutOfGasQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single OutOfGas entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one OutOfGas entity is not found.
+// Returns a *NotSingularError when more than one OutOfGas entity is found.
 // Returns a *NotFoundError when no OutOfGas entities are found.
 func (oogq *OutOfGasQuery) Only(ctx context.Context) (*OutOfGas, error) {
 	nodes, err := oogq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (oogq *OutOfGasQuery) OnlyX(ctx context.Context) *OutOfGas {
 }
 
 // OnlyID is like Only, but returns the only OutOfGas ID in the query.
-// Returns a *NotSingularError when exactly one OutOfGas ID is not found.
+// Returns a *NotSingularError when more than one OutOfGas ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (oogq *OutOfGasQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (oogq *OutOfGasQuery) Clone() *OutOfGasQuery {
 		order:      append([]OrderFunc{}, oogq.order...),
 		predicates: append([]predicate.OutOfGas{}, oogq.predicates...),
 		// clone intermediate query.
-		sql:  oogq.sql.Clone(),
-		path: oogq.path,
+		sql:    oogq.sql.Clone(),
+		path:   oogq.path,
+		unique: oogq.unique,
 	}
 }
 

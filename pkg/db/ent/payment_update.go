@@ -134,6 +134,34 @@ func (pu *PaymentUpdate) SetPlatformTransactionID(u uuid.UUID) *PaymentUpdate {
 	return pu
 }
 
+// SetUserSetPaid sets the "user_set_paid" field.
+func (pu *PaymentUpdate) SetUserSetPaid(b bool) *PaymentUpdate {
+	pu.mutation.SetUserSetPaid(b)
+	return pu
+}
+
+// SetNillableUserSetPaid sets the "user_set_paid" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableUserSetPaid(b *bool) *PaymentUpdate {
+	if b != nil {
+		pu.SetUserSetPaid(*b)
+	}
+	return pu
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (pu *PaymentUpdate) SetUserPaymentTxid(s string) *PaymentUpdate {
+	pu.mutation.SetUserPaymentTxid(s)
+	return pu
+}
+
+// SetNillableUserPaymentTxid sets the "user_payment_txid" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableUserPaymentTxid(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetUserPaymentTxid(*s)
+	}
+	return pu
+}
+
 // SetCreateAt sets the "create_at" field.
 func (pu *PaymentUpdate) SetCreateAt(u uint32) *PaymentUpdate {
 	pu.mutation.ResetCreateAt()
@@ -410,6 +438,20 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldPlatformTransactionID,
 		})
 	}
+	if value, ok := pu.mutation.UserSetPaid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetPaid,
+		})
+	}
+	if value, ok := pu.mutation.UserPaymentTxid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment.FieldUserPaymentTxid,
+		})
+	}
 	if value, ok := pu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -574,6 +616,34 @@ func (puo *PaymentUpdateOne) SetChainTransactionID(s string) *PaymentUpdateOne {
 // SetPlatformTransactionID sets the "platform_transaction_id" field.
 func (puo *PaymentUpdateOne) SetPlatformTransactionID(u uuid.UUID) *PaymentUpdateOne {
 	puo.mutation.SetPlatformTransactionID(u)
+	return puo
+}
+
+// SetUserSetPaid sets the "user_set_paid" field.
+func (puo *PaymentUpdateOne) SetUserSetPaid(b bool) *PaymentUpdateOne {
+	puo.mutation.SetUserSetPaid(b)
+	return puo
+}
+
+// SetNillableUserSetPaid sets the "user_set_paid" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableUserSetPaid(b *bool) *PaymentUpdateOne {
+	if b != nil {
+		puo.SetUserSetPaid(*b)
+	}
+	return puo
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (puo *PaymentUpdateOne) SetUserPaymentTxid(s string) *PaymentUpdateOne {
+	puo.mutation.SetUserPaymentTxid(s)
+	return puo
+}
+
+// SetNillableUserPaymentTxid sets the "user_payment_txid" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableUserPaymentTxid(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetUserPaymentTxid(*s)
+	}
 	return puo
 }
 
@@ -875,6 +945,20 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: payment.FieldPlatformTransactionID,
+		})
+	}
+	if value, ok := puo.mutation.UserSetPaid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetPaid,
+		})
+	}
+	if value, ok := puo.mutation.UserPaymentTxid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment.FieldUserPaymentTxid,
 		})
 	}
 	if value, ok := puo.mutation.CreateAt(); ok {

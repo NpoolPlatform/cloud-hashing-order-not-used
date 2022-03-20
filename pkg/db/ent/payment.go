@@ -42,6 +42,10 @@ type Payment struct {
 	ChainTransactionID string `json:"chain_transaction_id,omitempty"`
 	// PlatformTransactionID holds the value of the "platform_transaction_id" field.
 	PlatformTransactionID uuid.UUID `json:"platform_transaction_id,omitempty"`
+	// UserSetPaid holds the value of the "user_set_paid" field.
+	UserSetPaid bool `json:"user_set_paid,omitempty"`
+	// UserPaymentTxid holds the value of the "user_payment_txid" field.
+	UserPaymentTxid string `json:"user_payment_txid,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -55,9 +59,11 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case payment.FieldUserSetPaid:
+			values[i] = new(sql.NullBool)
 		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case payment.FieldState, payment.FieldChainTransactionID:
+		case payment.FieldState, payment.FieldChainTransactionID, payment.FieldUserPaymentTxid:
 			values[i] = new(sql.NullString)
 		case payment.FieldID, payment.FieldAppID, payment.FieldUserID, payment.FieldGoodID, payment.FieldOrderID, payment.FieldAccountID, payment.FieldCoinInfoID, payment.FieldPlatformTransactionID:
 			values[i] = new(uuid.UUID)
@@ -160,6 +166,18 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				pa.PlatformTransactionID = *value
 			}
+		case payment.FieldUserSetPaid:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field user_set_paid", values[i])
+			} else if value.Valid {
+				pa.UserSetPaid = value.Bool
+			}
+		case payment.FieldUserPaymentTxid:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_payment_txid", values[i])
+			} else if value.Valid {
+				pa.UserPaymentTxid = value.String
+			}
 		case payment.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
@@ -232,6 +250,10 @@ func (pa *Payment) String() string {
 	builder.WriteString(pa.ChainTransactionID)
 	builder.WriteString(", platform_transaction_id=")
 	builder.WriteString(fmt.Sprintf("%v", pa.PlatformTransactionID))
+	builder.WriteString(", user_set_paid=")
+	builder.WriteString(fmt.Sprintf("%v", pa.UserSetPaid))
+	builder.WriteString(", user_payment_txid=")
+	builder.WriteString(pa.UserPaymentTxid)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", pa.CreateAt))
 	builder.WriteString(", update_at=")

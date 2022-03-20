@@ -39,6 +39,10 @@ const (
 	FieldChainTransactionID = "chain_transaction_id"
 	// FieldPlatformTransactionID holds the string denoting the platform_transaction_id field in the database.
 	FieldPlatformTransactionID = "platform_transaction_id"
+	// FieldUserSetPaid holds the string denoting the user_set_paid field in the database.
+	FieldUserSetPaid = "user_set_paid"
+	// FieldUserPaymentTxid holds the string denoting the user_payment_txid field in the database.
+	FieldUserPaymentTxid = "user_payment_txid"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -65,6 +69,8 @@ var Columns = []string{
 	FieldState,
 	FieldChainTransactionID,
 	FieldPlatformTransactionID,
+	FieldUserSetPaid,
+	FieldUserPaymentTxid,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,
@@ -81,6 +87,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultUserSetPaid holds the default value on creation for the "user_set_paid" field.
+	DefaultUserSetPaid bool
+	// DefaultUserPaymentTxid holds the default value on creation for the "user_payment_txid" field.
+	DefaultUserPaymentTxid string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.

@@ -41,6 +41,8 @@ func (Payment) Fields() []ent.Field {
 			),
 		field.String("chain_transaction_id"),
 		field.UUID("platform_transaction_id", uuid.UUID{}),
+		field.Bool("user_set_paid").Default(false),
+		field.String("user_payment_txid").Default(""),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

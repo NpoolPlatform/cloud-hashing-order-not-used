@@ -54,6 +54,8 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		State:                 string(row.State),
 		ChainTransactionID:    row.ChainTransactionID,
 		PlatformTransactionID: row.PlatformTransactionID.String(),
+		UserSetPaid:           row.UserSetPaid,
+		UserPaymentTXID:       row.UserPaymentTxid,
 		CreateAt:              row.CreateAt,
 	}
 }
@@ -129,6 +131,36 @@ func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdateP
 	}
 
 	return &npool.UpdatePaymentResponse{
+		Info: dbRowToPayment(info),
+	}, nil
+}
+
+func UpdateByUser(ctx context.Context, in *npool.UpdatePaymentByUserRequest) (*npool.UpdatePaymentByUserResponse, error) {
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid payment id: %v", err)
+	}
+
+	if err := validatePayment(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
+		Payment.
+		UpdateOneID(id).
+		SetUserPaymentTxid(in.GetInfo().GetUserPaymentTXID()).
+		SetUserSetPaid(in.GetInfo().GetUserSetPaid()).
+		Save(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail update payment: %v", err)
+	}
+
+	return &npool.UpdatePaymentByUserResponse{
 		Info: dbRowToPayment(info),
 	}, nil
 }

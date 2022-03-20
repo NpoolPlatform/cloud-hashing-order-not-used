@@ -107,7 +107,7 @@ func (gpq *GasPayingQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single GasPaying entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one GasPaying entity is not found.
+// Returns a *NotSingularError when more than one GasPaying entity is found.
 // Returns a *NotFoundError when no GasPaying entities are found.
 func (gpq *GasPayingQuery) Only(ctx context.Context) (*GasPaying, error) {
 	nodes, err := gpq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (gpq *GasPayingQuery) OnlyX(ctx context.Context) *GasPaying {
 }
 
 // OnlyID is like Only, but returns the only GasPaying ID in the query.
-// Returns a *NotSingularError when exactly one GasPaying ID is not found.
+// Returns a *NotSingularError when more than one GasPaying ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (gpq *GasPayingQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (gpq *GasPayingQuery) Clone() *GasPayingQuery {
 		order:      append([]OrderFunc{}, gpq.order...),
 		predicates: append([]predicate.GasPaying{}, gpq.predicates...),
 		// clone intermediate query.
-		sql:  gpq.sql.Clone(),
-		path: gpq.path,
+		sql:    gpq.sql.Clone(),
+		path:   gpq.path,
+		unique: gpq.unique,
 	}
 }
 

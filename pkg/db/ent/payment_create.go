@@ -101,6 +101,34 @@ func (pc *PaymentCreate) SetPlatformTransactionID(u uuid.UUID) *PaymentCreate {
 	return pc
 }
 
+// SetUserSetPaid sets the "user_set_paid" field.
+func (pc *PaymentCreate) SetUserSetPaid(b bool) *PaymentCreate {
+	pc.mutation.SetUserSetPaid(b)
+	return pc
+}
+
+// SetNillableUserSetPaid sets the "user_set_paid" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableUserSetPaid(b *bool) *PaymentCreate {
+	if b != nil {
+		pc.SetUserSetPaid(*b)
+	}
+	return pc
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (pc *PaymentCreate) SetUserPaymentTxid(s string) *PaymentCreate {
+	pc.mutation.SetUserPaymentTxid(s)
+	return pc
+}
+
+// SetNillableUserPaymentTxid sets the "user_payment_txid" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableUserPaymentTxid(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetUserPaymentTxid(*s)
+	}
+	return pc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (pc *PaymentCreate) SetCreateAt(u uint32) *PaymentCreate {
 	pc.mutation.SetCreateAt(u)
@@ -228,6 +256,14 @@ func (pc *PaymentCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (pc *PaymentCreate) defaults() {
+	if _, ok := pc.mutation.UserSetPaid(); !ok {
+		v := payment.DefaultUserSetPaid
+		pc.mutation.SetUserSetPaid(v)
+	}
+	if _, ok := pc.mutation.UserPaymentTxid(); !ok {
+		v := payment.DefaultUserPaymentTxid
+		pc.mutation.SetUserPaymentTxid(v)
+	}
 	if _, ok := pc.mutation.CreateAt(); !ok {
 		v := payment.DefaultCreateAt()
 		pc.mutation.SetCreateAt(v)
@@ -291,6 +327,12 @@ func (pc *PaymentCreate) check() error {
 	}
 	if _, ok := pc.mutation.PlatformTransactionID(); !ok {
 		return &ValidationError{Name: "platform_transaction_id", err: errors.New(`ent: missing required field "Payment.platform_transaction_id"`)}
+	}
+	if _, ok := pc.mutation.UserSetPaid(); !ok {
+		return &ValidationError{Name: "user_set_paid", err: errors.New(`ent: missing required field "Payment.user_set_paid"`)}
+	}
+	if _, ok := pc.mutation.UserPaymentTxid(); !ok {
+		return &ValidationError{Name: "user_payment_txid", err: errors.New(`ent: missing required field "Payment.user_payment_txid"`)}
 	}
 	if _, ok := pc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Payment.create_at"`)}
@@ -441,6 +483,22 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldPlatformTransactionID,
 		})
 		_node.PlatformTransactionID = value
+	}
+	if value, ok := pc.mutation.UserSetPaid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetPaid,
+		})
+		_node.UserSetPaid = value
+	}
+	if value, ok := pc.mutation.UserPaymentTxid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment.FieldUserPaymentTxid,
+		})
+		_node.UserPaymentTxid = value
 	}
 	if value, ok := pc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -697,6 +755,30 @@ func (u *PaymentUpsert) SetPlatformTransactionID(v uuid.UUID) *PaymentUpsert {
 // UpdatePlatformTransactionID sets the "platform_transaction_id" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdatePlatformTransactionID() *PaymentUpsert {
 	u.SetExcluded(payment.FieldPlatformTransactionID)
+	return u
+}
+
+// SetUserSetPaid sets the "user_set_paid" field.
+func (u *PaymentUpsert) SetUserSetPaid(v bool) *PaymentUpsert {
+	u.Set(payment.FieldUserSetPaid, v)
+	return u
+}
+
+// UpdateUserSetPaid sets the "user_set_paid" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateUserSetPaid() *PaymentUpsert {
+	u.SetExcluded(payment.FieldUserSetPaid)
+	return u
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (u *PaymentUpsert) SetUserPaymentTxid(v string) *PaymentUpsert {
+	u.Set(payment.FieldUserPaymentTxid, v)
+	return u
+}
+
+// UpdateUserPaymentTxid sets the "user_payment_txid" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateUserPaymentTxid() *PaymentUpsert {
+	u.SetExcluded(payment.FieldUserPaymentTxid)
 	return u
 }
 
@@ -1011,6 +1093,34 @@ func (u *PaymentUpsertOne) SetPlatformTransactionID(v uuid.UUID) *PaymentUpsertO
 func (u *PaymentUpsertOne) UpdatePlatformTransactionID() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdatePlatformTransactionID()
+	})
+}
+
+// SetUserSetPaid sets the "user_set_paid" field.
+func (u *PaymentUpsertOne) SetUserSetPaid(v bool) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserSetPaid(v)
+	})
+}
+
+// UpdateUserSetPaid sets the "user_set_paid" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateUserSetPaid() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserSetPaid()
+	})
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (u *PaymentUpsertOne) SetUserPaymentTxid(v string) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserPaymentTxid(v)
+	})
+}
+
+// UpdateUserPaymentTxid sets the "user_payment_txid" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateUserPaymentTxid() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserPaymentTxid()
 	})
 }
 
@@ -1500,6 +1610,34 @@ func (u *PaymentUpsertBulk) SetPlatformTransactionID(v uuid.UUID) *PaymentUpsert
 func (u *PaymentUpsertBulk) UpdatePlatformTransactionID() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdatePlatformTransactionID()
+	})
+}
+
+// SetUserSetPaid sets the "user_set_paid" field.
+func (u *PaymentUpsertBulk) SetUserSetPaid(v bool) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserSetPaid(v)
+	})
+}
+
+// UpdateUserSetPaid sets the "user_set_paid" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateUserSetPaid() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserSetPaid()
+	})
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (u *PaymentUpsertBulk) SetUserPaymentTxid(v string) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserPaymentTxid(v)
+	})
+}
+
+// UpdateUserPaymentTxid sets the "user_payment_txid" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateUserPaymentTxid() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserPaymentTxid()
 	})
 }
 

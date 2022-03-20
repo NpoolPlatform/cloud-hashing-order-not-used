@@ -4201,6 +4201,8 @@ type PaymentMutation struct {
 	state                   *payment.State
 	chain_transaction_id    *string
 	platform_transaction_id *uuid.UUID
+	user_set_paid           *bool
+	user_payment_txid       *string
 	create_at               *uint32
 	addcreate_at            *int32
 	update_at               *uint32
@@ -4865,6 +4867,78 @@ func (m *PaymentMutation) ResetPlatformTransactionID() {
 	m.platform_transaction_id = nil
 }
 
+// SetUserSetPaid sets the "user_set_paid" field.
+func (m *PaymentMutation) SetUserSetPaid(b bool) {
+	m.user_set_paid = &b
+}
+
+// UserSetPaid returns the value of the "user_set_paid" field in the mutation.
+func (m *PaymentMutation) UserSetPaid() (r bool, exists bool) {
+	v := m.user_set_paid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserSetPaid returns the old "user_set_paid" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldUserSetPaid(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserSetPaid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserSetPaid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserSetPaid: %w", err)
+	}
+	return oldValue.UserSetPaid, nil
+}
+
+// ResetUserSetPaid resets all changes to the "user_set_paid" field.
+func (m *PaymentMutation) ResetUserSetPaid() {
+	m.user_set_paid = nil
+}
+
+// SetUserPaymentTxid sets the "user_payment_txid" field.
+func (m *PaymentMutation) SetUserPaymentTxid(s string) {
+	m.user_payment_txid = &s
+}
+
+// UserPaymentTxid returns the value of the "user_payment_txid" field in the mutation.
+func (m *PaymentMutation) UserPaymentTxid() (r string, exists bool) {
+	v := m.user_payment_txid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserPaymentTxid returns the old "user_payment_txid" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldUserPaymentTxid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserPaymentTxid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserPaymentTxid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserPaymentTxid: %w", err)
+	}
+	return oldValue.UserPaymentTxid, nil
+}
+
+// ResetUserPaymentTxid resets all changes to the "user_payment_txid" field.
+func (m *PaymentMutation) ResetUserPaymentTxid() {
+	m.user_payment_txid = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *PaymentMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -5052,7 +5126,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 16)
+	fields := make([]string, 0, 18)
 	if m.app_id != nil {
 		fields = append(fields, payment.FieldAppID)
 	}
@@ -5091,6 +5165,12 @@ func (m *PaymentMutation) Fields() []string {
 	}
 	if m.platform_transaction_id != nil {
 		fields = append(fields, payment.FieldPlatformTransactionID)
+	}
+	if m.user_set_paid != nil {
+		fields = append(fields, payment.FieldUserSetPaid)
+	}
+	if m.user_payment_txid != nil {
+		fields = append(fields, payment.FieldUserPaymentTxid)
 	}
 	if m.create_at != nil {
 		fields = append(fields, payment.FieldCreateAt)
@@ -5135,6 +5215,10 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.ChainTransactionID()
 	case payment.FieldPlatformTransactionID:
 		return m.PlatformTransactionID()
+	case payment.FieldUserSetPaid:
+		return m.UserSetPaid()
+	case payment.FieldUserPaymentTxid:
+		return m.UserPaymentTxid()
 	case payment.FieldCreateAt:
 		return m.CreateAt()
 	case payment.FieldUpdateAt:
@@ -5176,6 +5260,10 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldChainTransactionID(ctx)
 	case payment.FieldPlatformTransactionID:
 		return m.OldPlatformTransactionID(ctx)
+	case payment.FieldUserSetPaid:
+		return m.OldUserSetPaid(ctx)
+	case payment.FieldUserPaymentTxid:
+		return m.OldUserPaymentTxid(ctx)
 	case payment.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case payment.FieldUpdateAt:
@@ -5281,6 +5369,20 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPlatformTransactionID(v)
+		return nil
+	case payment.FieldUserSetPaid:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserSetPaid(v)
+		return nil
+	case payment.FieldUserPaymentTxid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserPaymentTxid(v)
 		return nil
 	case payment.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -5477,6 +5579,12 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldPlatformTransactionID:
 		m.ResetPlatformTransactionID()
+		return nil
+	case payment.FieldUserSetPaid:
+		m.ResetUserSetPaid()
+		return nil
+	case payment.FieldUserPaymentTxid:
+		m.ResetUserPaymentTxid()
 		return nil
 	case payment.FieldCreateAt:
 		m.ResetCreateAt()

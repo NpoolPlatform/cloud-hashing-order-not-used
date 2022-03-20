@@ -175,6 +175,20 @@ func PlatformTransactionID(v uuid.UUID) predicate.Payment {
 	})
 }
 
+// UserSetPaid applies equality check predicate on the "user_set_paid" field. It's identical to UserSetPaidEQ.
+func UserSetPaid(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserSetPaid), v))
+	})
+}
+
+// UserPaymentTxid applies equality check predicate on the "user_payment_txid" field. It's identical to UserPaymentTxidEQ.
+func UserPaymentTxid(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
@@ -1188,6 +1202,131 @@ func PlatformTransactionIDLT(v uuid.UUID) predicate.Payment {
 func PlatformTransactionIDLTE(v uuid.UUID) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldPlatformTransactionID), v))
+	})
+}
+
+// UserSetPaidEQ applies the EQ predicate on the "user_set_paid" field.
+func UserSetPaidEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserSetPaid), v))
+	})
+}
+
+// UserSetPaidNEQ applies the NEQ predicate on the "user_set_paid" field.
+func UserSetPaidNEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUserSetPaid), v))
+	})
+}
+
+// UserPaymentTxidEQ applies the EQ predicate on the "user_payment_txid" field.
+func UserPaymentTxidEQ(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidNEQ applies the NEQ predicate on the "user_payment_txid" field.
+func UserPaymentTxidNEQ(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidIn applies the In predicate on the "user_payment_txid" field.
+func UserPaymentTxidIn(vs ...string) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUserPaymentTxid), v...))
+	})
+}
+
+// UserPaymentTxidNotIn applies the NotIn predicate on the "user_payment_txid" field.
+func UserPaymentTxidNotIn(vs ...string) predicate.Payment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Payment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUserPaymentTxid), v...))
+	})
+}
+
+// UserPaymentTxidGT applies the GT predicate on the "user_payment_txid" field.
+func UserPaymentTxidGT(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidGTE applies the GTE predicate on the "user_payment_txid" field.
+func UserPaymentTxidGTE(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidLT applies the LT predicate on the "user_payment_txid" field.
+func UserPaymentTxidLT(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidLTE applies the LTE predicate on the "user_payment_txid" field.
+func UserPaymentTxidLTE(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidContains applies the Contains predicate on the "user_payment_txid" field.
+func UserPaymentTxidContains(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidHasPrefix applies the HasPrefix predicate on the "user_payment_txid" field.
+func UserPaymentTxidHasPrefix(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidHasSuffix applies the HasSuffix predicate on the "user_payment_txid" field.
+func UserPaymentTxidHasSuffix(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidEqualFold applies the EqualFold predicate on the "user_payment_txid" field.
+func UserPaymentTxidEqualFold(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// UserPaymentTxidContainsFold applies the ContainsFold predicate on the "user_payment_txid" field.
+func UserPaymentTxidContainsFold(v string) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUserPaymentTxid), v))
 	})
 }
 

@@ -107,7 +107,7 @@ func (pq *PaymentQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single Payment entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Payment entity is not found.
+// Returns a *NotSingularError when more than one Payment entity is found.
 // Returns a *NotFoundError when no Payment entities are found.
 func (pq *PaymentQuery) Only(ctx context.Context) (*Payment, error) {
 	nodes, err := pq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (pq *PaymentQuery) OnlyX(ctx context.Context) *Payment {
 }
 
 // OnlyID is like Only, but returns the only Payment ID in the query.
-// Returns a *NotSingularError when exactly one Payment ID is not found.
+// Returns a *NotSingularError when more than one Payment ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (pq *PaymentQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (pq *PaymentQuery) Clone() *PaymentQuery {
 		order:      append([]OrderFunc{}, pq.order...),
 		predicates: append([]predicate.Payment{}, pq.predicates...),
 		// clone intermediate query.
-		sql:  pq.sql.Clone(),
-		path: pq.path,
+		sql:    pq.sql.Clone(),
+		path:   pq.path,
+		unique: pq.unique,
 	}
 }
 
