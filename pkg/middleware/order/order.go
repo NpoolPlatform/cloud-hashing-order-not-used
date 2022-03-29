@@ -111,7 +111,7 @@ func Get(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderD
 	info, err := order.Get(ctx, &npool.GetOrderRequest{
 		ID: in.GetID(),
 	})
-	if err != nil {
+	if err != nil || info.Info == nil {
 		return nil, xerrors.Errorf("fail get order: %v", err)
 	}
 
