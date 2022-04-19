@@ -77,6 +77,19 @@ func (s *Server) GetPaymentsByApp(ctx context.Context, in *npool.GetPaymentsByAp
 	return resp, nil
 }
 
+func (s *Server) GetPaymentsByOtherApp(ctx context.Context, in *npool.GetPaymentsByOtherAppRequest) (*npool.GetPaymentsByOtherAppResponse, error) {
+	resp, err := payment.GetByApp(ctx, &npool.GetPaymentsByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("get payments by app error: %v", err)
+		return &npool.GetPaymentsByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetPaymentsByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
 func (s *Server) GetPaymentsByAppUser(ctx context.Context, in *npool.GetPaymentsByAppUserRequest) (*npool.GetPaymentsByAppUserResponse, error) {
 	resp, err := payment.GetByAppUser(ctx, in)
 	if err != nil {
