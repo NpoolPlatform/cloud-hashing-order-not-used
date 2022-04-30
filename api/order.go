@@ -69,15 +69,6 @@ func (s *Server) GetOrdersByGood(ctx context.Context, in *npool.GetOrdersByGoodR
 	return resp, nil
 }
 
-func (s *Server) GetSoldByGood(ctx context.Context, in *npool.GetSoldByGoodRequest) (*npool.GetSoldByGoodResponse, error) {
-	resp, err := mw.SoldByGood(ctx, in)
-	if err != nil {
-		logger.Sugar().Errorw("get orders by good error: %v", err)
-		return &npool.GetSoldByGoodResponse{}, status.Error(codes.Internal, err.Error())
-	}
-	return resp, nil
-}
-
 func (s *Server) GetOrderDetail(ctx context.Context, in *npool.GetOrderDetailRequest) (*npool.GetOrderDetailResponse, error) {
 	resp, err := mw.Get(ctx, in)
 	if err != nil {
