@@ -97,11 +97,4 @@ func TestCRUD(t *testing.T) {
 	if assert.Nil(t, err) {
 		assert.Equal(t, len(resp4.Infos), 1)
 	}
-
-	resp5, err := SoldByGood(context.Background(), &npool.GetSoldByGoodRequest{
-		GoodID: resp.Info.GoodID,
-	})
-	if assert.Nil(t, err) {
-		assert.Equal(t, resp5.Sold, order.Units)
-	}
 }
