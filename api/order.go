@@ -33,6 +33,15 @@ func (s *Server) GetOrder(ctx context.Context, in *npool.GetOrderRequest) (*npoo
 	return resp, nil
 }
 
+func (s *Server) GetOrders(ctx context.Context, in *npool.GetOrdersRequest) (*npool.GetOrdersResponse, error) {
+	resp, err := order.GetAll(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get orders error: %v", err)
+		return &npool.GetOrdersResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetOrdersByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*npool.GetOrdersByAppUserResponse, error) {
 	resp, err := order.GetByAppUser(ctx, in)
 	if err != nil {

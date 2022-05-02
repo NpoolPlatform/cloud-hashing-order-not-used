@@ -130,6 +130,32 @@ func Get(ctx context.Context, in *npool.GetOrderRequest) (*npool.GetOrderRespons
 	}, nil
 }
 
+func GetAll(ctx context.Context, in *npool.GetOrdersRequest) (*npool.GetOrdersResponse, error) {
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		Order.
+		Query().
+		Offset(int(in.GetOffset())).
+		Limit(int(in.GetLimit())).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query order: %v", err)
+	}
+
+	orders := []*npool.Order{}
+	for _, info := range infos {
+		orders = append(orders, dbRowToOrder(info))
+	}
+
+	return &npool.GetOrdersResponse{
+		Infos: orders,
+	}, nil
+}
+
 func GetByAppUser(ctx context.Context, in *npool.GetOrdersByAppUserRequest) (*npool.GetOrdersByAppUserResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
