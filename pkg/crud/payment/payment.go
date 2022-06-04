@@ -332,6 +332,47 @@ func GetByAppUser(ctx context.Context, in *npool.GetPaymentsByAppUserRequest) (*
 	}, nil
 }
 
+func GetByAppUserState(ctx context.Context, in *npool.GetPaymentsByAppUserStateRequest) (*npool.GetPaymentsByAppUserStateResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		Payment.
+		Query().
+		Where(
+			payment.And(
+				payment.AppID(appID),
+				payment.UserID(userID),
+				payment.StateEQ(payment.State(in.GetState())),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query payment by state: %v", err)
+	}
+
+	payments := []*npool.Payment{}
+	for _, info := range infos {
+		payments = append(payments, dbRowToPayment(info))
+	}
+
+	return &npool.GetPaymentsByAppUserStateResponse{
+		Infos: payments,
+	}, nil
+}
+
 func GetAll(ctx context.Context, in *npool.GetPaymentsRequest) (*npool.GetPaymentsResponse, error) {
 	cli, err := db.Client()
 	if err != nil {

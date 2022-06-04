@@ -99,6 +99,15 @@ func (s *Server) GetPaymentsByAppUser(ctx context.Context, in *npool.GetPayments
 	return resp, nil
 }
 
+func (s *Server) GetPaymentsByAppUserState(ctx context.Context, in *npool.GetPaymentsByAppUserStateRequest) (*npool.GetPaymentsByAppUserStateResponse, error) {
+	resp, err := payment.GetByAppUserState(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("get payments by app user error: %v", err)
+		return &npool.GetPaymentsByAppUserStateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetPayments(ctx context.Context, in *npool.GetPaymentsRequest) (*npool.GetPaymentsResponse, error) {
 	resp, err := payment.GetAll(ctx, in)
 	if err != nil {
