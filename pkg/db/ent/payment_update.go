@@ -148,6 +148,20 @@ func (pu *PaymentUpdate) SetNillableUserSetPaid(b *bool) *PaymentUpdate {
 	return pu
 }
 
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (pu *PaymentUpdate) SetUserSetCanceled(b bool) *PaymentUpdate {
+	pu.mutation.SetUserSetCanceled(b)
+	return pu
+}
+
+// SetNillableUserSetCanceled sets the "user_set_canceled" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableUserSetCanceled(b *bool) *PaymentUpdate {
+	if b != nil {
+		pu.SetUserSetCanceled(*b)
+	}
+	return pu
+}
+
 // SetUserPaymentTxid sets the "user_payment_txid" field.
 func (pu *PaymentUpdate) SetUserPaymentTxid(s string) *PaymentUpdate {
 	pu.mutation.SetUserPaymentTxid(s)
@@ -445,6 +459,13 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldUserSetPaid,
 		})
 	}
+	if value, ok := pu.mutation.UserSetCanceled(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetCanceled,
+		})
+	}
 	if value, ok := pu.mutation.UserPaymentTxid(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -629,6 +650,20 @@ func (puo *PaymentUpdateOne) SetUserSetPaid(b bool) *PaymentUpdateOne {
 func (puo *PaymentUpdateOne) SetNillableUserSetPaid(b *bool) *PaymentUpdateOne {
 	if b != nil {
 		puo.SetUserSetPaid(*b)
+	}
+	return puo
+}
+
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (puo *PaymentUpdateOne) SetUserSetCanceled(b bool) *PaymentUpdateOne {
+	puo.mutation.SetUserSetCanceled(b)
+	return puo
+}
+
+// SetNillableUserSetCanceled sets the "user_set_canceled" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableUserSetCanceled(b *bool) *PaymentUpdateOne {
+	if b != nil {
+		puo.SetUserSetCanceled(*b)
 	}
 	return puo
 }
@@ -952,6 +987,13 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: payment.FieldUserSetPaid,
+		})
+	}
+	if value, ok := puo.mutation.UserSetCanceled(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetCanceled,
 		})
 	}
 	if value, ok := puo.mutation.UserPaymentTxid(); ok {

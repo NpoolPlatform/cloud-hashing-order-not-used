@@ -115,6 +115,20 @@ func (pc *PaymentCreate) SetNillableUserSetPaid(b *bool) *PaymentCreate {
 	return pc
 }
 
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (pc *PaymentCreate) SetUserSetCanceled(b bool) *PaymentCreate {
+	pc.mutation.SetUserSetCanceled(b)
+	return pc
+}
+
+// SetNillableUserSetCanceled sets the "user_set_canceled" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableUserSetCanceled(b *bool) *PaymentCreate {
+	if b != nil {
+		pc.SetUserSetCanceled(*b)
+	}
+	return pc
+}
+
 // SetUserPaymentTxid sets the "user_payment_txid" field.
 func (pc *PaymentCreate) SetUserPaymentTxid(s string) *PaymentCreate {
 	pc.mutation.SetUserPaymentTxid(s)
@@ -260,6 +274,10 @@ func (pc *PaymentCreate) defaults() {
 		v := payment.DefaultUserSetPaid
 		pc.mutation.SetUserSetPaid(v)
 	}
+	if _, ok := pc.mutation.UserSetCanceled(); !ok {
+		v := payment.DefaultUserSetCanceled
+		pc.mutation.SetUserSetCanceled(v)
+	}
 	if _, ok := pc.mutation.UserPaymentTxid(); !ok {
 		v := payment.DefaultUserPaymentTxid
 		pc.mutation.SetUserPaymentTxid(v)
@@ -330,6 +348,9 @@ func (pc *PaymentCreate) check() error {
 	}
 	if _, ok := pc.mutation.UserSetPaid(); !ok {
 		return &ValidationError{Name: "user_set_paid", err: errors.New(`ent: missing required field "Payment.user_set_paid"`)}
+	}
+	if _, ok := pc.mutation.UserSetCanceled(); !ok {
+		return &ValidationError{Name: "user_set_canceled", err: errors.New(`ent: missing required field "Payment.user_set_canceled"`)}
 	}
 	if _, ok := pc.mutation.UserPaymentTxid(); !ok {
 		return &ValidationError{Name: "user_payment_txid", err: errors.New(`ent: missing required field "Payment.user_payment_txid"`)}
@@ -491,6 +512,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldUserSetPaid,
 		})
 		_node.UserSetPaid = value
+	}
+	if value, ok := pc.mutation.UserSetCanceled(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldUserSetCanceled,
+		})
+		_node.UserSetCanceled = value
 	}
 	if value, ok := pc.mutation.UserPaymentTxid(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -767,6 +796,18 @@ func (u *PaymentUpsert) SetUserSetPaid(v bool) *PaymentUpsert {
 // UpdateUserSetPaid sets the "user_set_paid" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateUserSetPaid() *PaymentUpsert {
 	u.SetExcluded(payment.FieldUserSetPaid)
+	return u
+}
+
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (u *PaymentUpsert) SetUserSetCanceled(v bool) *PaymentUpsert {
+	u.Set(payment.FieldUserSetCanceled, v)
+	return u
+}
+
+// UpdateUserSetCanceled sets the "user_set_canceled" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateUserSetCanceled() *PaymentUpsert {
+	u.SetExcluded(payment.FieldUserSetCanceled)
 	return u
 }
 
@@ -1107,6 +1148,20 @@ func (u *PaymentUpsertOne) SetUserSetPaid(v bool) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateUserSetPaid() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserSetPaid()
+	})
+}
+
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (u *PaymentUpsertOne) SetUserSetCanceled(v bool) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserSetCanceled(v)
+	})
+}
+
+// UpdateUserSetCanceled sets the "user_set_canceled" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateUserSetCanceled() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserSetCanceled()
 	})
 }
 
@@ -1624,6 +1679,20 @@ func (u *PaymentUpsertBulk) SetUserSetPaid(v bool) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateUserSetPaid() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserSetPaid()
+	})
+}
+
+// SetUserSetCanceled sets the "user_set_canceled" field.
+func (u *PaymentUpsertBulk) SetUserSetCanceled(v bool) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetUserSetCanceled(v)
+	})
+}
+
+// UpdateUserSetCanceled sets the "user_set_canceled" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateUserSetCanceled() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateUserSetCanceled()
 	})
 }
 

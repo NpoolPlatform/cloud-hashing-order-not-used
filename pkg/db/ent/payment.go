@@ -44,6 +44,8 @@ type Payment struct {
 	PlatformTransactionID uuid.UUID `json:"platform_transaction_id,omitempty"`
 	// UserSetPaid holds the value of the "user_set_paid" field.
 	UserSetPaid bool `json:"user_set_paid,omitempty"`
+	// UserSetCanceled holds the value of the "user_set_canceled" field.
+	UserSetCanceled bool `json:"user_set_canceled,omitempty"`
 	// UserPaymentTxid holds the value of the "user_payment_txid" field.
 	UserPaymentTxid string `json:"user_payment_txid,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
@@ -59,7 +61,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case payment.FieldUserSetPaid:
+		case payment.FieldUserSetPaid, payment.FieldUserSetCanceled:
 			values[i] = new(sql.NullBool)
 		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
@@ -172,6 +174,12 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				pa.UserSetPaid = value.Bool
 			}
+		case payment.FieldUserSetCanceled:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field user_set_canceled", values[i])
+			} else if value.Valid {
+				pa.UserSetCanceled = value.Bool
+			}
 		case payment.FieldUserPaymentTxid:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_payment_txid", values[i])
@@ -252,6 +260,8 @@ func (pa *Payment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", pa.PlatformTransactionID))
 	builder.WriteString(", user_set_paid=")
 	builder.WriteString(fmt.Sprintf("%v", pa.UserSetPaid))
+	builder.WriteString(", user_set_canceled=")
+	builder.WriteString(fmt.Sprintf("%v", pa.UserSetCanceled))
 	builder.WriteString(", user_payment_txid=")
 	builder.WriteString(pa.UserPaymentTxid)
 	builder.WriteString(", create_at=")

@@ -182,6 +182,13 @@ func UserSetPaid(v bool) predicate.Payment {
 	})
 }
 
+// UserSetCanceled applies equality check predicate on the "user_set_canceled" field. It's identical to UserSetCanceledEQ.
+func UserSetCanceled(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserSetCanceled), v))
+	})
+}
+
 // UserPaymentTxid applies equality check predicate on the "user_payment_txid" field. It's identical to UserPaymentTxidEQ.
 func UserPaymentTxid(v string) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
@@ -1216,6 +1223,20 @@ func UserSetPaidEQ(v bool) predicate.Payment {
 func UserSetPaidNEQ(v bool) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldUserSetPaid), v))
+	})
+}
+
+// UserSetCanceledEQ applies the EQ predicate on the "user_set_canceled" field.
+func UserSetCanceledEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserSetCanceled), v))
+	})
+}
+
+// UserSetCanceledNEQ applies the NEQ predicate on the "user_set_canceled" field.
+func UserSetCanceledNEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUserSetCanceled), v))
 	})
 }
 

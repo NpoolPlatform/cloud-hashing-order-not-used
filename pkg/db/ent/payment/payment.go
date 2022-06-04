@@ -41,6 +41,8 @@ const (
 	FieldPlatformTransactionID = "platform_transaction_id"
 	// FieldUserSetPaid holds the string denoting the user_set_paid field in the database.
 	FieldUserSetPaid = "user_set_paid"
+	// FieldUserSetCanceled holds the string denoting the user_set_canceled field in the database.
+	FieldUserSetCanceled = "user_set_canceled"
 	// FieldUserPaymentTxid holds the string denoting the user_payment_txid field in the database.
 	FieldUserPaymentTxid = "user_payment_txid"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
@@ -70,6 +72,7 @@ var Columns = []string{
 	FieldChainTransactionID,
 	FieldPlatformTransactionID,
 	FieldUserSetPaid,
+	FieldUserSetCanceled,
 	FieldUserPaymentTxid,
 	FieldCreateAt,
 	FieldUpdateAt,
@@ -89,6 +92,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultUserSetPaid holds the default value on creation for the "user_set_paid" field.
 	DefaultUserSetPaid bool
+	// DefaultUserSetCanceled holds the default value on creation for the "user_set_canceled" field.
+	DefaultUserSetCanceled bool
 	// DefaultUserPaymentTxid holds the default value on creation for the "user_payment_txid" field.
 	DefaultUserPaymentTxid string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.

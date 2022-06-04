@@ -113,6 +113,7 @@ var (
 		{Name: "chain_transaction_id", Type: field.TypeString},
 		{Name: "platform_transaction_id", Type: field.TypeUUID},
 		{Name: "user_set_paid", Type: field.TypeBool, Default: false},
+		{Name: "user_set_canceled", Type: field.TypeBool, Default: false},
 		{Name: "user_payment_txid", Type: field.TypeString, Default: ""},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
