@@ -139,6 +139,9 @@ func GetAll(ctx context.Context, in *npool.GetOrdersRequest) (*npool.GetOrdersRe
 	infos, err := cli.
 		Order.
 		Query().
+		Where(
+			order.DeleteAt(0),
+		).
 		Offset(int(in.GetOffset())).
 		Limit(int(in.GetLimit())).
 		All(ctx)
