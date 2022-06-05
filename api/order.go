@@ -69,6 +69,19 @@ func (s *Server) GetOrdersByApp(ctx context.Context, in *npool.GetOrdersByAppReq
 	return resp, nil
 }
 
+func (s *Server) GetOrdersByOtherApp(ctx context.Context, in *npool.GetOrdersByOtherAppRequest) (*npool.GetOrdersByOtherAppResponse, error) {
+	resp, err := order.GetByApp(ctx, &npool.GetOrdersByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("get orders by app error: %v", err)
+		return &npool.GetOrdersByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetOrdersByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
 func (s *Server) GetOrdersByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.GetOrdersByGoodResponse, error) {
 	resp, err := order.GetByGood(ctx, in)
 	if err != nil {

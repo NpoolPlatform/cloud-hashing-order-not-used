@@ -63,6 +63,10 @@ spec:
             backend:
               serviceName: cloud-hashing-order
               servicePort: 50040
+          - path: /api/cloud-hashing-order/v1/get/orders
+            backend:
+              serviceName: cloud-hashing-order
+              servicePort: 50040
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top
