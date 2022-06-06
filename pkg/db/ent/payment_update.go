@@ -110,6 +110,32 @@ func (pu *PaymentUpdate) AddCoinUsdCurrency(u int64) *PaymentUpdate {
 	return pu
 }
 
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (pu *PaymentUpdate) SetLocalCoinUsdCurrency(u uint64) *PaymentUpdate {
+	pu.mutation.ResetLocalCoinUsdCurrency()
+	pu.mutation.SetLocalCoinUsdCurrency(u)
+	return pu
+}
+
+// AddLocalCoinUsdCurrency adds u to the "local_coin_usd_currency" field.
+func (pu *PaymentUpdate) AddLocalCoinUsdCurrency(u int64) *PaymentUpdate {
+	pu.mutation.AddLocalCoinUsdCurrency(u)
+	return pu
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (pu *PaymentUpdate) SetLiveCoinUsdCurrency(u uint64) *PaymentUpdate {
+	pu.mutation.ResetLiveCoinUsdCurrency()
+	pu.mutation.SetLiveCoinUsdCurrency(u)
+	return pu
+}
+
+// AddLiveCoinUsdCurrency adds u to the "live_coin_usd_currency" field.
+func (pu *PaymentUpdate) AddLiveCoinUsdCurrency(u int64) *PaymentUpdate {
+	pu.mutation.AddLiveCoinUsdCurrency(u)
+	return pu
+}
+
 // SetCoinInfoID sets the "coin_info_id" field.
 func (pu *PaymentUpdate) SetCoinInfoID(u uuid.UUID) *PaymentUpdate {
 	pu.mutation.SetCoinInfoID(u)
@@ -424,6 +450,34 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldCoinUsdCurrency,
 		})
 	}
+	if value, ok := pu.mutation.LocalCoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLocalCoinUsdCurrency,
+		})
+	}
+	if value, ok := pu.mutation.AddedLocalCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLocalCoinUsdCurrency,
+		})
+	}
+	if value, ok := pu.mutation.LiveCoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLiveCoinUsdCurrency,
+		})
+	}
+	if value, ok := pu.mutation.AddedLiveCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLiveCoinUsdCurrency,
+		})
+	}
 	if value, ok := pu.mutation.CoinInfoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -613,6 +667,32 @@ func (puo *PaymentUpdateOne) SetCoinUsdCurrency(u uint64) *PaymentUpdateOne {
 // AddCoinUsdCurrency adds u to the "coin_usd_currency" field.
 func (puo *PaymentUpdateOne) AddCoinUsdCurrency(u int64) *PaymentUpdateOne {
 	puo.mutation.AddCoinUsdCurrency(u)
+	return puo
+}
+
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (puo *PaymentUpdateOne) SetLocalCoinUsdCurrency(u uint64) *PaymentUpdateOne {
+	puo.mutation.ResetLocalCoinUsdCurrency()
+	puo.mutation.SetLocalCoinUsdCurrency(u)
+	return puo
+}
+
+// AddLocalCoinUsdCurrency adds u to the "local_coin_usd_currency" field.
+func (puo *PaymentUpdateOne) AddLocalCoinUsdCurrency(u int64) *PaymentUpdateOne {
+	puo.mutation.AddLocalCoinUsdCurrency(u)
+	return puo
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (puo *PaymentUpdateOne) SetLiveCoinUsdCurrency(u uint64) *PaymentUpdateOne {
+	puo.mutation.ResetLiveCoinUsdCurrency()
+	puo.mutation.SetLiveCoinUsdCurrency(u)
+	return puo
+}
+
+// AddLiveCoinUsdCurrency adds u to the "live_coin_usd_currency" field.
+func (puo *PaymentUpdateOne) AddLiveCoinUsdCurrency(u int64) *PaymentUpdateOne {
+	puo.mutation.AddLiveCoinUsdCurrency(u)
 	return puo
 }
 
@@ -952,6 +1032,34 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeUint64,
 			Value:  value,
 			Column: payment.FieldCoinUsdCurrency,
+		})
+	}
+	if value, ok := puo.mutation.LocalCoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLocalCoinUsdCurrency,
+		})
+	}
+	if value, ok := puo.mutation.AddedLocalCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLocalCoinUsdCurrency,
+		})
+	}
+	if value, ok := puo.mutation.LiveCoinUsdCurrency(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLiveCoinUsdCurrency,
+		})
+	}
+	if value, ok := puo.mutation.AddedLiveCoinUsdCurrency(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLiveCoinUsdCurrency,
 		})
 	}
 	if value, ok := puo.mutation.CoinInfoID(); ok {

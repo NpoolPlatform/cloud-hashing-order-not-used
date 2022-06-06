@@ -34,6 +34,10 @@ type Payment struct {
 	FinishAmount uint64 `json:"finish_amount,omitempty"`
 	// CoinUsdCurrency holds the value of the "coin_usd_currency" field.
 	CoinUsdCurrency uint64 `json:"coin_usd_currency,omitempty"`
+	// LocalCoinUsdCurrency holds the value of the "local_coin_usd_currency" field.
+	LocalCoinUsdCurrency uint64 `json:"local_coin_usd_currency,omitempty"`
+	// LiveCoinUsdCurrency holds the value of the "live_coin_usd_currency" field.
+	LiveCoinUsdCurrency uint64 `json:"live_coin_usd_currency,omitempty"`
 	// CoinInfoID holds the value of the "coin_info_id" field.
 	CoinInfoID uuid.UUID `json:"coin_info_id,omitempty"`
 	// State holds the value of the "state" field.
@@ -63,7 +67,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case payment.FieldUserSetPaid, payment.FieldUserSetCanceled:
 			values[i] = new(sql.NullBool)
-		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
+		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldLocalCoinUsdCurrency, payment.FieldLiveCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
 		case payment.FieldState, payment.FieldChainTransactionID, payment.FieldUserPaymentTxid:
 			values[i] = new(sql.NullString)
@@ -143,6 +147,18 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field coin_usd_currency", values[i])
 			} else if value.Valid {
 				pa.CoinUsdCurrency = uint64(value.Int64)
+			}
+		case payment.FieldLocalCoinUsdCurrency:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field local_coin_usd_currency", values[i])
+			} else if value.Valid {
+				pa.LocalCoinUsdCurrency = uint64(value.Int64)
+			}
+		case payment.FieldLiveCoinUsdCurrency:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field live_coin_usd_currency", values[i])
+			} else if value.Valid {
+				pa.LiveCoinUsdCurrency = uint64(value.Int64)
 			}
 		case payment.FieldCoinInfoID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -250,6 +266,10 @@ func (pa *Payment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", pa.FinishAmount))
 	builder.WriteString(", coin_usd_currency=")
 	builder.WriteString(fmt.Sprintf("%v", pa.CoinUsdCurrency))
+	builder.WriteString(", local_coin_usd_currency=")
+	builder.WriteString(fmt.Sprintf("%v", pa.LocalCoinUsdCurrency))
+	builder.WriteString(", live_coin_usd_currency=")
+	builder.WriteString(fmt.Sprintf("%v", pa.LiveCoinUsdCurrency))
 	builder.WriteString(", coin_info_id=")
 	builder.WriteString(fmt.Sprintf("%v", pa.CoinInfoID))
 	builder.WriteString(", state=")

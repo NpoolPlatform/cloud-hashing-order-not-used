@@ -77,6 +77,18 @@ func (pc *PaymentCreate) SetCoinUsdCurrency(u uint64) *PaymentCreate {
 	return pc
 }
 
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (pc *PaymentCreate) SetLocalCoinUsdCurrency(u uint64) *PaymentCreate {
+	pc.mutation.SetLocalCoinUsdCurrency(u)
+	return pc
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (pc *PaymentCreate) SetLiveCoinUsdCurrency(u uint64) *PaymentCreate {
+	pc.mutation.SetLiveCoinUsdCurrency(u)
+	return pc
+}
+
 // SetCoinInfoID sets the "coin_info_id" field.
 func (pc *PaymentCreate) SetCoinInfoID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetCoinInfoID(u)
@@ -329,6 +341,12 @@ func (pc *PaymentCreate) check() error {
 	if _, ok := pc.mutation.CoinUsdCurrency(); !ok {
 		return &ValidationError{Name: "coin_usd_currency", err: errors.New(`ent: missing required field "Payment.coin_usd_currency"`)}
 	}
+	if _, ok := pc.mutation.LocalCoinUsdCurrency(); !ok {
+		return &ValidationError{Name: "local_coin_usd_currency", err: errors.New(`ent: missing required field "Payment.local_coin_usd_currency"`)}
+	}
+	if _, ok := pc.mutation.LiveCoinUsdCurrency(); !ok {
+		return &ValidationError{Name: "live_coin_usd_currency", err: errors.New(`ent: missing required field "Payment.live_coin_usd_currency"`)}
+	}
 	if _, ok := pc.mutation.CoinInfoID(); !ok {
 		return &ValidationError{Name: "coin_info_id", err: errors.New(`ent: missing required field "Payment.coin_info_id"`)}
 	}
@@ -472,6 +490,22 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldCoinUsdCurrency,
 		})
 		_node.CoinUsdCurrency = value
+	}
+	if value, ok := pc.mutation.LocalCoinUsdCurrency(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLocalCoinUsdCurrency,
+		})
+		_node.LocalCoinUsdCurrency = value
+	}
+	if value, ok := pc.mutation.LiveCoinUsdCurrency(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint64,
+			Value:  value,
+			Column: payment.FieldLiveCoinUsdCurrency,
+		})
+		_node.LiveCoinUsdCurrency = value
 	}
 	if value, ok := pc.mutation.CoinInfoID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -736,6 +770,42 @@ func (u *PaymentUpsert) UpdateCoinUsdCurrency() *PaymentUpsert {
 // AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
 func (u *PaymentUpsert) AddCoinUsdCurrency(v uint64) *PaymentUpsert {
 	u.Add(payment.FieldCoinUsdCurrency, v)
+	return u
+}
+
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (u *PaymentUpsert) SetLocalCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Set(payment.FieldLocalCoinUsdCurrency, v)
+	return u
+}
+
+// UpdateLocalCoinUsdCurrency sets the "local_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateLocalCoinUsdCurrency() *PaymentUpsert {
+	u.SetExcluded(payment.FieldLocalCoinUsdCurrency)
+	return u
+}
+
+// AddLocalCoinUsdCurrency adds v to the "local_coin_usd_currency" field.
+func (u *PaymentUpsert) AddLocalCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldLocalCoinUsdCurrency, v)
+	return u
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (u *PaymentUpsert) SetLiveCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Set(payment.FieldLiveCoinUsdCurrency, v)
+	return u
+}
+
+// UpdateLiveCoinUsdCurrency sets the "live_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateLiveCoinUsdCurrency() *PaymentUpsert {
+	u.SetExcluded(payment.FieldLiveCoinUsdCurrency)
+	return u
+}
+
+// AddLiveCoinUsdCurrency adds v to the "live_coin_usd_currency" field.
+func (u *PaymentUpsert) AddLiveCoinUsdCurrency(v uint64) *PaymentUpsert {
+	u.Add(payment.FieldLiveCoinUsdCurrency, v)
 	return u
 }
 
@@ -1078,6 +1148,48 @@ func (u *PaymentUpsertOne) AddCoinUsdCurrency(v uint64) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateCoinUsdCurrency() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateCoinUsdCurrency()
+	})
+}
+
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (u *PaymentUpsertOne) SetLocalCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetLocalCoinUsdCurrency(v)
+	})
+}
+
+// AddLocalCoinUsdCurrency adds v to the "local_coin_usd_currency" field.
+func (u *PaymentUpsertOne) AddLocalCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddLocalCoinUsdCurrency(v)
+	})
+}
+
+// UpdateLocalCoinUsdCurrency sets the "local_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateLocalCoinUsdCurrency() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateLocalCoinUsdCurrency()
+	})
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (u *PaymentUpsertOne) SetLiveCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetLiveCoinUsdCurrency(v)
+	})
+}
+
+// AddLiveCoinUsdCurrency adds v to the "live_coin_usd_currency" field.
+func (u *PaymentUpsertOne) AddLiveCoinUsdCurrency(v uint64) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddLiveCoinUsdCurrency(v)
+	})
+}
+
+// UpdateLiveCoinUsdCurrency sets the "live_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateLiveCoinUsdCurrency() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateLiveCoinUsdCurrency()
 	})
 }
 
@@ -1609,6 +1721,48 @@ func (u *PaymentUpsertBulk) AddCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateCoinUsdCurrency() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateCoinUsdCurrency()
+	})
+}
+
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (u *PaymentUpsertBulk) SetLocalCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetLocalCoinUsdCurrency(v)
+	})
+}
+
+// AddLocalCoinUsdCurrency adds v to the "local_coin_usd_currency" field.
+func (u *PaymentUpsertBulk) AddLocalCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddLocalCoinUsdCurrency(v)
+	})
+}
+
+// UpdateLocalCoinUsdCurrency sets the "local_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateLocalCoinUsdCurrency() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateLocalCoinUsdCurrency()
+	})
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (u *PaymentUpsertBulk) SetLiveCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetLiveCoinUsdCurrency(v)
+	})
+}
+
+// AddLiveCoinUsdCurrency adds v to the "live_coin_usd_currency" field.
+func (u *PaymentUpsertBulk) AddLiveCoinUsdCurrency(v uint64) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.AddLiveCoinUsdCurrency(v)
+	})
+}
+
+// UpdateLiveCoinUsdCurrency sets the "live_coin_usd_currency" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateLiveCoinUsdCurrency() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateLiveCoinUsdCurrency()
 	})
 }
 

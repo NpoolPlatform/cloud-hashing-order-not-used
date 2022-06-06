@@ -31,6 +31,10 @@ const (
 	FieldFinishAmount = "finish_amount"
 	// FieldCoinUsdCurrency holds the string denoting the coin_usd_currency field in the database.
 	FieldCoinUsdCurrency = "coin_usd_currency"
+	// FieldLocalCoinUsdCurrency holds the string denoting the local_coin_usd_currency field in the database.
+	FieldLocalCoinUsdCurrency = "local_coin_usd_currency"
+	// FieldLiveCoinUsdCurrency holds the string denoting the live_coin_usd_currency field in the database.
+	FieldLiveCoinUsdCurrency = "live_coin_usd_currency"
 	// FieldCoinInfoID holds the string denoting the coin_info_id field in the database.
 	FieldCoinInfoID = "coin_info_id"
 	// FieldState holds the string denoting the state field in the database.
@@ -67,6 +71,8 @@ var Columns = []string{
 	FieldAmount,
 	FieldFinishAmount,
 	FieldCoinUsdCurrency,
+	FieldLocalCoinUsdCurrency,
+	FieldLiveCoinUsdCurrency,
 	FieldCoinInfoID,
 	FieldState,
 	FieldChainTransactionID,

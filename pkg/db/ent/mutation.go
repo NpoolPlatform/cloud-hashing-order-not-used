@@ -4181,39 +4181,43 @@ func (m *OutOfGasMutation) ResetEdge(name string) error {
 // PaymentMutation represents an operation that mutates the Payment nodes in the graph.
 type PaymentMutation struct {
 	config
-	op                      Op
-	typ                     string
-	id                      *uuid.UUID
-	app_id                  *uuid.UUID
-	user_id                 *uuid.UUID
-	good_id                 *uuid.UUID
-	order_id                *uuid.UUID
-	account_id              *uuid.UUID
-	start_amount            *uint64
-	addstart_amount         *int64
-	amount                  *uint64
-	addamount               *int64
-	finish_amount           *uint64
-	addfinish_amount        *int64
-	coin_usd_currency       *uint64
-	addcoin_usd_currency    *int64
-	coin_info_id            *uuid.UUID
-	state                   *payment.State
-	chain_transaction_id    *string
-	platform_transaction_id *uuid.UUID
-	user_set_paid           *bool
-	user_set_canceled       *bool
-	user_payment_txid       *string
-	create_at               *uint32
-	addcreate_at            *int32
-	update_at               *uint32
-	addupdate_at            *int32
-	delete_at               *uint32
-	adddelete_at            *int32
-	clearedFields           map[string]struct{}
-	done                    bool
-	oldValue                func(context.Context) (*Payment, error)
-	predicates              []predicate.Payment
+	op                         Op
+	typ                        string
+	id                         *uuid.UUID
+	app_id                     *uuid.UUID
+	user_id                    *uuid.UUID
+	good_id                    *uuid.UUID
+	order_id                   *uuid.UUID
+	account_id                 *uuid.UUID
+	start_amount               *uint64
+	addstart_amount            *int64
+	amount                     *uint64
+	addamount                  *int64
+	finish_amount              *uint64
+	addfinish_amount           *int64
+	coin_usd_currency          *uint64
+	addcoin_usd_currency       *int64
+	local_coin_usd_currency    *uint64
+	addlocal_coin_usd_currency *int64
+	live_coin_usd_currency     *uint64
+	addlive_coin_usd_currency  *int64
+	coin_info_id               *uuid.UUID
+	state                      *payment.State
+	chain_transaction_id       *string
+	platform_transaction_id    *uuid.UUID
+	user_set_paid              *bool
+	user_set_canceled          *bool
+	user_payment_txid          *string
+	create_at                  *uint32
+	addcreate_at               *int32
+	update_at                  *uint32
+	addupdate_at               *int32
+	delete_at                  *uint32
+	adddelete_at               *int32
+	clearedFields              map[string]struct{}
+	done                       bool
+	oldValue                   func(context.Context) (*Payment, error)
+	predicates                 []predicate.Payment
 }
 
 var _ ent.Mutation = (*PaymentMutation)(nil)
@@ -4724,6 +4728,118 @@ func (m *PaymentMutation) ResetCoinUsdCurrency() {
 	m.addcoin_usd_currency = nil
 }
 
+// SetLocalCoinUsdCurrency sets the "local_coin_usd_currency" field.
+func (m *PaymentMutation) SetLocalCoinUsdCurrency(u uint64) {
+	m.local_coin_usd_currency = &u
+	m.addlocal_coin_usd_currency = nil
+}
+
+// LocalCoinUsdCurrency returns the value of the "local_coin_usd_currency" field in the mutation.
+func (m *PaymentMutation) LocalCoinUsdCurrency() (r uint64, exists bool) {
+	v := m.local_coin_usd_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocalCoinUsdCurrency returns the old "local_coin_usd_currency" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldLocalCoinUsdCurrency(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocalCoinUsdCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocalCoinUsdCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocalCoinUsdCurrency: %w", err)
+	}
+	return oldValue.LocalCoinUsdCurrency, nil
+}
+
+// AddLocalCoinUsdCurrency adds u to the "local_coin_usd_currency" field.
+func (m *PaymentMutation) AddLocalCoinUsdCurrency(u int64) {
+	if m.addlocal_coin_usd_currency != nil {
+		*m.addlocal_coin_usd_currency += u
+	} else {
+		m.addlocal_coin_usd_currency = &u
+	}
+}
+
+// AddedLocalCoinUsdCurrency returns the value that was added to the "local_coin_usd_currency" field in this mutation.
+func (m *PaymentMutation) AddedLocalCoinUsdCurrency() (r int64, exists bool) {
+	v := m.addlocal_coin_usd_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLocalCoinUsdCurrency resets all changes to the "local_coin_usd_currency" field.
+func (m *PaymentMutation) ResetLocalCoinUsdCurrency() {
+	m.local_coin_usd_currency = nil
+	m.addlocal_coin_usd_currency = nil
+}
+
+// SetLiveCoinUsdCurrency sets the "live_coin_usd_currency" field.
+func (m *PaymentMutation) SetLiveCoinUsdCurrency(u uint64) {
+	m.live_coin_usd_currency = &u
+	m.addlive_coin_usd_currency = nil
+}
+
+// LiveCoinUsdCurrency returns the value of the "live_coin_usd_currency" field in the mutation.
+func (m *PaymentMutation) LiveCoinUsdCurrency() (r uint64, exists bool) {
+	v := m.live_coin_usd_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLiveCoinUsdCurrency returns the old "live_coin_usd_currency" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldLiveCoinUsdCurrency(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLiveCoinUsdCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLiveCoinUsdCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLiveCoinUsdCurrency: %w", err)
+	}
+	return oldValue.LiveCoinUsdCurrency, nil
+}
+
+// AddLiveCoinUsdCurrency adds u to the "live_coin_usd_currency" field.
+func (m *PaymentMutation) AddLiveCoinUsdCurrency(u int64) {
+	if m.addlive_coin_usd_currency != nil {
+		*m.addlive_coin_usd_currency += u
+	} else {
+		m.addlive_coin_usd_currency = &u
+	}
+}
+
+// AddedLiveCoinUsdCurrency returns the value that was added to the "live_coin_usd_currency" field in this mutation.
+func (m *PaymentMutation) AddedLiveCoinUsdCurrency() (r int64, exists bool) {
+	v := m.addlive_coin_usd_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLiveCoinUsdCurrency resets all changes to the "live_coin_usd_currency" field.
+func (m *PaymentMutation) ResetLiveCoinUsdCurrency() {
+	m.live_coin_usd_currency = nil
+	m.addlive_coin_usd_currency = nil
+}
+
 // SetCoinInfoID sets the "coin_info_id" field.
 func (m *PaymentMutation) SetCoinInfoID(u uuid.UUID) {
 	m.coin_info_id = &u
@@ -5163,7 +5279,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 21)
 	if m.app_id != nil {
 		fields = append(fields, payment.FieldAppID)
 	}
@@ -5190,6 +5306,12 @@ func (m *PaymentMutation) Fields() []string {
 	}
 	if m.coin_usd_currency != nil {
 		fields = append(fields, payment.FieldCoinUsdCurrency)
+	}
+	if m.local_coin_usd_currency != nil {
+		fields = append(fields, payment.FieldLocalCoinUsdCurrency)
+	}
+	if m.live_coin_usd_currency != nil {
+		fields = append(fields, payment.FieldLiveCoinUsdCurrency)
 	}
 	if m.coin_info_id != nil {
 		fields = append(fields, payment.FieldCoinInfoID)
@@ -5247,6 +5369,10 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.FinishAmount()
 	case payment.FieldCoinUsdCurrency:
 		return m.CoinUsdCurrency()
+	case payment.FieldLocalCoinUsdCurrency:
+		return m.LocalCoinUsdCurrency()
+	case payment.FieldLiveCoinUsdCurrency:
+		return m.LiveCoinUsdCurrency()
 	case payment.FieldCoinInfoID:
 		return m.CoinInfoID()
 	case payment.FieldState:
@@ -5294,6 +5420,10 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldFinishAmount(ctx)
 	case payment.FieldCoinUsdCurrency:
 		return m.OldCoinUsdCurrency(ctx)
+	case payment.FieldLocalCoinUsdCurrency:
+		return m.OldLocalCoinUsdCurrency(ctx)
+	case payment.FieldLiveCoinUsdCurrency:
+		return m.OldLiveCoinUsdCurrency(ctx)
 	case payment.FieldCoinInfoID:
 		return m.OldCoinInfoID(ctx)
 	case payment.FieldState:
@@ -5386,6 +5516,20 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCoinUsdCurrency(v)
 		return nil
+	case payment.FieldLocalCoinUsdCurrency:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocalCoinUsdCurrency(v)
+		return nil
+	case payment.FieldLiveCoinUsdCurrency:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLiveCoinUsdCurrency(v)
+		return nil
 	case payment.FieldCoinInfoID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
@@ -5476,6 +5620,12 @@ func (m *PaymentMutation) AddedFields() []string {
 	if m.addcoin_usd_currency != nil {
 		fields = append(fields, payment.FieldCoinUsdCurrency)
 	}
+	if m.addlocal_coin_usd_currency != nil {
+		fields = append(fields, payment.FieldLocalCoinUsdCurrency)
+	}
+	if m.addlive_coin_usd_currency != nil {
+		fields = append(fields, payment.FieldLiveCoinUsdCurrency)
+	}
 	if m.addcreate_at != nil {
 		fields = append(fields, payment.FieldCreateAt)
 	}
@@ -5501,6 +5651,10 @@ func (m *PaymentMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedFinishAmount()
 	case payment.FieldCoinUsdCurrency:
 		return m.AddedCoinUsdCurrency()
+	case payment.FieldLocalCoinUsdCurrency:
+		return m.AddedLocalCoinUsdCurrency()
+	case payment.FieldLiveCoinUsdCurrency:
+		return m.AddedLiveCoinUsdCurrency()
 	case payment.FieldCreateAt:
 		return m.AddedCreateAt()
 	case payment.FieldUpdateAt:
@@ -5543,6 +5697,20 @@ func (m *PaymentMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCoinUsdCurrency(v)
+		return nil
+	case payment.FieldLocalCoinUsdCurrency:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLocalCoinUsdCurrency(v)
+		return nil
+	case payment.FieldLiveCoinUsdCurrency:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLiveCoinUsdCurrency(v)
 		return nil
 	case payment.FieldCreateAt:
 		v, ok := value.(int32)
@@ -5618,6 +5786,12 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldCoinUsdCurrency:
 		m.ResetCoinUsdCurrency()
+		return nil
+	case payment.FieldLocalCoinUsdCurrency:
+		m.ResetLocalCoinUsdCurrency()
+		return nil
+	case payment.FieldLiveCoinUsdCurrency:
+		m.ResetLiveCoinUsdCurrency()
 		return nil
 	case payment.FieldCoinInfoID:
 		m.ResetCoinInfoID()

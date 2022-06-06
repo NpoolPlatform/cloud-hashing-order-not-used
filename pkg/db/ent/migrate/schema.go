@@ -108,6 +108,8 @@ var (
 		{Name: "amount", Type: field.TypeUint64},
 		{Name: "finish_amount", Type: field.TypeUint64},
 		{Name: "coin_usd_currency", Type: field.TypeUint64},
+		{Name: "local_coin_usd_currency", Type: field.TypeUint64},
+		{Name: "live_coin_usd_currency", Type: field.TypeUint64},
 		{Name: "coin_info_id", Type: field.TypeUUID},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
 		{Name: "chain_transaction_id", Type: field.TypeString},
