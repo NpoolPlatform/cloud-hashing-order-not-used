@@ -60,6 +60,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		UserSetCanceled:       row.UserSetCanceled,
 		UserPaymentTXID:       row.UserPaymentTxid,
 		CreateAt:              row.CreateAt,
+		FakePayment:           row.FakePayment,
 	}
 }
 
@@ -130,6 +131,7 @@ func Update(ctx context.Context, in *npool.UpdatePaymentRequest) (*npool.UpdateP
 		SetChainTransactionID(in.GetInfo().GetChainTransactionID()).
 		SetFinishAmount(price.VisualPriceToDBPrice(in.GetInfo().GetFinishAmount())).
 		SetPlatformTransactionID(ptid).
+		SetFakePayment(in.GetInfo().GetFakePayment()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update payment: %v", err)
