@@ -42,6 +42,7 @@ func dbRowToOrder(row *ent.Order) *npool.Order {
 		CouponID:               row.CouponID.String(),
 		PromotionID:            row.PromotionID.String(),
 		CreateAt:               row.CreateAt,
+		OrderType:              row.OrderType,
 	}
 }
 
@@ -75,6 +76,18 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
+	orderType := in.GetInfo().GetOrderType()
+	if orderType == "" {
+		orderType = constant.OrderTypeNormal
+	}
+	switch orderType {
+	case constant.OrderTypeNormal:
+	case constant.OrderTypeOffline:
+	case constant.OrderTypeAirdrop:
+	default:
+		return nil, xerrors.Errorf("invalid order type: %v", orderType)
+	}
+
 	info, err := cli.
 		Order.
 		Create().
@@ -88,6 +101,7 @@ func Create(ctx context.Context, in *npool.CreateOrderRequest) (*npool.CreateOrd
 		SetEnd(in.GetInfo().GetEnd()).
 		SetCouponID(couponID).
 		SetPromotionID(promotionID).
+		SetOrderType(orderType).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create order: %v", err)

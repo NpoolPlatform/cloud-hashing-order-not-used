@@ -109,6 +109,20 @@ func (ou *OrderUpdate) SetCouponID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
+// SetOrderType sets the "order_type" field.
+func (ou *OrderUpdate) SetOrderType(s string) *OrderUpdate {
+	ou.mutation.SetOrderType(s)
+	return ou
+}
+
+// SetNillableOrderType sets the "order_type" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableOrderType(s *string) *OrderUpdate {
+	if s != nil {
+		ou.SetOrderType(*s)
+	}
+	return ou
+}
+
 // SetCreateAt sets the "create_at" field.
 func (ou *OrderUpdate) SetCreateAt(u uint32) *OrderUpdate {
 	ou.mutation.ResetCreateAt()
@@ -341,6 +355,13 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldCouponID,
 		})
 	}
+	if value, ok := ou.mutation.OrderType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: order.FieldOrderType,
+		})
+	}
 	if value, ok := ou.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -480,6 +501,20 @@ func (ouo *OrderUpdateOne) AddEnd(u int32) *OrderUpdateOne {
 // SetCouponID sets the "coupon_id" field.
 func (ouo *OrderUpdateOne) SetCouponID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetCouponID(u)
+	return ouo
+}
+
+// SetOrderType sets the "order_type" field.
+func (ouo *OrderUpdateOne) SetOrderType(s string) *OrderUpdateOne {
+	ouo.mutation.SetOrderType(s)
+	return ouo
+}
+
+// SetNillableOrderType sets the "order_type" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableOrderType(s *string) *OrderUpdateOne {
+	if s != nil {
+		ouo.SetOrderType(*s)
+	}
 	return ouo
 }
 
@@ -737,6 +772,13 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: order.FieldCouponID,
+		})
+	}
+	if value, ok := ouo.mutation.OrderType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: order.FieldOrderType,
 		})
 	}
 	if value, ok := ouo.mutation.CreateAt(); ok {

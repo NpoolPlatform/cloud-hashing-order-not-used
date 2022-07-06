@@ -36,6 +36,8 @@ type Order struct {
 	End uint32 `json:"end,omitempty"`
 	// CouponID holds the value of the "coupon_id" field.
 	CouponID uuid.UUID `json:"coupon_id,omitempty"`
+	// OrderType holds the value of the "order_type" field.
+	OrderType string `json:"order_type,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -51,6 +53,8 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case order.FieldUnits, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
+		case order.FieldOrderType:
+			values[i] = new(sql.NullString)
 		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -134,6 +138,12 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				o.CouponID = *value
 			}
+		case order.FieldOrderType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field order_type", values[i])
+			} else if value.Valid {
+				o.OrderType = value.String
+			}
 		case order.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
@@ -200,6 +210,8 @@ func (o *Order) String() string {
 	builder.WriteString(fmt.Sprintf("%v", o.End))
 	builder.WriteString(", coupon_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.CouponID))
+	builder.WriteString(", order_type=")
+	builder.WriteString(o.OrderType)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", o.CreateAt))
 	builder.WriteString(", update_at=")

@@ -17,4 +17,8 @@ const (
 	FixAmountCoupon            = inspireconst.CouponTypeCoupon
 	DiscountCoupon             = inspireconst.CouponTypeDiscount
 	UserSpecialReductionCoupon = "user-special-reduction"
+
+	OrderTypeOffline = "offline"
+	OrderTypeNormal  = "normal"
+	OrderTypeAirdrop = "airdrop"
 )

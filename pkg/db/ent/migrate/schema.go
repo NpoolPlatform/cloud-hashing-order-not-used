@@ -70,6 +70,7 @@ var (
 		{Name: "start", Type: field.TypeUint32},
 		{Name: "end", Type: field.TypeUint32},
 		{Name: "coupon_id", Type: field.TypeUUID},
+		{Name: "order_type", Type: field.TypeString, Default: "normal"},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},

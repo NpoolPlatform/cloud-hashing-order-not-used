@@ -83,6 +83,20 @@ func (oc *OrderCreate) SetCouponID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
+// SetOrderType sets the "order_type" field.
+func (oc *OrderCreate) SetOrderType(s string) *OrderCreate {
+	oc.mutation.SetOrderType(s)
+	return oc
+}
+
+// SetNillableOrderType sets the "order_type" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableOrderType(s *string) *OrderCreate {
+	if s != nil {
+		oc.SetOrderType(*s)
+	}
+	return oc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (oc *OrderCreate) SetCreateAt(u uint32) *OrderCreate {
 	oc.mutation.SetCreateAt(u)
@@ -210,6 +224,10 @@ func (oc *OrderCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (oc *OrderCreate) defaults() {
+	if _, ok := oc.mutation.OrderType(); !ok {
+		v := order.DefaultOrderType
+		oc.mutation.SetOrderType(v)
+	}
 	if _, ok := oc.mutation.CreateAt(); !ok {
 		v := order.DefaultCreateAt()
 		oc.mutation.SetCreateAt(v)
@@ -259,6 +277,9 @@ func (oc *OrderCreate) check() error {
 	}
 	if _, ok := oc.mutation.CouponID(); !ok {
 		return &ValidationError{Name: "coupon_id", err: errors.New(`ent: missing required field "Order.coupon_id"`)}
+	}
+	if _, ok := oc.mutation.OrderType(); !ok {
+		return &ValidationError{Name: "order_type", err: errors.New(`ent: missing required field "Order.order_type"`)}
 	}
 	if _, ok := oc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Order.create_at"`)}
@@ -385,6 +406,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldCouponID,
 		})
 		_node.CouponID = value
+	}
+	if value, ok := oc.mutation.OrderType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: order.FieldOrderType,
+		})
+		_node.OrderType = value
 	}
 	if value, ok := oc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -599,6 +628,18 @@ func (u *OrderUpsert) SetCouponID(v uuid.UUID) *OrderUpsert {
 // UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
 func (u *OrderUpsert) UpdateCouponID() *OrderUpsert {
 	u.SetExcluded(order.FieldCouponID)
+	return u
+}
+
+// SetOrderType sets the "order_type" field.
+func (u *OrderUpsert) SetOrderType(v string) *OrderUpsert {
+	u.Set(order.FieldOrderType, v)
+	return u
+}
+
+// UpdateOrderType sets the "order_type" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateOrderType() *OrderUpsert {
+	u.SetExcluded(order.FieldOrderType)
 	return u
 }
 
@@ -864,6 +905,20 @@ func (u *OrderUpsertOne) SetCouponID(v uuid.UUID) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateCouponID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateCouponID()
+	})
+}
+
+// SetOrderType sets the "order_type" field.
+func (u *OrderUpsertOne) SetOrderType(v string) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetOrderType(v)
+	})
+}
+
+// UpdateOrderType sets the "order_type" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateOrderType() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateOrderType()
 	})
 }
 
@@ -1304,6 +1359,20 @@ func (u *OrderUpsertBulk) SetCouponID(v uuid.UUID) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateCouponID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateCouponID()
+	})
+}
+
+// SetOrderType sets the "order_type" field.
+func (u *OrderUpsertBulk) SetOrderType(v string) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetOrderType(v)
+	})
+}
+
+// UpdateOrderType sets the "order_type" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateOrderType() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateOrderType()
 	})
 }
 

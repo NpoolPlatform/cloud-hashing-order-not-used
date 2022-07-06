@@ -161,6 +161,13 @@ func CouponID(v uuid.UUID) predicate.Order {
 	})
 }
 
+// OrderType applies equality check predicate on the "order_type" field. It's identical to OrderTypeEQ.
+func OrderType(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOrderType), v))
+	})
+}
+
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
@@ -939,6 +946,117 @@ func CouponIDLT(v uuid.UUID) predicate.Order {
 func CouponIDLTE(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldCouponID), v))
+	})
+}
+
+// OrderTypeEQ applies the EQ predicate on the "order_type" field.
+func OrderTypeEQ(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeNEQ applies the NEQ predicate on the "order_type" field.
+func OrderTypeNEQ(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeIn applies the In predicate on the "order_type" field.
+func OrderTypeIn(vs ...string) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldOrderType), v...))
+	})
+}
+
+// OrderTypeNotIn applies the NotIn predicate on the "order_type" field.
+func OrderTypeNotIn(vs ...string) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldOrderType), v...))
+	})
+}
+
+// OrderTypeGT applies the GT predicate on the "order_type" field.
+func OrderTypeGT(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeGTE applies the GTE predicate on the "order_type" field.
+func OrderTypeGTE(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeLT applies the LT predicate on the "order_type" field.
+func OrderTypeLT(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeLTE applies the LTE predicate on the "order_type" field.
+func OrderTypeLTE(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeContains applies the Contains predicate on the "order_type" field.
+func OrderTypeContains(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeHasPrefix applies the HasPrefix predicate on the "order_type" field.
+func OrderTypeHasPrefix(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeHasSuffix applies the HasSuffix predicate on the "order_type" field.
+func OrderTypeHasSuffix(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeEqualFold applies the EqualFold predicate on the "order_type" field.
+func OrderTypeEqualFold(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldOrderType), v))
+	})
+}
+
+// OrderTypeContainsFold applies the ContainsFold predicate on the "order_type" field.
+func OrderTypeContainsFold(v string) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldOrderType), v))
 	})
 }
 

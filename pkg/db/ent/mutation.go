@@ -2276,6 +2276,7 @@ type OrderMutation struct {
 	end                       *uint32
 	addend                    *int32
 	coupon_id                 *uuid.UUID
+	order_type                *string
 	create_at                 *uint32
 	addcreate_at              *int32
 	update_at                 *uint32
@@ -2812,6 +2813,42 @@ func (m *OrderMutation) ResetCouponID() {
 	m.coupon_id = nil
 }
 
+// SetOrderType sets the "order_type" field.
+func (m *OrderMutation) SetOrderType(s string) {
+	m.order_type = &s
+}
+
+// OrderType returns the value of the "order_type" field in the mutation.
+func (m *OrderMutation) OrderType() (r string, exists bool) {
+	v := m.order_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrderType returns the old "order_type" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldOrderType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrderType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrderType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrderType: %w", err)
+	}
+	return oldValue.OrderType, nil
+}
+
+// ResetOrderType resets all changes to the "order_type" field.
+func (m *OrderMutation) ResetOrderType() {
+	m.order_type = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *OrderMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -2999,7 +3036,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 14)
 	if m.good_id != nil {
 		fields = append(fields, order.FieldGoodID)
 	}
@@ -3029,6 +3066,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.coupon_id != nil {
 		fields = append(fields, order.FieldCouponID)
+	}
+	if m.order_type != nil {
+		fields = append(fields, order.FieldOrderType)
 	}
 	if m.create_at != nil {
 		fields = append(fields, order.FieldCreateAt)
@@ -3067,6 +3107,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.End()
 	case order.FieldCouponID:
 		return m.CouponID()
+	case order.FieldOrderType:
+		return m.OrderType()
 	case order.FieldCreateAt:
 		return m.CreateAt()
 	case order.FieldUpdateAt:
@@ -3102,6 +3144,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldEnd(ctx)
 	case order.FieldCouponID:
 		return m.OldCouponID(ctx)
+	case order.FieldOrderType:
+		return m.OldOrderType(ctx)
 	case order.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case order.FieldUpdateAt:
@@ -3186,6 +3230,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCouponID(v)
+		return nil
+	case order.FieldOrderType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrderType(v)
 		return nil
 	case order.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -3361,6 +3412,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldCouponID:
 		m.ResetCouponID()
+		return nil
+	case order.FieldOrderType:
+		m.ResetOrderType()
 		return nil
 	case order.FieldCreateAt:
 		m.ResetCreateAt()

@@ -31,6 +31,8 @@ const (
 	FieldEnd = "end"
 	// FieldCouponID holds the string denoting the coupon_id field in the database.
 	FieldCouponID = "coupon_id"
+	// FieldOrderType holds the string denoting the order_type field in the database.
+	FieldOrderType = "order_type"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -54,6 +56,7 @@ var Columns = []string{
 	FieldStart,
 	FieldEnd,
 	FieldCouponID,
+	FieldOrderType,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,
@@ -70,6 +73,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultOrderType holds the default value on creation for the "order_type" field.
+	DefaultOrderType string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.

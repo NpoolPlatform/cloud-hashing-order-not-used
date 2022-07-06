@@ -7,6 +7,8 @@ import (
 	"entgo.io/ent/schema/field"
 
 	"github.com/google/uuid"
+
+	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
 )
 
 // Order holds the schema definition for the Order entity.
@@ -30,6 +32,7 @@ func (Order) Fields() []ent.Field {
 		field.Uint32("start"),
 		field.Uint32("end"),
 		field.UUID("coupon_id", uuid.UUID{}),
+		field.String("order_type").Default(constant.OrderTypeNormal),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())
