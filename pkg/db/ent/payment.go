@@ -52,6 +52,8 @@ type Payment struct {
 	UserSetCanceled bool `json:"user_set_canceled,omitempty"`
 	// UserPaymentTxid holds the value of the "user_payment_txid" field.
 	UserPaymentTxid string `json:"user_payment_txid,omitempty"`
+	// FakePayment holds the value of the "fake_payment" field.
+	FakePayment bool `json:"fake_payment,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -65,7 +67,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case payment.FieldUserSetPaid, payment.FieldUserSetCanceled:
+		case payment.FieldUserSetPaid, payment.FieldUserSetCanceled, payment.FieldFakePayment:
 			values[i] = new(sql.NullBool)
 		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldLocalCoinUsdCurrency, payment.FieldLiveCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
@@ -202,6 +204,12 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				pa.UserPaymentTxid = value.String
 			}
+		case payment.FieldFakePayment:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field fake_payment", values[i])
+			} else if value.Valid {
+				pa.FakePayment = value.Bool
+			}
 		case payment.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
@@ -284,6 +292,8 @@ func (pa *Payment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", pa.UserSetCanceled))
 	builder.WriteString(", user_payment_txid=")
 	builder.WriteString(pa.UserPaymentTxid)
+	builder.WriteString(", fake_payment=")
+	builder.WriteString(fmt.Sprintf("%v", pa.FakePayment))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", pa.CreateAt))
 	builder.WriteString(", update_at=")

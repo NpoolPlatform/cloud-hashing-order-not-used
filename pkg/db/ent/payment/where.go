@@ -210,6 +210,13 @@ func UserPaymentTxid(v string) predicate.Payment {
 	})
 }
 
+// FakePayment applies equality check predicate on the "fake_payment" field. It's identical to FakePaymentEQ.
+func FakePayment(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFakePayment), v))
+	})
+}
+
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
@@ -1514,6 +1521,20 @@ func UserPaymentTxidEqualFold(v string) predicate.Payment {
 func UserPaymentTxidContainsFold(v string) predicate.Payment {
 	return predicate.Payment(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldUserPaymentTxid), v))
+	})
+}
+
+// FakePaymentEQ applies the EQ predicate on the "fake_payment" field.
+func FakePaymentEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFakePayment), v))
+	})
+}
+
+// FakePaymentNEQ applies the NEQ predicate on the "fake_payment" field.
+func FakePaymentNEQ(v bool) predicate.Payment {
+	return predicate.Payment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFakePayment), v))
 	})
 }
 

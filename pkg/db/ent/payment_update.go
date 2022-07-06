@@ -202,6 +202,20 @@ func (pu *PaymentUpdate) SetNillableUserPaymentTxid(s *string) *PaymentUpdate {
 	return pu
 }
 
+// SetFakePayment sets the "fake_payment" field.
+func (pu *PaymentUpdate) SetFakePayment(b bool) *PaymentUpdate {
+	pu.mutation.SetFakePayment(b)
+	return pu
+}
+
+// SetNillableFakePayment sets the "fake_payment" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableFakePayment(b *bool) *PaymentUpdate {
+	if b != nil {
+		pu.SetFakePayment(*b)
+	}
+	return pu
+}
+
 // SetCreateAt sets the "create_at" field.
 func (pu *PaymentUpdate) SetCreateAt(u uint32) *PaymentUpdate {
 	pu.mutation.ResetCreateAt()
@@ -527,6 +541,13 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldUserPaymentTxid,
 		})
 	}
+	if value, ok := pu.mutation.FakePayment(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldFakePayment,
+		})
+	}
 	if value, ok := pu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -758,6 +779,20 @@ func (puo *PaymentUpdateOne) SetUserPaymentTxid(s string) *PaymentUpdateOne {
 func (puo *PaymentUpdateOne) SetNillableUserPaymentTxid(s *string) *PaymentUpdateOne {
 	if s != nil {
 		puo.SetUserPaymentTxid(*s)
+	}
+	return puo
+}
+
+// SetFakePayment sets the "fake_payment" field.
+func (puo *PaymentUpdateOne) SetFakePayment(b bool) *PaymentUpdateOne {
+	puo.mutation.SetFakePayment(b)
+	return puo
+}
+
+// SetNillableFakePayment sets the "fake_payment" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableFakePayment(b *bool) *PaymentUpdateOne {
+	if b != nil {
+		puo.SetFakePayment(*b)
 	}
 	return puo
 }
@@ -1109,6 +1144,13 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Type:   field.TypeString,
 			Value:  value,
 			Column: payment.FieldUserPaymentTxid,
+		})
+	}
+	if value, ok := puo.mutation.FakePayment(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldFakePayment,
 		})
 	}
 	if value, ok := puo.mutation.CreateAt(); ok {

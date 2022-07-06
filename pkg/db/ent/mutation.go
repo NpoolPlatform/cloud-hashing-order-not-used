@@ -4262,6 +4262,7 @@ type PaymentMutation struct {
 	user_set_paid              *bool
 	user_set_canceled          *bool
 	user_payment_txid          *string
+	fake_payment               *bool
 	create_at                  *uint32
 	addcreate_at               *int32
 	update_at                  *uint32
@@ -5146,6 +5147,42 @@ func (m *PaymentMutation) ResetUserPaymentTxid() {
 	m.user_payment_txid = nil
 }
 
+// SetFakePayment sets the "fake_payment" field.
+func (m *PaymentMutation) SetFakePayment(b bool) {
+	m.fake_payment = &b
+}
+
+// FakePayment returns the value of the "fake_payment" field in the mutation.
+func (m *PaymentMutation) FakePayment() (r bool, exists bool) {
+	v := m.fake_payment
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFakePayment returns the old "fake_payment" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldFakePayment(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFakePayment is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFakePayment requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFakePayment: %w", err)
+	}
+	return oldValue.FakePayment, nil
+}
+
+// ResetFakePayment resets all changes to the "fake_payment" field.
+func (m *PaymentMutation) ResetFakePayment() {
+	m.fake_payment = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *PaymentMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -5333,7 +5370,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 21)
+	fields := make([]string, 0, 22)
 	if m.app_id != nil {
 		fields = append(fields, payment.FieldAppID)
 	}
@@ -5388,6 +5425,9 @@ func (m *PaymentMutation) Fields() []string {
 	if m.user_payment_txid != nil {
 		fields = append(fields, payment.FieldUserPaymentTxid)
 	}
+	if m.fake_payment != nil {
+		fields = append(fields, payment.FieldFakePayment)
+	}
 	if m.create_at != nil {
 		fields = append(fields, payment.FieldCreateAt)
 	}
@@ -5441,6 +5481,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.UserSetCanceled()
 	case payment.FieldUserPaymentTxid:
 		return m.UserPaymentTxid()
+	case payment.FieldFakePayment:
+		return m.FakePayment()
 	case payment.FieldCreateAt:
 		return m.CreateAt()
 	case payment.FieldUpdateAt:
@@ -5492,6 +5534,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldUserSetCanceled(ctx)
 	case payment.FieldUserPaymentTxid:
 		return m.OldUserPaymentTxid(ctx)
+	case payment.FieldFakePayment:
+		return m.OldFakePayment(ctx)
 	case payment.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case payment.FieldUpdateAt:
@@ -5632,6 +5676,13 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserPaymentTxid(v)
+		return nil
+	case payment.FieldFakePayment:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFakePayment(v)
 		return nil
 	case payment.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -5867,6 +5918,9 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldUserPaymentTxid:
 		m.ResetUserPaymentTxid()
+		return nil
+	case payment.FieldFakePayment:
+		m.ResetFakePayment()
 		return nil
 	case payment.FieldCreateAt:
 		m.ResetCreateAt()

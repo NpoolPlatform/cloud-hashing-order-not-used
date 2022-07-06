@@ -118,6 +118,7 @@ var (
 		{Name: "user_set_paid", Type: field.TypeBool, Default: false},
 		{Name: "user_set_canceled", Type: field.TypeBool, Default: false},
 		{Name: "user_payment_txid", Type: field.TypeString, Default: ""},
+		{Name: "fake_payment", Type: field.TypeBool, Default: false},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},

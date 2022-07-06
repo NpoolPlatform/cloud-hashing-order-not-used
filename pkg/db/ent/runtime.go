@@ -135,18 +135,22 @@ func init() {
 	paymentDescUserPaymentTxid := paymentFields[18].Descriptor()
 	// payment.DefaultUserPaymentTxid holds the default value on creation for the user_payment_txid field.
 	payment.DefaultUserPaymentTxid = paymentDescUserPaymentTxid.Default.(string)
+	// paymentDescFakePayment is the schema descriptor for fake_payment field.
+	paymentDescFakePayment := paymentFields[19].Descriptor()
+	// payment.DefaultFakePayment holds the default value on creation for the fake_payment field.
+	payment.DefaultFakePayment = paymentDescFakePayment.Default.(bool)
 	// paymentDescCreateAt is the schema descriptor for create_at field.
-	paymentDescCreateAt := paymentFields[19].Descriptor()
+	paymentDescCreateAt := paymentFields[20].Descriptor()
 	// payment.DefaultCreateAt holds the default value on creation for the create_at field.
 	payment.DefaultCreateAt = paymentDescCreateAt.Default.(func() uint32)
 	// paymentDescUpdateAt is the schema descriptor for update_at field.
-	paymentDescUpdateAt := paymentFields[20].Descriptor()
+	paymentDescUpdateAt := paymentFields[21].Descriptor()
 	// payment.DefaultUpdateAt holds the default value on creation for the update_at field.
 	payment.DefaultUpdateAt = paymentDescUpdateAt.Default.(func() uint32)
 	// payment.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	payment.UpdateDefaultUpdateAt = paymentDescUpdateAt.UpdateDefault.(func() uint32)
 	// paymentDescDeleteAt is the schema descriptor for delete_at field.
-	paymentDescDeleteAt := paymentFields[21].Descriptor()
+	paymentDescDeleteAt := paymentFields[22].Descriptor()
 	// payment.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	payment.DefaultDeleteAt = paymentDescDeleteAt.Default.(func() uint32)
 	// paymentDescID is the schema descriptor for id field.

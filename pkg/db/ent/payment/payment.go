@@ -49,6 +49,8 @@ const (
 	FieldUserSetCanceled = "user_set_canceled"
 	// FieldUserPaymentTxid holds the string denoting the user_payment_txid field in the database.
 	FieldUserPaymentTxid = "user_payment_txid"
+	// FieldFakePayment holds the string denoting the fake_payment field in the database.
+	FieldFakePayment = "fake_payment"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -80,6 +82,7 @@ var Columns = []string{
 	FieldUserSetPaid,
 	FieldUserSetCanceled,
 	FieldUserPaymentTxid,
+	FieldFakePayment,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,
@@ -102,6 +105,8 @@ var (
 	DefaultUserSetCanceled bool
 	// DefaultUserPaymentTxid holds the default value on creation for the "user_payment_txid" field.
 	DefaultUserPaymentTxid string
+	// DefaultFakePayment holds the default value on creation for the "fake_payment" field.
+	DefaultFakePayment bool
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.

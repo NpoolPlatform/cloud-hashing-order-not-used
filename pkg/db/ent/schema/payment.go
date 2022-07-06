@@ -46,6 +46,7 @@ func (Payment) Fields() []ent.Field {
 		field.Bool("user_set_paid").Default(false),
 		field.Bool("user_set_canceled").Default(false),
 		field.String("user_payment_txid").Default(""),
+		field.Bool("fake_payment").Default(false),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

@@ -155,6 +155,20 @@ func (pc *PaymentCreate) SetNillableUserPaymentTxid(s *string) *PaymentCreate {
 	return pc
 }
 
+// SetFakePayment sets the "fake_payment" field.
+func (pc *PaymentCreate) SetFakePayment(b bool) *PaymentCreate {
+	pc.mutation.SetFakePayment(b)
+	return pc
+}
+
+// SetNillableFakePayment sets the "fake_payment" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableFakePayment(b *bool) *PaymentCreate {
+	if b != nil {
+		pc.SetFakePayment(*b)
+	}
+	return pc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (pc *PaymentCreate) SetCreateAt(u uint32) *PaymentCreate {
 	pc.mutation.SetCreateAt(u)
@@ -294,6 +308,10 @@ func (pc *PaymentCreate) defaults() {
 		v := payment.DefaultUserPaymentTxid
 		pc.mutation.SetUserPaymentTxid(v)
 	}
+	if _, ok := pc.mutation.FakePayment(); !ok {
+		v := payment.DefaultFakePayment
+		pc.mutation.SetFakePayment(v)
+	}
 	if _, ok := pc.mutation.CreateAt(); !ok {
 		v := payment.DefaultCreateAt()
 		pc.mutation.SetCreateAt(v)
@@ -372,6 +390,9 @@ func (pc *PaymentCreate) check() error {
 	}
 	if _, ok := pc.mutation.UserPaymentTxid(); !ok {
 		return &ValidationError{Name: "user_payment_txid", err: errors.New(`ent: missing required field "Payment.user_payment_txid"`)}
+	}
+	if _, ok := pc.mutation.FakePayment(); !ok {
+		return &ValidationError{Name: "fake_payment", err: errors.New(`ent: missing required field "Payment.fake_payment"`)}
 	}
 	if _, ok := pc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Payment.create_at"`)}
@@ -562,6 +583,14 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Column: payment.FieldUserPaymentTxid,
 		})
 		_node.UserPaymentTxid = value
+	}
+	if value, ok := pc.mutation.FakePayment(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: payment.FieldFakePayment,
+		})
+		_node.FakePayment = value
 	}
 	if value, ok := pc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -890,6 +919,18 @@ func (u *PaymentUpsert) SetUserPaymentTxid(v string) *PaymentUpsert {
 // UpdateUserPaymentTxid sets the "user_payment_txid" field to the value that was provided on create.
 func (u *PaymentUpsert) UpdateUserPaymentTxid() *PaymentUpsert {
 	u.SetExcluded(payment.FieldUserPaymentTxid)
+	return u
+}
+
+// SetFakePayment sets the "fake_payment" field.
+func (u *PaymentUpsert) SetFakePayment(v bool) *PaymentUpsert {
+	u.Set(payment.FieldFakePayment, v)
+	return u
+}
+
+// UpdateFakePayment sets the "fake_payment" field to the value that was provided on create.
+func (u *PaymentUpsert) UpdateFakePayment() *PaymentUpsert {
+	u.SetExcluded(payment.FieldFakePayment)
 	return u
 }
 
@@ -1288,6 +1329,20 @@ func (u *PaymentUpsertOne) SetUserPaymentTxid(v string) *PaymentUpsertOne {
 func (u *PaymentUpsertOne) UpdateUserPaymentTxid() *PaymentUpsertOne {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserPaymentTxid()
+	})
+}
+
+// SetFakePayment sets the "fake_payment" field.
+func (u *PaymentUpsertOne) SetFakePayment(v bool) *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetFakePayment(v)
+	})
+}
+
+// UpdateFakePayment sets the "fake_payment" field to the value that was provided on create.
+func (u *PaymentUpsertOne) UpdateFakePayment() *PaymentUpsertOne {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateFakePayment()
 	})
 }
 
@@ -1861,6 +1916,20 @@ func (u *PaymentUpsertBulk) SetUserPaymentTxid(v string) *PaymentUpsertBulk {
 func (u *PaymentUpsertBulk) UpdateUserPaymentTxid() *PaymentUpsertBulk {
 	return u.Update(func(s *PaymentUpsert) {
 		s.UpdateUserPaymentTxid()
+	})
+}
+
+// SetFakePayment sets the "fake_payment" field.
+func (u *PaymentUpsertBulk) SetFakePayment(v bool) *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.SetFakePayment(v)
+	})
+}
+
+// UpdateFakePayment sets the "fake_payment" field to the value that was provided on create.
+func (u *PaymentUpsertBulk) UpdateFakePayment() *PaymentUpsertBulk {
+	return u.Update(func(s *PaymentUpsert) {
+		s.UpdateFakePayment()
 	})
 }
 
