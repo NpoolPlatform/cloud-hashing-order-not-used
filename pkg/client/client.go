@@ -44,7 +44,7 @@ func GetOrders(ctx context.Context, offset, limit int32) ([]*npool.Order, error)
 	return infos.([]*npool.Order), nil
 }
 
-func GetOrderPayment(ctx context.Context, orderID string) (*npool.Order, error) {
+func GetOrderPayment(ctx context.Context, orderID string) (*npool.Payment, error) {
 	// conds: NOT USED NOW, will be used after refactor code
 	info, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
 		resp, err := cli.GetPaymentByOrder(ctx, &npool.GetPaymentByOrderRequest{
@@ -58,5 +58,5 @@ func GetOrderPayment(ctx context.Context, orderID string) (*npool.Order, error) 
 	if err != nil {
 		return nil, fmt.Errorf("fail get payment: %v", err)
 	}
-	return info.(*npool.Order), nil
+	return info.(*npool.Payment), nil
 }
