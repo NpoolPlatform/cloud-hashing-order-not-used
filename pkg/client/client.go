@@ -60,3 +60,20 @@ func GetOrderPayment(ctx context.Context, orderID string) (*npool.Payment, error
 	}
 	return info.(*npool.Payment), nil
 }
+
+func GetStatePayments(ctx context.Context, state string) ([]*npool.Payment, error) {
+	// conds: NOT USED NOW, will be used after refactor code
+	infos, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
+		resp, err := cli.GetPaymentsByState(ctx, &npool.GetPaymentsByStateRequest{
+			State: state,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("fail get payments: %v", err)
+		}
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail get payments: %v", err)
+	}
+	return infos.([]*npool.Payment), nil
+}
