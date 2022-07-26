@@ -327,6 +327,8 @@ func GetByGood(ctx context.Context, in *npool.GetOrdersByGoodRequest) (*npool.Ge
 		Where(
 			order.GoodID(goodID),
 		).
+		Offset(int(in.GetOffset())).
+		Limit(int(in.GetLimit())).
 		All(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail query order: %v", err)

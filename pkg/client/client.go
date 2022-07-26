@@ -44,6 +44,25 @@ func GetOrders(ctx context.Context, offset, limit int32) ([]*npool.Order, error)
 	return infos.([]*npool.Order), nil
 }
 
+func GetGoodOrders(ctx context.Context, goodID string, offset, limit int32) ([]*npool.Order, error) {
+	// conds: NOT USED NOW, will be used after refactor code
+	infos, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
+		resp, err := cli.GetOrdersByGood(ctx, &npool.GetOrdersByGoodRequest{
+			GoodID: goodID,
+			Offset: offset,
+			Limit:  limit,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("fail get orders: %v", err)
+		}
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail get orders: %v", err)
+	}
+	return infos.([]*npool.Order), nil
+}
+
 func GetOrder(ctx context.Context, id string) (*npool.Order, error) {
 	// conds: NOT USED NOW, will be used after refactor code
 	info, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
