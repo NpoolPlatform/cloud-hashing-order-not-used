@@ -114,6 +114,25 @@ func GetStatePayments(ctx context.Context, state string) ([]*npool.Payment, erro
 	return infos.([]*npool.Payment), nil
 }
 
+func GetAppUserStatePayments(ctx context.Context, appID, userID, state string) ([]*npool.Payment, error) {
+	// conds: NOT USED NOW, will be used after refactor code
+	infos, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
+		resp, err := cli.GetPaymentsByAppUserState(ctx, &npool.GetPaymentsByAppUserStateRequest{
+			AppID:  appID,
+			UserID: userID,
+			State:  state,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("fail get payments: %v", err)
+		}
+		return resp.Infos, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail get payments: %v", err)
+	}
+	return infos.([]*npool.Payment), nil
+}
+
 func UpdatePayment(ctx context.Context, in *npool.Payment) (*npool.Payment, error) {
 	// conds: NOT USED NOW, will be used after refactor code
 	info, err := do(ctx, func(_ctx context.Context, cli npool.CloudHashingOrderClient) (cruder.Any, error) {
