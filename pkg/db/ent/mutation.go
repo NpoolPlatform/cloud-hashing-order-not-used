@@ -2267,6 +2267,7 @@ type OrderMutation struct {
 	good_id                   *uuid.UUID
 	app_id                    *uuid.UUID
 	user_id                   *uuid.UUID
+	parent_id                 *uuid.UUID
 	units                     *uint32
 	addunits                  *int32
 	promotion_id              *uuid.UUID
@@ -2500,6 +2501,42 @@ func (m *OrderMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) 
 // ResetUserID resets all changes to the "user_id" field.
 func (m *OrderMutation) ResetUserID() {
 	m.user_id = nil
+}
+
+// SetParentID sets the "parent_id" field.
+func (m *OrderMutation) SetParentID(u uuid.UUID) {
+	m.parent_id = &u
+}
+
+// ParentID returns the value of the "parent_id" field in the mutation.
+func (m *OrderMutation) ParentID() (r uuid.UUID, exists bool) {
+	v := m.parent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParentID returns the old "parent_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldParentID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldParentID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
+	}
+	return oldValue.ParentID, nil
+}
+
+// ResetParentID resets all changes to the "parent_id" field.
+func (m *OrderMutation) ResetParentID() {
+	m.parent_id = nil
 }
 
 // SetUnits sets the "units" field.
@@ -3037,7 +3074,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 15)
 	if m.good_id != nil {
 		fields = append(fields, order.FieldGoodID)
 	}
@@ -3046,6 +3083,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.user_id != nil {
 		fields = append(fields, order.FieldUserID)
+	}
+	if m.parent_id != nil {
+		fields = append(fields, order.FieldParentID)
 	}
 	if m.units != nil {
 		fields = append(fields, order.FieldUnits)
@@ -3094,6 +3134,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case order.FieldUserID:
 		return m.UserID()
+	case order.FieldParentID:
+		return m.ParentID()
 	case order.FieldUnits:
 		return m.Units()
 	case order.FieldPromotionID:
@@ -3131,6 +3173,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldAppID(ctx)
 	case order.FieldUserID:
 		return m.OldUserID(ctx)
+	case order.FieldParentID:
+		return m.OldParentID(ctx)
 	case order.FieldUnits:
 		return m.OldUnits(ctx)
 	case order.FieldPromotionID:
@@ -3182,6 +3226,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
+		return nil
+	case order.FieldParentID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParentID(v)
 		return nil
 	case order.FieldUnits:
 		v, ok := value.(uint32)
@@ -3392,6 +3443,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case order.FieldParentID:
+		m.ResetParentID()
 		return nil
 	case order.FieldUnits:
 		m.ResetUnits()

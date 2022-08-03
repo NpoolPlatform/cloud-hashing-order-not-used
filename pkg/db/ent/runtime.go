@@ -80,21 +80,21 @@ func init() {
 	orderFields := schema.Order{}.Fields()
 	_ = orderFields
 	// orderDescOrderType is the schema descriptor for order_type field.
-	orderDescOrderType := orderFields[11].Descriptor()
+	orderDescOrderType := orderFields[12].Descriptor()
 	// order.DefaultOrderType holds the default value on creation for the order_type field.
 	order.DefaultOrderType = orderDescOrderType.Default.(string)
 	// orderDescCreateAt is the schema descriptor for create_at field.
-	orderDescCreateAt := orderFields[12].Descriptor()
+	orderDescCreateAt := orderFields[13].Descriptor()
 	// order.DefaultCreateAt holds the default value on creation for the create_at field.
 	order.DefaultCreateAt = orderDescCreateAt.Default.(func() uint32)
 	// orderDescUpdateAt is the schema descriptor for update_at field.
-	orderDescUpdateAt := orderFields[13].Descriptor()
+	orderDescUpdateAt := orderFields[14].Descriptor()
 	// order.DefaultUpdateAt holds the default value on creation for the update_at field.
 	order.DefaultUpdateAt = orderDescUpdateAt.Default.(func() uint32)
 	// order.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	order.UpdateDefaultUpdateAt = orderDescUpdateAt.UpdateDefault.(func() uint32)
 	// orderDescDeleteAt is the schema descriptor for delete_at field.
-	orderDescDeleteAt := orderFields[14].Descriptor()
+	orderDescDeleteAt := orderFields[15].Descriptor()
 	// order.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	order.DefaultDeleteAt = orderDescDeleteAt.Default.(func() uint32)
 	// orderDescID is the schema descriptor for id field.

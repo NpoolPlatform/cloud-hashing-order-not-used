@@ -41,6 +41,12 @@ func (oc *OrderCreate) SetUserID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
+// SetParentID sets the "parent_id" field.
+func (oc *OrderCreate) SetParentID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetParentID(u)
+	return oc
+}
+
 // SetUnits sets the "units" field.
 func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	oc.mutation.SetUnits(u)
@@ -263,6 +269,9 @@ func (oc *OrderCreate) check() error {
 	if _, ok := oc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Order.user_id"`)}
 	}
+	if _, ok := oc.mutation.ParentID(); !ok {
+		return &ValidationError{Name: "parent_id", err: errors.New(`ent: missing required field "Order.parent_id"`)}
+	}
 	if _, ok := oc.mutation.Units(); !ok {
 		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "Order.units"`)}
 	}
@@ -356,6 +365,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldUserID,
 		})
 		_node.UserID = value
+	}
+	if value, ok := oc.mutation.ParentID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldParentID,
+		})
+		_node.ParentID = value
 	}
 	if value, ok := oc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -532,6 +549,18 @@ func (u *OrderUpsert) SetUserID(v uuid.UUID) *OrderUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *OrderUpsert) UpdateUserID() *OrderUpsert {
 	u.SetExcluded(order.FieldUserID)
+	return u
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *OrderUpsert) SetParentID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldParentID, v)
+	return u
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateParentID() *OrderUpsert {
+	u.SetExcluded(order.FieldParentID)
 	return u
 }
 
@@ -792,6 +821,20 @@ func (u *OrderUpsertOne) SetUserID(v uuid.UUID) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateUserID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *OrderUpsertOne) SetParentID(v uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetParentID(v)
+	})
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateParentID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateParentID()
 	})
 }
 
@@ -1246,6 +1289,20 @@ func (u *OrderUpsertBulk) SetUserID(v uuid.UUID) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateUserID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *OrderUpsertBulk) SetParentID(v uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetParentID(v)
+	})
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateParentID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateParentID()
 	})
 }
 

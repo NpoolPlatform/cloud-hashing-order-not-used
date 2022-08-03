@@ -17,6 +17,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
 	// FieldPromotionID holds the string denoting the promotion_id field in the database.
@@ -49,6 +51,7 @@ var Columns = []string{
 	FieldGoodID,
 	FieldAppID,
 	FieldUserID,
+	FieldParentID,
 	FieldUnits,
 	FieldPromotionID,
 	FieldDiscountCouponID,

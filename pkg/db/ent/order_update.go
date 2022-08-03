@@ -46,6 +46,12 @@ func (ou *OrderUpdate) SetUserID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
+// SetParentID sets the "parent_id" field.
+func (ou *OrderUpdate) SetParentID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetParentID(u)
+	return ou
+}
+
 // SetUnits sets the "units" field.
 func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
 	ou.mutation.ResetUnits()
@@ -285,6 +291,13 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUserID,
 		})
 	}
+	if value, ok := ou.mutation.ParentID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldParentID,
+		})
+	}
 	if value, ok := ou.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -438,6 +451,12 @@ func (ouo *OrderUpdateOne) SetAppID(u uuid.UUID) *OrderUpdateOne {
 // SetUserID sets the "user_id" field.
 func (ouo *OrderUpdateOne) SetUserID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetUserID(u)
+	return ouo
+}
+
+// SetParentID sets the "parent_id" field.
+func (ouo *OrderUpdateOne) SetParentID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetParentID(u)
 	return ouo
 }
 
@@ -708,6 +727,13 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: order.FieldUserID,
+		})
+	}
+	if value, ok := ouo.mutation.ParentID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: order.FieldParentID,
 		})
 	}
 	if value, ok := ouo.mutation.Units(); ok {
