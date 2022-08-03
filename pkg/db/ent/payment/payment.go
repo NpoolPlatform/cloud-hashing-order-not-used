@@ -102,6 +102,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultChainTransactionID holds the default value on creation for the "chain_transaction_id" field.
+	DefaultChainTransactionID string
+	// DefaultPlatformTransactionID holds the default value on creation for the "platform_transaction_id" field.
+	DefaultPlatformTransactionID func() uuid.UUID
 	// DefaultUserSetPaid holds the default value on creation for the "user_set_paid" field.
 	DefaultUserSetPaid bool
 	// DefaultUserSetCanceled holds the default value on creation for the "user_set_canceled" field.

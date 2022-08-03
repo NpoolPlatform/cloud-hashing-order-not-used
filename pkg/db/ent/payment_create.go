@@ -122,9 +122,25 @@ func (pc *PaymentCreate) SetChainTransactionID(s string) *PaymentCreate {
 	return pc
 }
 
+// SetNillableChainTransactionID sets the "chain_transaction_id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableChainTransactionID(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetChainTransactionID(*s)
+	}
+	return pc
+}
+
 // SetPlatformTransactionID sets the "platform_transaction_id" field.
 func (pc *PaymentCreate) SetPlatformTransactionID(u uuid.UUID) *PaymentCreate {
 	pc.mutation.SetPlatformTransactionID(u)
+	return pc
+}
+
+// SetNillablePlatformTransactionID sets the "platform_transaction_id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillablePlatformTransactionID(u *uuid.UUID) *PaymentCreate {
+	if u != nil {
+		pc.SetPlatformTransactionID(*u)
+	}
 	return pc
 }
 
@@ -317,6 +333,14 @@ func (pc *PaymentCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (pc *PaymentCreate) defaults() {
+	if _, ok := pc.mutation.ChainTransactionID(); !ok {
+		v := payment.DefaultChainTransactionID
+		pc.mutation.SetChainTransactionID(v)
+	}
+	if _, ok := pc.mutation.PlatformTransactionID(); !ok {
+		v := payment.DefaultPlatformTransactionID()
+		pc.mutation.SetPlatformTransactionID(v)
+	}
 	if _, ok := pc.mutation.UserSetPaid(); !ok {
 		v := payment.DefaultUserSetPaid
 		pc.mutation.SetUserSetPaid(v)

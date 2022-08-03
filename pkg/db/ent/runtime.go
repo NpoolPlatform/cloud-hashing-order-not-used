@@ -147,6 +147,14 @@ func init() {
 	outofgas.DefaultID = outofgasDescID.Default.(func() uuid.UUID)
 	paymentFields := schema.Payment{}.Fields()
 	_ = paymentFields
+	// paymentDescChainTransactionID is the schema descriptor for chain_transaction_id field.
+	paymentDescChainTransactionID := paymentFields[15].Descriptor()
+	// payment.DefaultChainTransactionID holds the default value on creation for the chain_transaction_id field.
+	payment.DefaultChainTransactionID = paymentDescChainTransactionID.Default.(string)
+	// paymentDescPlatformTransactionID is the schema descriptor for platform_transaction_id field.
+	paymentDescPlatformTransactionID := paymentFields[16].Descriptor()
+	// payment.DefaultPlatformTransactionID holds the default value on creation for the platform_transaction_id field.
+	payment.DefaultPlatformTransactionID = paymentDescPlatformTransactionID.Default.(func() uuid.UUID)
 	// paymentDescUserSetPaid is the schema descriptor for user_set_paid field.
 	paymentDescUserSetPaid := paymentFields[17].Descriptor()
 	// payment.DefaultUserSetPaid holds the default value on creation for the user_set_paid field.

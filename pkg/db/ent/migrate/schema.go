@@ -116,7 +116,7 @@ var (
 		{Name: "live_coin_usd_currency", Type: field.TypeUint64},
 		{Name: "coin_info_id", Type: field.TypeUUID},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"wait", "done", "canceled", "timeout"}},
-		{Name: "chain_transaction_id", Type: field.TypeString},
+		{Name: "chain_transaction_id", Type: field.TypeString, Default: ""},
 		{Name: "platform_transaction_id", Type: field.TypeUUID},
 		{Name: "user_set_paid", Type: field.TypeBool, Default: false},
 		{Name: "user_set_canceled", Type: field.TypeBool, Default: false},

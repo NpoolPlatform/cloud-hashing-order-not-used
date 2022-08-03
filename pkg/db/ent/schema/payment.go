@@ -52,8 +52,14 @@ func (Payment) Fields() []ent.Field {
 				constant.PaymentStateCanceled,
 				constant.PaymentStateTimeout,
 			),
-		field.String("chain_transaction_id"),
-		field.UUID("platform_transaction_id", uuid.UUID{}),
+		field.
+			String("chain_transaction_id").
+			Default(""),
+		field.
+			UUID("platform_transaction_id", uuid.UUID{}).
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.Bool("user_set_paid").Default(false),
 		field.Bool("user_set_canceled").Default(false),
 		field.String("user_payment_txid").Default(""),

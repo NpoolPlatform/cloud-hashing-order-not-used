@@ -182,9 +182,25 @@ func (pu *PaymentUpdate) SetChainTransactionID(s string) *PaymentUpdate {
 	return pu
 }
 
+// SetNillableChainTransactionID sets the "chain_transaction_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableChainTransactionID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetChainTransactionID(*s)
+	}
+	return pu
+}
+
 // SetPlatformTransactionID sets the "platform_transaction_id" field.
 func (pu *PaymentUpdate) SetPlatformTransactionID(u uuid.UUID) *PaymentUpdate {
 	pu.mutation.SetPlatformTransactionID(u)
+	return pu
+}
+
+// SetNillablePlatformTransactionID sets the "platform_transaction_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillablePlatformTransactionID(u *uuid.UUID) *PaymentUpdate {
+	if u != nil {
+		pu.SetPlatformTransactionID(*u)
+	}
 	return pu
 }
 
@@ -810,9 +826,25 @@ func (puo *PaymentUpdateOne) SetChainTransactionID(s string) *PaymentUpdateOne {
 	return puo
 }
 
+// SetNillableChainTransactionID sets the "chain_transaction_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableChainTransactionID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetChainTransactionID(*s)
+	}
+	return puo
+}
+
 // SetPlatformTransactionID sets the "platform_transaction_id" field.
 func (puo *PaymentUpdateOne) SetPlatformTransactionID(u uuid.UUID) *PaymentUpdateOne {
 	puo.mutation.SetPlatformTransactionID(u)
+	return puo
+}
+
+// SetNillablePlatformTransactionID sets the "platform_transaction_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillablePlatformTransactionID(u *uuid.UUID) *PaymentUpdateOne {
+	if u != nil {
+		puo.SetPlatformTransactionID(*u)
+	}
 	return puo
 }
 
