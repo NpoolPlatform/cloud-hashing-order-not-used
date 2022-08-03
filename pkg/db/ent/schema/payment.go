@@ -4,10 +4,13 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 
 	constant "github.com/NpoolPlatform/cloud-hashing-order/pkg/const"
+
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Payment holds the schema definition for the Payment entity.
@@ -29,6 +32,13 @@ func (Payment) Fields() []ent.Field {
 		field.UUID("account_id", uuid.UUID{}),
 		field.Uint64("start_amount"),
 		field.Uint64("amount"),
+		field.
+			Float("pay_with_balance_amount").
+			GoType(decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37, 18)",
+			}).
+			Optional(),
 		field.Uint64("finish_amount"),
 		field.Uint64("coin_usd_currency"),
 		field.Uint64("local_coin_usd_currency"),
