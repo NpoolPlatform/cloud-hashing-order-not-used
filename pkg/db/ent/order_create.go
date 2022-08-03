@@ -55,6 +55,20 @@ func (oc *OrderCreate) SetNillableParentOrderID(u *uuid.UUID) *OrderCreate {
 	return oc
 }
 
+// SetPayWithParent sets the "pay_with_parent" field.
+func (oc *OrderCreate) SetPayWithParent(b bool) *OrderCreate {
+	oc.mutation.SetPayWithParent(b)
+	return oc
+}
+
+// SetNillablePayWithParent sets the "pay_with_parent" field if the given value is not nil.
+func (oc *OrderCreate) SetNillablePayWithParent(b *bool) *OrderCreate {
+	if b != nil {
+		oc.SetPayWithParent(*b)
+	}
+	return oc
+}
+
 // SetUnits sets the "units" field.
 func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	oc.mutation.SetUnits(u)
@@ -248,6 +262,10 @@ func (oc *OrderCreate) defaults() {
 		v := order.DefaultParentOrderID()
 		oc.mutation.SetParentOrderID(v)
 	}
+	if _, ok := oc.mutation.PayWithParent(); !ok {
+		v := order.DefaultPayWithParent
+		oc.mutation.SetPayWithParent(v)
+	}
 	if _, ok := oc.mutation.OrderType(); !ok {
 		v := order.DefaultOrderType
 		oc.mutation.SetOrderType(v)
@@ -382,6 +400,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldParentOrderID,
 		})
 		_node.ParentOrderID = value
+	}
+	if value, ok := oc.mutation.PayWithParent(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: order.FieldPayWithParent,
+		})
+		_node.PayWithParent = value
 	}
 	if value, ok := oc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -576,6 +602,24 @@ func (u *OrderUpsert) UpdateParentOrderID() *OrderUpsert {
 // ClearParentOrderID clears the value of the "parent_order_id" field.
 func (u *OrderUpsert) ClearParentOrderID() *OrderUpsert {
 	u.SetNull(order.FieldParentOrderID)
+	return u
+}
+
+// SetPayWithParent sets the "pay_with_parent" field.
+func (u *OrderUpsert) SetPayWithParent(v bool) *OrderUpsert {
+	u.Set(order.FieldPayWithParent, v)
+	return u
+}
+
+// UpdatePayWithParent sets the "pay_with_parent" field to the value that was provided on create.
+func (u *OrderUpsert) UpdatePayWithParent() *OrderUpsert {
+	u.SetExcluded(order.FieldPayWithParent)
+	return u
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (u *OrderUpsert) ClearPayWithParent() *OrderUpsert {
+	u.SetNull(order.FieldPayWithParent)
 	return u
 }
 
@@ -857,6 +901,27 @@ func (u *OrderUpsertOne) UpdateParentOrderID() *OrderUpsertOne {
 func (u *OrderUpsertOne) ClearParentOrderID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearParentOrderID()
+	})
+}
+
+// SetPayWithParent sets the "pay_with_parent" field.
+func (u *OrderUpsertOne) SetPayWithParent(v bool) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetPayWithParent(v)
+	})
+}
+
+// UpdatePayWithParent sets the "pay_with_parent" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdatePayWithParent() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdatePayWithParent()
+	})
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (u *OrderUpsertOne) ClearPayWithParent() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearPayWithParent()
 	})
 }
 
@@ -1332,6 +1397,27 @@ func (u *OrderUpsertBulk) UpdateParentOrderID() *OrderUpsertBulk {
 func (u *OrderUpsertBulk) ClearParentOrderID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearParentOrderID()
+	})
+}
+
+// SetPayWithParent sets the "pay_with_parent" field.
+func (u *OrderUpsertBulk) SetPayWithParent(v bool) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetPayWithParent(v)
+	})
+}
+
+// UpdatePayWithParent sets the "pay_with_parent" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdatePayWithParent() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdatePayWithParent()
+	})
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (u *OrderUpsertBulk) ClearPayWithParent() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearPayWithParent()
 	})
 }
 

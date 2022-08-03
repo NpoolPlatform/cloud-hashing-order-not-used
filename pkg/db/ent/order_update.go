@@ -66,6 +66,26 @@ func (ou *OrderUpdate) ClearParentOrderID() *OrderUpdate {
 	return ou
 }
 
+// SetPayWithParent sets the "pay_with_parent" field.
+func (ou *OrderUpdate) SetPayWithParent(b bool) *OrderUpdate {
+	ou.mutation.SetPayWithParent(b)
+	return ou
+}
+
+// SetNillablePayWithParent sets the "pay_with_parent" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillablePayWithParent(b *bool) *OrderUpdate {
+	if b != nil {
+		ou.SetPayWithParent(*b)
+	}
+	return ou
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (ou *OrderUpdate) ClearPayWithParent() *OrderUpdate {
+	ou.mutation.ClearPayWithParent()
+	return ou
+}
+
 // SetUnits sets the "units" field.
 func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
 	ou.mutation.ResetUnits()
@@ -318,6 +338,19 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldParentOrderID,
 		})
 	}
+	if value, ok := ou.mutation.PayWithParent(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: order.FieldPayWithParent,
+		})
+	}
+	if ou.mutation.PayWithParentCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: order.FieldPayWithParent,
+		})
+	}
 	if value, ok := ou.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -491,6 +524,26 @@ func (ouo *OrderUpdateOne) SetNillableParentOrderID(u *uuid.UUID) *OrderUpdateOn
 // ClearParentOrderID clears the value of the "parent_order_id" field.
 func (ouo *OrderUpdateOne) ClearParentOrderID() *OrderUpdateOne {
 	ouo.mutation.ClearParentOrderID()
+	return ouo
+}
+
+// SetPayWithParent sets the "pay_with_parent" field.
+func (ouo *OrderUpdateOne) SetPayWithParent(b bool) *OrderUpdateOne {
+	ouo.mutation.SetPayWithParent(b)
+	return ouo
+}
+
+// SetNillablePayWithParent sets the "pay_with_parent" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillablePayWithParent(b *bool) *OrderUpdateOne {
+	if b != nil {
+		ouo.SetPayWithParent(*b)
+	}
+	return ouo
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (ouo *OrderUpdateOne) ClearPayWithParent() *OrderUpdateOne {
+	ouo.mutation.ClearPayWithParent()
 	return ouo
 }
 
@@ -774,6 +827,19 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: order.FieldParentOrderID,
+		})
+	}
+	if value, ok := ouo.mutation.PayWithParent(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: order.FieldPayWithParent,
+		})
+	}
+	if ouo.mutation.PayWithParentCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: order.FieldPayWithParent,
 		})
 	}
 	if value, ok := ouo.mutation.Units(); ok {

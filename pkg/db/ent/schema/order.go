@@ -31,6 +31,10 @@ func (Order) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
+		field.
+			Bool("pay_with_parent").
+			Optional().
+			Default(false),
 		field.Uint32("units"),
 		field.UUID("promotion_id", uuid.UUID{}),
 		field.UUID("discount_coupon_id", uuid.UUID{}),

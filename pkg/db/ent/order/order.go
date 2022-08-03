@@ -19,6 +19,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldParentOrderID holds the string denoting the parent_order_id field in the database.
 	FieldParentOrderID = "parent_order_id"
+	// FieldPayWithParent holds the string denoting the pay_with_parent field in the database.
+	FieldPayWithParent = "pay_with_parent"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
 	// FieldPromotionID holds the string denoting the promotion_id field in the database.
@@ -52,6 +54,7 @@ var Columns = []string{
 	FieldAppID,
 	FieldUserID,
 	FieldParentOrderID,
+	FieldPayWithParent,
 	FieldUnits,
 	FieldPromotionID,
 	FieldDiscountCouponID,
@@ -78,6 +81,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultParentOrderID holds the default value on creation for the "parent_order_id" field.
 	DefaultParentOrderID func() uuid.UUID
+	// DefaultPayWithParent holds the default value on creation for the "pay_with_parent" field.
+	DefaultPayWithParent bool
 	// DefaultOrderType holds the default value on creation for the "order_type" field.
 	DefaultOrderType string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.

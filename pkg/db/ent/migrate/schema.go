@@ -64,6 +64,7 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "parent_order_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "pay_with_parent", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "units", Type: field.TypeUint32},
 		{Name: "promotion_id", Type: field.TypeUUID},
 		{Name: "discount_coupon_id", Type: field.TypeUUID},

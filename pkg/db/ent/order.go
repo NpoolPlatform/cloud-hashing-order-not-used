@@ -24,6 +24,8 @@ type Order struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// ParentOrderID holds the value of the "parent_order_id" field.
 	ParentOrderID uuid.UUID `json:"parent_order_id,omitempty"`
+	// PayWithParent holds the value of the "pay_with_parent" field.
+	PayWithParent bool `json:"pay_with_parent,omitempty"`
 	// Units holds the value of the "units" field.
 	Units uint32 `json:"units,omitempty"`
 	// PromotionID holds the value of the "promotion_id" field.
@@ -53,6 +55,8 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case order.FieldPayWithParent:
+			values[i] = new(sql.NullBool)
 		case order.FieldUnits, order.FieldStart, order.FieldEnd, order.FieldCreateAt, order.FieldUpdateAt, order.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
 		case order.FieldOrderType:
@@ -103,6 +107,12 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field parent_order_id", values[i])
 			} else if value != nil {
 				o.ParentOrderID = *value
+			}
+		case order.FieldPayWithParent:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field pay_with_parent", values[i])
+			} else if value.Valid {
+				o.PayWithParent = value.Bool
 			}
 		case order.FieldUnits:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -209,6 +219,9 @@ func (o *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("parent_order_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.ParentOrderID))
+	builder.WriteString(", ")
+	builder.WriteString("pay_with_parent=")
+	builder.WriteString(fmt.Sprintf("%v", o.PayWithParent))
 	builder.WriteString(", ")
 	builder.WriteString("units=")
 	builder.WriteString(fmt.Sprintf("%v", o.Units))

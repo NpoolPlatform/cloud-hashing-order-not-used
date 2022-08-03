@@ -2268,6 +2268,7 @@ type OrderMutation struct {
 	app_id                    *uuid.UUID
 	user_id                   *uuid.UUID
 	parent_order_id           *uuid.UUID
+	pay_with_parent           *bool
 	units                     *uint32
 	addunits                  *int32
 	promotion_id              *uuid.UUID
@@ -2550,6 +2551,55 @@ func (m *OrderMutation) ParentOrderIDCleared() bool {
 func (m *OrderMutation) ResetParentOrderID() {
 	m.parent_order_id = nil
 	delete(m.clearedFields, order.FieldParentOrderID)
+}
+
+// SetPayWithParent sets the "pay_with_parent" field.
+func (m *OrderMutation) SetPayWithParent(b bool) {
+	m.pay_with_parent = &b
+}
+
+// PayWithParent returns the value of the "pay_with_parent" field in the mutation.
+func (m *OrderMutation) PayWithParent() (r bool, exists bool) {
+	v := m.pay_with_parent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPayWithParent returns the old "pay_with_parent" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldPayWithParent(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPayWithParent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPayWithParent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPayWithParent: %w", err)
+	}
+	return oldValue.PayWithParent, nil
+}
+
+// ClearPayWithParent clears the value of the "pay_with_parent" field.
+func (m *OrderMutation) ClearPayWithParent() {
+	m.pay_with_parent = nil
+	m.clearedFields[order.FieldPayWithParent] = struct{}{}
+}
+
+// PayWithParentCleared returns if the "pay_with_parent" field was cleared in this mutation.
+func (m *OrderMutation) PayWithParentCleared() bool {
+	_, ok := m.clearedFields[order.FieldPayWithParent]
+	return ok
+}
+
+// ResetPayWithParent resets all changes to the "pay_with_parent" field.
+func (m *OrderMutation) ResetPayWithParent() {
+	m.pay_with_parent = nil
+	delete(m.clearedFields, order.FieldPayWithParent)
 }
 
 // SetUnits sets the "units" field.
@@ -3087,7 +3137,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.good_id != nil {
 		fields = append(fields, order.FieldGoodID)
 	}
@@ -3099,6 +3149,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.parent_order_id != nil {
 		fields = append(fields, order.FieldParentOrderID)
+	}
+	if m.pay_with_parent != nil {
+		fields = append(fields, order.FieldPayWithParent)
 	}
 	if m.units != nil {
 		fields = append(fields, order.FieldUnits)
@@ -3149,6 +3202,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case order.FieldParentOrderID:
 		return m.ParentOrderID()
+	case order.FieldPayWithParent:
+		return m.PayWithParent()
 	case order.FieldUnits:
 		return m.Units()
 	case order.FieldPromotionID:
@@ -3188,6 +3243,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldUserID(ctx)
 	case order.FieldParentOrderID:
 		return m.OldParentOrderID(ctx)
+	case order.FieldPayWithParent:
+		return m.OldPayWithParent(ctx)
 	case order.FieldUnits:
 		return m.OldUnits(ctx)
 	case order.FieldPromotionID:
@@ -3246,6 +3303,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetParentOrderID(v)
+		return nil
+	case order.FieldPayWithParent:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPayWithParent(v)
 		return nil
 	case order.FieldUnits:
 		v, ok := value.(uint32)
@@ -3432,6 +3496,9 @@ func (m *OrderMutation) ClearedFields() []string {
 	if m.FieldCleared(order.FieldParentOrderID) {
 		fields = append(fields, order.FieldParentOrderID)
 	}
+	if m.FieldCleared(order.FieldPayWithParent) {
+		fields = append(fields, order.FieldPayWithParent)
+	}
 	return fields
 }
 
@@ -3448,6 +3515,9 @@ func (m *OrderMutation) ClearField(name string) error {
 	switch name {
 	case order.FieldParentOrderID:
 		m.ClearParentOrderID()
+		return nil
+	case order.FieldPayWithParent:
+		m.ClearPayWithParent()
 		return nil
 	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
@@ -3468,6 +3538,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldParentOrderID:
 		m.ResetParentOrderID()
+		return nil
+	case order.FieldPayWithParent:
+		m.ResetPayWithParent()
 		return nil
 	case order.FieldUnits:
 		m.ResetUnits()

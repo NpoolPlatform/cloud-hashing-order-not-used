@@ -107,6 +107,13 @@ func ParentOrderID(v uuid.UUID) predicate.Order {
 	})
 }
 
+// PayWithParent applies equality check predicate on the "pay_with_parent" field. It's identical to PayWithParentEQ.
+func PayWithParent(v bool) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPayWithParent), v))
+	})
+}
+
 // Units applies equality check predicate on the "units" field. It's identical to UnitsEQ.
 func Units(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
@@ -499,6 +506,34 @@ func ParentOrderIDIsNil() predicate.Order {
 func ParentOrderIDNotNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldParentOrderID)))
+	})
+}
+
+// PayWithParentEQ applies the EQ predicate on the "pay_with_parent" field.
+func PayWithParentEQ(v bool) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPayWithParent), v))
+	})
+}
+
+// PayWithParentNEQ applies the NEQ predicate on the "pay_with_parent" field.
+func PayWithParentNEQ(v bool) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPayWithParent), v))
+	})
+}
+
+// PayWithParentIsNil applies the IsNil predicate on the "pay_with_parent" field.
+func PayWithParentIsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPayWithParent)))
+	})
+}
+
+// PayWithParentNotNil applies the NotNil predicate on the "pay_with_parent" field.
+func PayWithParentNotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPayWithParent)))
 	})
 }
 
