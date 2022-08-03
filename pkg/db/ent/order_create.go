@@ -41,16 +41,16 @@ func (oc *OrderCreate) SetUserID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
-// SetParentID sets the "parent_id" field.
-func (oc *OrderCreate) SetParentID(u uuid.UUID) *OrderCreate {
-	oc.mutation.SetParentID(u)
+// SetParentOrderID sets the "parent_order_id" field.
+func (oc *OrderCreate) SetParentOrderID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetParentOrderID(u)
 	return oc
 }
 
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableParentID(u *uuid.UUID) *OrderCreate {
+// SetNillableParentOrderID sets the "parent_order_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableParentOrderID(u *uuid.UUID) *OrderCreate {
 	if u != nil {
-		oc.SetParentID(*u)
+		oc.SetParentOrderID(*u)
 	}
 	return oc
 }
@@ -244,9 +244,9 @@ func (oc *OrderCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (oc *OrderCreate) defaults() {
-	if _, ok := oc.mutation.ParentID(); !ok {
-		v := order.DefaultParentID()
-		oc.mutation.SetParentID(v)
+	if _, ok := oc.mutation.ParentOrderID(); !ok {
+		v := order.DefaultParentOrderID()
+		oc.mutation.SetParentOrderID(v)
 	}
 	if _, ok := oc.mutation.OrderType(); !ok {
 		v := order.DefaultOrderType
@@ -375,13 +375,13 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 		})
 		_node.UserID = value
 	}
-	if value, ok := oc.mutation.ParentID(); ok {
+	if value, ok := oc.mutation.ParentOrderID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldParentID,
+			Column: order.FieldParentOrderID,
 		})
-		_node.ParentID = value
+		_node.ParentOrderID = value
 	}
 	if value, ok := oc.mutation.Units(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -561,21 +561,21 @@ func (u *OrderUpsert) UpdateUserID() *OrderUpsert {
 	return u
 }
 
-// SetParentID sets the "parent_id" field.
-func (u *OrderUpsert) SetParentID(v uuid.UUID) *OrderUpsert {
-	u.Set(order.FieldParentID, v)
+// SetParentOrderID sets the "parent_order_id" field.
+func (u *OrderUpsert) SetParentOrderID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldParentOrderID, v)
 	return u
 }
 
-// UpdateParentID sets the "parent_id" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateParentID() *OrderUpsert {
-	u.SetExcluded(order.FieldParentID)
+// UpdateParentOrderID sets the "parent_order_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateParentOrderID() *OrderUpsert {
+	u.SetExcluded(order.FieldParentOrderID)
 	return u
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (u *OrderUpsert) ClearParentID() *OrderUpsert {
-	u.SetNull(order.FieldParentID)
+// ClearParentOrderID clears the value of the "parent_order_id" field.
+func (u *OrderUpsert) ClearParentOrderID() *OrderUpsert {
+	u.SetNull(order.FieldParentOrderID)
 	return u
 }
 
@@ -839,24 +839,24 @@ func (u *OrderUpsertOne) UpdateUserID() *OrderUpsertOne {
 	})
 }
 
-// SetParentID sets the "parent_id" field.
-func (u *OrderUpsertOne) SetParentID(v uuid.UUID) *OrderUpsertOne {
+// SetParentOrderID sets the "parent_order_id" field.
+func (u *OrderUpsertOne) SetParentOrderID(v uuid.UUID) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetParentID(v)
+		s.SetParentOrderID(v)
 	})
 }
 
-// UpdateParentID sets the "parent_id" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateParentID() *OrderUpsertOne {
+// UpdateParentOrderID sets the "parent_order_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateParentOrderID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateParentID()
+		s.UpdateParentOrderID()
 	})
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (u *OrderUpsertOne) ClearParentID() *OrderUpsertOne {
+// ClearParentOrderID clears the value of the "parent_order_id" field.
+func (u *OrderUpsertOne) ClearParentOrderID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.ClearParentID()
+		s.ClearParentOrderID()
 	})
 }
 
@@ -1314,24 +1314,24 @@ func (u *OrderUpsertBulk) UpdateUserID() *OrderUpsertBulk {
 	})
 }
 
-// SetParentID sets the "parent_id" field.
-func (u *OrderUpsertBulk) SetParentID(v uuid.UUID) *OrderUpsertBulk {
+// SetParentOrderID sets the "parent_order_id" field.
+func (u *OrderUpsertBulk) SetParentOrderID(v uuid.UUID) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetParentID(v)
+		s.SetParentOrderID(v)
 	})
 }
 
-// UpdateParentID sets the "parent_id" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateParentID() *OrderUpsertBulk {
+// UpdateParentOrderID sets the "parent_order_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateParentOrderID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateParentID()
+		s.UpdateParentOrderID()
 	})
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (u *OrderUpsertBulk) ClearParentID() *OrderUpsertBulk {
+// ClearParentOrderID clears the value of the "parent_order_id" field.
+func (u *OrderUpsertBulk) ClearParentOrderID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.ClearParentID()
+		s.ClearParentOrderID()
 	})
 }
 

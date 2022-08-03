@@ -22,8 +22,8 @@ type Order struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// ParentID holds the value of the "parent_id" field.
-	ParentID uuid.UUID `json:"parent_id,omitempty"`
+	// ParentOrderID holds the value of the "parent_order_id" field.
+	ParentOrderID uuid.UUID `json:"parent_order_id,omitempty"`
 	// Units holds the value of the "units" field.
 	Units uint32 `json:"units,omitempty"`
 	// PromotionID holds the value of the "promotion_id" field.
@@ -57,7 +57,7 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case order.FieldOrderType:
 			values[i] = new(sql.NullString)
-		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldParentID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldParentOrderID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
@@ -98,11 +98,11 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				o.UserID = *value
 			}
-		case order.FieldParentID:
+		case order.FieldParentOrderID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+				return fmt.Errorf("unexpected type %T for field parent_order_id", values[i])
 			} else if value != nil {
-				o.ParentID = *value
+				o.ParentOrderID = *value
 			}
 		case order.FieldUnits:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -207,8 +207,8 @@ func (o *Order) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.UserID))
 	builder.WriteString(", ")
-	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", o.ParentID))
+	builder.WriteString("parent_order_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.ParentOrderID))
 	builder.WriteString(", ")
 	builder.WriteString("units=")
 	builder.WriteString(fmt.Sprintf("%v", o.Units))

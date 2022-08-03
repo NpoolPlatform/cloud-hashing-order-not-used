@@ -26,7 +26,7 @@ func (Order) Fields() []ent.Field {
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
 		field.
-			UUID("parent_id", uuid.UUID{}).
+			UUID("parent_order_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.UUID{}

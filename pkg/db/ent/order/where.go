@@ -100,10 +100,10 @@ func UserID(v uuid.UUID) predicate.Order {
 	})
 }
 
-// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
-func ParentID(v uuid.UUID) predicate.Order {
+// ParentOrderID applies equality check predicate on the "parent_order_id" field. It's identical to ParentOrderIDEQ.
+func ParentOrderID(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldParentID), v))
+		s.Where(sql.EQ(s.C(FieldParentOrderID), v))
 	})
 }
 
@@ -412,22 +412,22 @@ func UserIDLTE(v uuid.UUID) predicate.Order {
 	})
 }
 
-// ParentIDEQ applies the EQ predicate on the "parent_id" field.
-func ParentIDEQ(v uuid.UUID) predicate.Order {
+// ParentOrderIDEQ applies the EQ predicate on the "parent_order_id" field.
+func ParentOrderIDEQ(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldParentID), v))
+		s.Where(sql.EQ(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
-func ParentIDNEQ(v uuid.UUID) predicate.Order {
+// ParentOrderIDNEQ applies the NEQ predicate on the "parent_order_id" field.
+func ParentOrderIDNEQ(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldParentID), v))
+		s.Where(sql.NEQ(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDIn applies the In predicate on the "parent_id" field.
-func ParentIDIn(vs ...uuid.UUID) predicate.Order {
+// ParentOrderIDIn applies the In predicate on the "parent_order_id" field.
+func ParentOrderIDIn(vs ...uuid.UUID) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -439,12 +439,12 @@ func ParentIDIn(vs ...uuid.UUID) predicate.Order {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldParentID), v...))
+		s.Where(sql.In(s.C(FieldParentOrderID), v...))
 	})
 }
 
-// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
-func ParentIDNotIn(vs ...uuid.UUID) predicate.Order {
+// ParentOrderIDNotIn applies the NotIn predicate on the "parent_order_id" field.
+func ParentOrderIDNotIn(vs ...uuid.UUID) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -456,49 +456,49 @@ func ParentIDNotIn(vs ...uuid.UUID) predicate.Order {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldParentID), v...))
+		s.Where(sql.NotIn(s.C(FieldParentOrderID), v...))
 	})
 }
 
-// ParentIDGT applies the GT predicate on the "parent_id" field.
-func ParentIDGT(v uuid.UUID) predicate.Order {
+// ParentOrderIDGT applies the GT predicate on the "parent_order_id" field.
+func ParentOrderIDGT(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldParentID), v))
+		s.Where(sql.GT(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDGTE applies the GTE predicate on the "parent_id" field.
-func ParentIDGTE(v uuid.UUID) predicate.Order {
+// ParentOrderIDGTE applies the GTE predicate on the "parent_order_id" field.
+func ParentOrderIDGTE(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldParentID), v))
+		s.Where(sql.GTE(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDLT applies the LT predicate on the "parent_id" field.
-func ParentIDLT(v uuid.UUID) predicate.Order {
+// ParentOrderIDLT applies the LT predicate on the "parent_order_id" field.
+func ParentOrderIDLT(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldParentID), v))
+		s.Where(sql.LT(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDLTE applies the LTE predicate on the "parent_id" field.
-func ParentIDLTE(v uuid.UUID) predicate.Order {
+// ParentOrderIDLTE applies the LTE predicate on the "parent_order_id" field.
+func ParentOrderIDLTE(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldParentID), v))
+		s.Where(sql.LTE(s.C(FieldParentOrderID), v))
 	})
 }
 
-// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
-func ParentIDIsNil() predicate.Order {
+// ParentOrderIDIsNil applies the IsNil predicate on the "parent_order_id" field.
+func ParentOrderIDIsNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldParentID)))
+		s.Where(sql.IsNull(s.C(FieldParentOrderID)))
 	})
 }
 
-// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
-func ParentIDNotNil() predicate.Order {
+// ParentOrderIDNotNil applies the NotNil predicate on the "parent_order_id" field.
+func ParentOrderIDNotNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldParentID)))
+		s.Where(sql.NotNull(s.C(FieldParentOrderID)))
 	})
 }
 

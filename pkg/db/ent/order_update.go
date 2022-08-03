@@ -46,23 +46,23 @@ func (ou *OrderUpdate) SetUserID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
-// SetParentID sets the "parent_id" field.
-func (ou *OrderUpdate) SetParentID(u uuid.UUID) *OrderUpdate {
-	ou.mutation.SetParentID(u)
+// SetParentOrderID sets the "parent_order_id" field.
+func (ou *OrderUpdate) SetParentOrderID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetParentOrderID(u)
 	return ou
 }
 
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableParentID(u *uuid.UUID) *OrderUpdate {
+// SetNillableParentOrderID sets the "parent_order_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableParentOrderID(u *uuid.UUID) *OrderUpdate {
 	if u != nil {
-		ou.SetParentID(*u)
+		ou.SetParentOrderID(*u)
 	}
 	return ou
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (ou *OrderUpdate) ClearParentID() *OrderUpdate {
-	ou.mutation.ClearParentID()
+// ClearParentOrderID clears the value of the "parent_order_id" field.
+func (ou *OrderUpdate) ClearParentOrderID() *OrderUpdate {
+	ou.mutation.ClearParentOrderID()
 	return ou
 }
 
@@ -305,17 +305,17 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUserID,
 		})
 	}
-	if value, ok := ou.mutation.ParentID(); ok {
+	if value, ok := ou.mutation.ParentOrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldParentID,
+			Column: order.FieldParentOrderID,
 		})
 	}
-	if ou.mutation.ParentIDCleared() {
+	if ou.mutation.ParentOrderIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: order.FieldParentID,
+			Column: order.FieldParentOrderID,
 		})
 	}
 	if value, ok := ou.mutation.Units(); ok {
@@ -474,23 +474,23 @@ func (ouo *OrderUpdateOne) SetUserID(u uuid.UUID) *OrderUpdateOne {
 	return ouo
 }
 
-// SetParentID sets the "parent_id" field.
-func (ouo *OrderUpdateOne) SetParentID(u uuid.UUID) *OrderUpdateOne {
-	ouo.mutation.SetParentID(u)
+// SetParentOrderID sets the "parent_order_id" field.
+func (ouo *OrderUpdateOne) SetParentOrderID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetParentOrderID(u)
 	return ouo
 }
 
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableParentID(u *uuid.UUID) *OrderUpdateOne {
+// SetNillableParentOrderID sets the "parent_order_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableParentOrderID(u *uuid.UUID) *OrderUpdateOne {
 	if u != nil {
-		ouo.SetParentID(*u)
+		ouo.SetParentOrderID(*u)
 	}
 	return ouo
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (ouo *OrderUpdateOne) ClearParentID() *OrderUpdateOne {
-	ouo.mutation.ClearParentID()
+// ClearParentOrderID clears the value of the "parent_order_id" field.
+func (ouo *OrderUpdateOne) ClearParentOrderID() *OrderUpdateOne {
+	ouo.mutation.ClearParentOrderID()
 	return ouo
 }
 
@@ -763,17 +763,17 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Column: order.FieldUserID,
 		})
 	}
-	if value, ok := ouo.mutation.ParentID(); ok {
+	if value, ok := ouo.mutation.ParentOrderID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldParentID,
+			Column: order.FieldParentOrderID,
 		})
 	}
-	if ouo.mutation.ParentIDCleared() {
+	if ouo.mutation.ParentOrderIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: order.FieldParentID,
+			Column: order.FieldParentOrderID,
 		})
 	}
 	if value, ok := ouo.mutation.Units(); ok {

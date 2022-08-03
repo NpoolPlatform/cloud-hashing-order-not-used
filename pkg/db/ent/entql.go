@@ -91,7 +91,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			order.FieldGoodID:                 {Type: field.TypeUUID, Column: order.FieldGoodID},
 			order.FieldAppID:                  {Type: field.TypeUUID, Column: order.FieldAppID},
 			order.FieldUserID:                 {Type: field.TypeUUID, Column: order.FieldUserID},
-			order.FieldParentID:               {Type: field.TypeUUID, Column: order.FieldParentID},
+			order.FieldParentOrderID:          {Type: field.TypeUUID, Column: order.FieldParentOrderID},
 			order.FieldUnits:                  {Type: field.TypeUint32, Column: order.FieldUnits},
 			order.FieldPromotionID:            {Type: field.TypeUUID, Column: order.FieldPromotionID},
 			order.FieldDiscountCouponID:       {Type: field.TypeUUID, Column: order.FieldDiscountCouponID},
@@ -439,9 +439,9 @@ func (f *OrderFilter) WhereUserID(p entql.ValueP) {
 	f.Where(p.Field(order.FieldUserID))
 }
 
-// WhereParentID applies the entql [16]byte predicate on the parent_id field.
-func (f *OrderFilter) WhereParentID(p entql.ValueP) {
-	f.Where(p.Field(order.FieldParentID))
+// WhereParentOrderID applies the entql [16]byte predicate on the parent_order_id field.
+func (f *OrderFilter) WhereParentOrderID(p entql.ValueP) {
+	f.Where(p.Field(order.FieldParentOrderID))
 }
 
 // WhereUnits applies the entql uint32 predicate on the units field.
