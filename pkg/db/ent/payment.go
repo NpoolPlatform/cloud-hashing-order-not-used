@@ -32,7 +32,7 @@ type Payment struct {
 	// Amount holds the value of the "amount" field.
 	Amount uint64 `json:"amount,omitempty"`
 	// PayWithBalanceAmount holds the value of the "pay_with_balance_amount" field.
-	PayWithBalanceAmount decimal.Decimal `json:"pay_with_balance_amount,omitempty"`
+	PayWithBalanceAmount *decimal.Decimal `json:"pay_with_balance_amount,omitempty"`
 	// FinishAmount holds the value of the "finish_amount" field.
 	FinishAmount uint64 `json:"finish_amount,omitempty"`
 	// CoinUsdCurrency holds the value of the "coin_usd_currency" field.
@@ -71,7 +71,7 @@ func (*Payment) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case payment.FieldPayWithBalanceAmount:
-			values[i] = new(decimal.Decimal)
+			values[i] = &sql.NullScanner{S: new(decimal.Decimal)}
 		case payment.FieldUserSetPaid, payment.FieldUserSetCanceled, payment.FieldFakePayment:
 			values[i] = new(sql.NullBool)
 		case payment.FieldStartAmount, payment.FieldAmount, payment.FieldFinishAmount, payment.FieldCoinUsdCurrency, payment.FieldLocalCoinUsdCurrency, payment.FieldLiveCoinUsdCurrency, payment.FieldCreateAt, payment.FieldUpdateAt, payment.FieldDeleteAt:
@@ -144,10 +144,11 @@ func (pa *Payment) assignValues(columns []string, values []interface{}) error {
 				pa.Amount = uint64(value.Int64)
 			}
 		case payment.FieldPayWithBalanceAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
+			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field pay_with_balance_amount", values[i])
-			} else if value != nil {
-				pa.PayWithBalanceAmount = *value
+			} else if value.Valid {
+				pa.PayWithBalanceAmount = new(decimal.Decimal)
+				*pa.PayWithBalanceAmount = *value.S.(*decimal.Decimal)
 			}
 		case payment.FieldFinishAmount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -288,8 +289,10 @@ func (pa *Payment) String() string {
 	builder.WriteString("amount=")
 	builder.WriteString(fmt.Sprintf("%v", pa.Amount))
 	builder.WriteString(", ")
-	builder.WriteString("pay_with_balance_amount=")
-	builder.WriteString(fmt.Sprintf("%v", pa.PayWithBalanceAmount))
+	if v := pa.PayWithBalanceAmount; v != nil {
+		builder.WriteString("pay_with_balance_amount=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("finish_amount=")
 	builder.WriteString(fmt.Sprintf("%v", pa.FinishAmount))

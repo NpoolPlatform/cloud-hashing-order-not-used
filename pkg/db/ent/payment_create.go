@@ -523,7 +523,7 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: payment.FieldPayWithBalanceAmount,
 		})
-		_node.PayWithBalanceAmount = value
+		_node.PayWithBalanceAmount = &value
 	}
 	if value, ok := pc.mutation.FinishAmount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

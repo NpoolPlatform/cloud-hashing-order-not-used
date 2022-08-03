@@ -4841,7 +4841,7 @@ func (m *PaymentMutation) PayWithBalanceAmount() (r decimal.Decimal, exists bool
 // OldPayWithBalanceAmount returns the old "pay_with_balance_amount" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldPayWithBalanceAmount(ctx context.Context) (v decimal.Decimal, err error) {
+func (m *PaymentMutation) OldPayWithBalanceAmount(ctx context.Context) (v *decimal.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldPayWithBalanceAmount is only allowed on UpdateOne operations")
 	}
