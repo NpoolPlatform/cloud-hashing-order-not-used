@@ -83,6 +83,14 @@ var (
 	DefaultParentOrderID func() uuid.UUID
 	// DefaultPayWithParent holds the default value on creation for the "pay_with_parent" field.
 	DefaultPayWithParent bool
+	// DefaultPromotionID holds the default value on creation for the "promotion_id" field.
+	DefaultPromotionID func() uuid.UUID
+	// DefaultDiscountCouponID holds the default value on creation for the "discount_coupon_id" field.
+	DefaultDiscountCouponID func() uuid.UUID
+	// DefaultUserSpecialReductionID holds the default value on creation for the "user_special_reduction_id" field.
+	DefaultUserSpecialReductionID func() uuid.UUID
+	// DefaultCouponID holds the default value on creation for the "coupon_id" field.
+	DefaultCouponID func() uuid.UUID
 	// DefaultOrderType holds the default value on creation for the "order_type" field.
 	DefaultOrderType string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.

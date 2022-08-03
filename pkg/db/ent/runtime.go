@@ -87,6 +87,22 @@ func init() {
 	orderDescPayWithParent := orderFields[5].Descriptor()
 	// order.DefaultPayWithParent holds the default value on creation for the pay_with_parent field.
 	order.DefaultPayWithParent = orderDescPayWithParent.Default.(bool)
+	// orderDescPromotionID is the schema descriptor for promotion_id field.
+	orderDescPromotionID := orderFields[7].Descriptor()
+	// order.DefaultPromotionID holds the default value on creation for the promotion_id field.
+	order.DefaultPromotionID = orderDescPromotionID.Default.(func() uuid.UUID)
+	// orderDescDiscountCouponID is the schema descriptor for discount_coupon_id field.
+	orderDescDiscountCouponID := orderFields[8].Descriptor()
+	// order.DefaultDiscountCouponID holds the default value on creation for the discount_coupon_id field.
+	order.DefaultDiscountCouponID = orderDescDiscountCouponID.Default.(func() uuid.UUID)
+	// orderDescUserSpecialReductionID is the schema descriptor for user_special_reduction_id field.
+	orderDescUserSpecialReductionID := orderFields[9].Descriptor()
+	// order.DefaultUserSpecialReductionID holds the default value on creation for the user_special_reduction_id field.
+	order.DefaultUserSpecialReductionID = orderDescUserSpecialReductionID.Default.(func() uuid.UUID)
+	// orderDescCouponID is the schema descriptor for coupon_id field.
+	orderDescCouponID := orderFields[12].Descriptor()
+	// order.DefaultCouponID holds the default value on creation for the coupon_id field.
+	order.DefaultCouponID = orderDescCouponID.Default.(func() uuid.UUID)
 	// orderDescOrderType is the schema descriptor for order_type field.
 	orderDescOrderType := orderFields[13].Descriptor()
 	// order.DefaultOrderType holds the default value on creation for the order_type field.

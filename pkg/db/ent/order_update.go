@@ -105,15 +105,39 @@ func (ou *OrderUpdate) SetPromotionID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
+// SetNillablePromotionID sets the "promotion_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillablePromotionID(u *uuid.UUID) *OrderUpdate {
+	if u != nil {
+		ou.SetPromotionID(*u)
+	}
+	return ou
+}
+
 // SetDiscountCouponID sets the "discount_coupon_id" field.
 func (ou *OrderUpdate) SetDiscountCouponID(u uuid.UUID) *OrderUpdate {
 	ou.mutation.SetDiscountCouponID(u)
 	return ou
 }
 
+// SetNillableDiscountCouponID sets the "discount_coupon_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableDiscountCouponID(u *uuid.UUID) *OrderUpdate {
+	if u != nil {
+		ou.SetDiscountCouponID(*u)
+	}
+	return ou
+}
+
 // SetUserSpecialReductionID sets the "user_special_reduction_id" field.
 func (ou *OrderUpdate) SetUserSpecialReductionID(u uuid.UUID) *OrderUpdate {
 	ou.mutation.SetUserSpecialReductionID(u)
+	return ou
+}
+
+// SetNillableUserSpecialReductionID sets the "user_special_reduction_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableUserSpecialReductionID(u *uuid.UUID) *OrderUpdate {
+	if u != nil {
+		ou.SetUserSpecialReductionID(*u)
+	}
 	return ou
 }
 
@@ -146,6 +170,14 @@ func (ou *OrderUpdate) AddEnd(u int32) *OrderUpdate {
 // SetCouponID sets the "coupon_id" field.
 func (ou *OrderUpdate) SetCouponID(u uuid.UUID) *OrderUpdate {
 	ou.mutation.SetCouponID(u)
+	return ou
+}
+
+// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableCouponID(u *uuid.UUID) *OrderUpdate {
+	if u != nil {
+		ou.SetCouponID(*u)
+	}
 	return ou
 }
 
@@ -566,15 +598,39 @@ func (ouo *OrderUpdateOne) SetPromotionID(u uuid.UUID) *OrderUpdateOne {
 	return ouo
 }
 
+// SetNillablePromotionID sets the "promotion_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillablePromotionID(u *uuid.UUID) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetPromotionID(*u)
+	}
+	return ouo
+}
+
 // SetDiscountCouponID sets the "discount_coupon_id" field.
 func (ouo *OrderUpdateOne) SetDiscountCouponID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetDiscountCouponID(u)
 	return ouo
 }
 
+// SetNillableDiscountCouponID sets the "discount_coupon_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableDiscountCouponID(u *uuid.UUID) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetDiscountCouponID(*u)
+	}
+	return ouo
+}
+
 // SetUserSpecialReductionID sets the "user_special_reduction_id" field.
 func (ouo *OrderUpdateOne) SetUserSpecialReductionID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetUserSpecialReductionID(u)
+	return ouo
+}
+
+// SetNillableUserSpecialReductionID sets the "user_special_reduction_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableUserSpecialReductionID(u *uuid.UUID) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetUserSpecialReductionID(*u)
+	}
 	return ouo
 }
 
@@ -607,6 +663,14 @@ func (ouo *OrderUpdateOne) AddEnd(u int32) *OrderUpdateOne {
 // SetCouponID sets the "coupon_id" field.
 func (ouo *OrderUpdateOne) SetCouponID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetCouponID(u)
+	return ouo
+}
+
+// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableCouponID(u *uuid.UUID) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetCouponID(*u)
+	}
 	return ouo
 }
 

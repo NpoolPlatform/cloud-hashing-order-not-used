@@ -81,15 +81,39 @@ func (oc *OrderCreate) SetPromotionID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
+// SetNillablePromotionID sets the "promotion_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillablePromotionID(u *uuid.UUID) *OrderCreate {
+	if u != nil {
+		oc.SetPromotionID(*u)
+	}
+	return oc
+}
+
 // SetDiscountCouponID sets the "discount_coupon_id" field.
 func (oc *OrderCreate) SetDiscountCouponID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetDiscountCouponID(u)
 	return oc
 }
 
+// SetNillableDiscountCouponID sets the "discount_coupon_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableDiscountCouponID(u *uuid.UUID) *OrderCreate {
+	if u != nil {
+		oc.SetDiscountCouponID(*u)
+	}
+	return oc
+}
+
 // SetUserSpecialReductionID sets the "user_special_reduction_id" field.
 func (oc *OrderCreate) SetUserSpecialReductionID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetUserSpecialReductionID(u)
+	return oc
+}
+
+// SetNillableUserSpecialReductionID sets the "user_special_reduction_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableUserSpecialReductionID(u *uuid.UUID) *OrderCreate {
+	if u != nil {
+		oc.SetUserSpecialReductionID(*u)
+	}
 	return oc
 }
 
@@ -108,6 +132,14 @@ func (oc *OrderCreate) SetEnd(u uint32) *OrderCreate {
 // SetCouponID sets the "coupon_id" field.
 func (oc *OrderCreate) SetCouponID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetCouponID(u)
+	return oc
+}
+
+// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableCouponID(u *uuid.UUID) *OrderCreate {
+	if u != nil {
+		oc.SetCouponID(*u)
+	}
 	return oc
 }
 
@@ -265,6 +297,22 @@ func (oc *OrderCreate) defaults() {
 	if _, ok := oc.mutation.PayWithParent(); !ok {
 		v := order.DefaultPayWithParent
 		oc.mutation.SetPayWithParent(v)
+	}
+	if _, ok := oc.mutation.PromotionID(); !ok {
+		v := order.DefaultPromotionID()
+		oc.mutation.SetPromotionID(v)
+	}
+	if _, ok := oc.mutation.DiscountCouponID(); !ok {
+		v := order.DefaultDiscountCouponID()
+		oc.mutation.SetDiscountCouponID(v)
+	}
+	if _, ok := oc.mutation.UserSpecialReductionID(); !ok {
+		v := order.DefaultUserSpecialReductionID()
+		oc.mutation.SetUserSpecialReductionID(v)
+	}
+	if _, ok := oc.mutation.CouponID(); !ok {
+		v := order.DefaultCouponID()
+		oc.mutation.SetCouponID(v)
 	}
 	if _, ok := oc.mutation.OrderType(); !ok {
 		v := order.DefaultOrderType

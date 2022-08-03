@@ -36,12 +36,28 @@ func (Order) Fields() []ent.Field {
 			Optional().
 			Default(false),
 		field.Uint32("units"),
-		field.UUID("promotion_id", uuid.UUID{}),
-		field.UUID("discount_coupon_id", uuid.UUID{}),
-		field.UUID("user_special_reduction_id", uuid.UUID{}),
+		field.
+			UUID("promotion_id", uuid.UUID{}).
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("discount_coupon_id", uuid.UUID{}).
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("user_special_reduction_id", uuid.UUID{}).
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.Uint32("start"),
 		field.Uint32("end"),
-		field.UUID("coupon_id", uuid.UUID{}),
+		field.
+			UUID("coupon_id", uuid.UUID{}).
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.String("order_type").Default(constant.OrderTypeNormal),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
