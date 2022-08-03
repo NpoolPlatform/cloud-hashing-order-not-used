@@ -47,6 +47,14 @@ func (oc *OrderCreate) SetParentID(u uuid.UUID) *OrderCreate {
 	return oc
 }
 
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableParentID(u *uuid.UUID) *OrderCreate {
+	if u != nil {
+		oc.SetParentID(*u)
+	}
+	return oc
+}
+
 // SetUnits sets the "units" field.
 func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	oc.mutation.SetUnits(u)
@@ -236,6 +244,10 @@ func (oc *OrderCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (oc *OrderCreate) defaults() {
+	if _, ok := oc.mutation.ParentID(); !ok {
+		v := order.DefaultParentID()
+		oc.mutation.SetParentID(v)
+	}
 	if _, ok := oc.mutation.OrderType(); !ok {
 		v := order.DefaultOrderType
 		oc.mutation.SetOrderType(v)
@@ -268,9 +280,6 @@ func (oc *OrderCreate) check() error {
 	}
 	if _, ok := oc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Order.user_id"`)}
-	}
-	if _, ok := oc.mutation.ParentID(); !ok {
-		return &ValidationError{Name: "parent_id", err: errors.New(`ent: missing required field "Order.parent_id"`)}
 	}
 	if _, ok := oc.mutation.Units(); !ok {
 		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "Order.units"`)}
@@ -564,6 +573,12 @@ func (u *OrderUpsert) UpdateParentID() *OrderUpsert {
 	return u
 }
 
+// ClearParentID clears the value of the "parent_id" field.
+func (u *OrderUpsert) ClearParentID() *OrderUpsert {
+	u.SetNull(order.FieldParentID)
+	return u
+}
+
 // SetUnits sets the "units" field.
 func (u *OrderUpsert) SetUnits(v uint32) *OrderUpsert {
 	u.Set(order.FieldUnits, v)
@@ -835,6 +850,13 @@ func (u *OrderUpsertOne) SetParentID(v uuid.UUID) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateParentID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateParentID()
+	})
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (u *OrderUpsertOne) ClearParentID() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearParentID()
 	})
 }
 
@@ -1303,6 +1325,13 @@ func (u *OrderUpsertBulk) SetParentID(v uuid.UUID) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateParentID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateParentID()
+	})
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (u *OrderUpsertBulk) ClearParentID() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearParentID()
 	})
 }
 

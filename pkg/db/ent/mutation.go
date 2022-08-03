@@ -2534,9 +2534,22 @@ func (m *OrderMutation) OldParentID(ctx context.Context) (v uuid.UUID, err error
 	return oldValue.ParentID, nil
 }
 
+// ClearParentID clears the value of the "parent_id" field.
+func (m *OrderMutation) ClearParentID() {
+	m.parent_id = nil
+	m.clearedFields[order.FieldParentID] = struct{}{}
+}
+
+// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
+func (m *OrderMutation) ParentIDCleared() bool {
+	_, ok := m.clearedFields[order.FieldParentID]
+	return ok
+}
+
 // ResetParentID resets all changes to the "parent_id" field.
 func (m *OrderMutation) ResetParentID() {
 	m.parent_id = nil
+	delete(m.clearedFields, order.FieldParentID)
 }
 
 // SetUnits sets the "units" field.
@@ -3415,7 +3428,11 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *OrderMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(order.FieldParentID) {
+		fields = append(fields, order.FieldParentID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3428,6 +3445,11 @@ func (m *OrderMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *OrderMutation) ClearField(name string) error {
+	switch name {
+	case order.FieldParentID:
+		m.ClearParentID()
+		return nil
+	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
 }
 

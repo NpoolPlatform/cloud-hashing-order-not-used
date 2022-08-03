@@ -76,6 +76,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultParentID holds the default value on creation for the "parent_id" field.
+	DefaultParentID func() uuid.UUID
 	// DefaultOrderType holds the default value on creation for the "order_type" field.
 	DefaultOrderType string
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.

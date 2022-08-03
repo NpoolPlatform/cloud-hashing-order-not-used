@@ -79,6 +79,10 @@ func init() {
 	goodpaying.DefaultID = goodpayingDescID.Default.(func() uuid.UUID)
 	orderFields := schema.Order{}.Fields()
 	_ = orderFields
+	// orderDescParentID is the schema descriptor for parent_id field.
+	orderDescParentID := orderFields[4].Descriptor()
+	// order.DefaultParentID holds the default value on creation for the parent_id field.
+	order.DefaultParentID = orderDescParentID.Default.(func() uuid.UUID)
 	// orderDescOrderType is the schema descriptor for order_type field.
 	orderDescOrderType := orderFields[12].Descriptor()
 	// order.DefaultOrderType holds the default value on creation for the order_type field.

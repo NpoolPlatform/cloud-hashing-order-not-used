@@ -25,7 +25,12 @@ func (Order) Fields() []ent.Field {
 		field.UUID("good_id", uuid.UUID{}),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.UUID("parent_id", uuid.UUID{}),
+		field.
+			UUID("parent_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.Uint32("units"),
 		field.UUID("promotion_id", uuid.UUID{}),
 		field.UUID("discount_coupon_id", uuid.UUID{}),

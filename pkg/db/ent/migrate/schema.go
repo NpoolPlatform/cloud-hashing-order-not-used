@@ -63,7 +63,7 @@ var (
 		{Name: "good_id", Type: field.TypeUUID},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "parent_id", Type: field.TypeUUID},
+		{Name: "parent_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "units", Type: field.TypeUint32},
 		{Name: "promotion_id", Type: field.TypeUUID},
 		{Name: "discount_coupon_id", Type: field.TypeUUID},

@@ -52,6 +52,20 @@ func (ou *OrderUpdate) SetParentID(u uuid.UUID) *OrderUpdate {
 	return ou
 }
 
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableParentID(u *uuid.UUID) *OrderUpdate {
+	if u != nil {
+		ou.SetParentID(*u)
+	}
+	return ou
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (ou *OrderUpdate) ClearParentID() *OrderUpdate {
+	ou.mutation.ClearParentID()
+	return ou
+}
+
 // SetUnits sets the "units" field.
 func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
 	ou.mutation.ResetUnits()
@@ -298,6 +312,12 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldParentID,
 		})
 	}
+	if ou.mutation.ParentIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: order.FieldParentID,
+		})
+	}
 	if value, ok := ou.mutation.Units(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -457,6 +477,20 @@ func (ouo *OrderUpdateOne) SetUserID(u uuid.UUID) *OrderUpdateOne {
 // SetParentID sets the "parent_id" field.
 func (ouo *OrderUpdateOne) SetParentID(u uuid.UUID) *OrderUpdateOne {
 	ouo.mutation.SetParentID(u)
+	return ouo
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableParentID(u *uuid.UUID) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetParentID(*u)
+	}
+	return ouo
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (ouo *OrderUpdateOne) ClearParentID() *OrderUpdateOne {
+	ouo.mutation.ClearParentID()
 	return ouo
 }
 
@@ -733,6 +767,12 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: order.FieldParentID,
+		})
+	}
+	if ouo.mutation.ParentIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: order.FieldParentID,
 		})
 	}

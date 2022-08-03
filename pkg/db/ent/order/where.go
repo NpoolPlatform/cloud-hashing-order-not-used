@@ -488,6 +488,20 @@ func ParentIDLTE(v uuid.UUID) predicate.Order {
 	})
 }
 
+// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
+func ParentIDIsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldParentID)))
+	})
+}
+
+// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
+func ParentIDNotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldParentID)))
+	})
+}
+
 // UnitsEQ applies the EQ predicate on the "units" field.
 func UnitsEQ(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
