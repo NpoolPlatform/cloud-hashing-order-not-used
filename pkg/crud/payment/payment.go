@@ -39,7 +39,7 @@ func validatePayment(info *npool.Payment) error {
 }
 
 func dbRowToPayment(row *ent.Payment) *npool.Payment {
-	return &npool.Payment{
+	p := &npool.Payment{
 		ID:                    row.ID.String(),
 		AppID:                 row.AppID.String(),
 		UserID:                row.UserID.String(),
@@ -61,8 +61,11 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		UserPaymentTXID:       row.UserPaymentTxid,
 		CreateAt:              row.CreateAt,
 		FakePayment:           row.FakePayment,
-		PayWithBalanceAmount:  row.PayWithBalanceAmount.String(),
 	}
+	if row.PayWithBalanceAmount != nil {
+		p.PayWithBalanceAmount = row.PayWithBalanceAmount.String()
+	}
+	return p
 }
 
 func Create(ctx context.Context, in *npool.CreatePaymentRequest) (*npool.CreatePaymentResponse, error) {
