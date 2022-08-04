@@ -61,6 +61,7 @@ func dbRowToPayment(row *ent.Payment) *npool.Payment {
 		UserPaymentTXID:       row.UserPaymentTxid,
 		CreateAt:              row.CreateAt,
 		FakePayment:           row.FakePayment,
+		PayWithBalanceAmount:  row.PayWithBalanceAmount.String(),
 	}
 }
 
