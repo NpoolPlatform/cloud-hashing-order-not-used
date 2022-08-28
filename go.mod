@@ -3,13 +3,13 @@ module github.com/NpoolPlatform/cloud-hashing-order
 go 1.17
 
 require (
-	entgo.io/ent v0.11.1
-	github.com/NpoolPlatform/api-manager v0.0.0-20220205130236-69d286e72dba
+	entgo.io/ent v0.11.2
+	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
 	github.com/NpoolPlatform/cloud-hashing-billing v0.0.0-20220211112041-cb90970f6df1
 	github.com/NpoolPlatform/cloud-hashing-inspire v0.0.0-20220224025352-b4d29cbbeebc
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220812032117-44ecffa2bb95
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20220818105452-9457611ae070
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220621110548-8f3f8049ecc5
-	github.com/NpoolPlatform/message v0.0.0-20220804035405-7b5ec9178d24
+	github.com/NpoolPlatform/message v0.0.0-20220819134247-1dc75c85fe43
 	github.com/NpoolPlatform/sphinx-coininfo v0.0.0-20211208035009-5ad2768d2290
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
@@ -24,7 +24,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.5.0 // indirect
+	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e // indirect
 	github.com/Shonminh/apollo-client v0.4.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -91,9 +91,9 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/ratelimit v0.1.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20220302033224-9aa15565e42a // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
