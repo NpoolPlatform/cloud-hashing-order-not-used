@@ -13,8 +13,7 @@ import (
 	rabbitmqconst "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/const"
 	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
 
-	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
-	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"      //nolint
+	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const" //nolint
 
 	cli "github.com/urfave/cli/v2"
 )
@@ -40,7 +39,7 @@ func main() {
 		rabbitmqconst.RabbitMQServiceName,
 		redisconst.RedisServiceName,
 		coininfoconst.ServiceName,
-		billingconst.ServiceName)
+	)
 	if err != nil {
 		logger.Sugar().Errorf("fail to create %v: %v", serviceName, err)
 		return

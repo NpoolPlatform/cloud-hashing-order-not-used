@@ -14,8 +14,7 @@ import (
 	rabbitmqconst "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/const"
 	redisconst "github.com/NpoolPlatform/go-service-framework/pkg/redis/const"
 
-	billingconst "github.com/NpoolPlatform/cloud-hashing-billing/pkg/message/const" //nolint
-	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const"      //nolint
+	coininfoconst "github.com/NpoolPlatform/sphinx-coininfo/pkg/message/const" //nolint
 
 	"golang.org/x/xerrors"
 )
@@ -41,7 +40,7 @@ func Init() error {
 		rabbitmqconst.RabbitMQServiceName,
 		redisconst.RedisServiceName,
 		coininfoconst.ServiceName,
-		billingconst.ServiceName)
+	)
 	if err != nil {
 		return xerrors.Errorf("cannot init app stub: %v", err)
 	}
